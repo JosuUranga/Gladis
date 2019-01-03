@@ -235,7 +235,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 	}
 	private Component crearPanelIzquierda() {
 		JSplitPane panel = new JSplitPane(JSplitPane.VERTICAL_SPLIT,true,crearPanelIzquierdaArriba(),crearPanelIzquierdaAbajo());
-		
+		panel.setDividerLocation((this.getHeight()-90)/2);
 		return panel;
 	}
 	
@@ -331,7 +331,17 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			}
 		}
 			break;
-
+		case "quitarAgrupacion":{
+			if(!controlador.getMapa().keySet().isEmpty()) {
+				if(listaAgrupaciones.getSelectedValue()!=null)controladorAgrupaciones.eliminarString(listaAgrupaciones.getSelectedValue());
+				listaAgrupaciones.clearSelection();
+				listaHabitaciones.clearSelection();
+				listaDispositivos.setListData(new Dispositivo[0]);
+			}else {
+				JOptionPane.showMessageDialog(this, "No hay habitaciones", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+			break;
 		
 		case "quitarDispositivo":
 			eliminar=true;
@@ -355,6 +365,10 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			listaHabitaciones.clearSelection();
 			if(listaAgrupaciones.getSelectedIndex()!=-1) {
 				listaDispositivos.setListData(controladorAgrupaciones.getDispositivosData(listaAgrupaciones.getSelectedValue()));
+				bquitarAgrupacion.setEnabled(true);
+				banadirDispositivo.setEnabled(false);
+			}else {
+				bquitarAgrupacion.setEnabled(false);
 			}
 		}else if (eliminar==true && listaDispositivos.getSelectedIndex()!=-1) {
 			if(listaAgrupaciones.getSelectedIndex()!=-1) {
