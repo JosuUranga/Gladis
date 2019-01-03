@@ -39,7 +39,6 @@ public class Agrupaciones extends AbstractListModel<String> {
 		lista.addAll(dispositivo);
 		mapa.put(nombre, lista);
 		this.fireContentsChanged(mapa, 0, mapa.size());
-		soporte.firePropertyChange("agrupacion", true, false);
 	}
 	public Map<String, List<Dispositivo>> getMapa() {
 		return mapa;
@@ -48,7 +47,8 @@ public class Agrupaciones extends AbstractListModel<String> {
 		List<Dispositivo>lista = mapa.get(nombre);
 		lista.remove(dispositivo);
 		mapa.replace(nombre, mapa.get(nombre), lista);
-		soporte.firePropertyChange("agrupacion", true, false);
+		this.fireContentsChanged(mapa, 0, mapa.size());
+		soporte.firePropertyChange("agrupacion", false, true);
 		
 	}
 	public boolean isEmpty() {

@@ -323,8 +323,9 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			if(!controlador.getMapa().keySet().isEmpty()) {
 				dialogoAgrupacion=new DialogoAgrupaciones(this, controlador.getMapa());
 				controladorAgrupaciones.anadirDispositivos(dialogoAgrupacion.getNombre(), dialogoAgrupacion.getListaAgrupacion());
+				listaAgrupaciones.clearSelection();
 				listaHabitaciones.clearSelection();
-				listaAgrupaciones.setSelectedIndex(0);
+				listaDispositivos.setListData(new Dispositivo[0]);
 			}else {
 				JOptionPane.showMessageDialog(this, "No hay habitaciones", "Error", JOptionPane.ERROR_MESSAGE);
 			}
@@ -352,13 +353,17 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			}
 		}else if(arg0.getSource()==listaAgrupaciones) {
 			listaHabitaciones.clearSelection();
-			listaDispositivos.setListData(controladorAgrupaciones.getDispositivosData(listaAgrupaciones.getSelectedValue()));
+			if(listaAgrupaciones.getSelectedIndex()!=-1) {
+				listaDispositivos.setListData(controladorAgrupaciones.getDispositivosData(listaAgrupaciones.getSelectedValue()));
+			}
 		}else if (eliminar==true && listaDispositivos.getSelectedIndex()!=-1) {
-				controlador.escribirHabitacion(listaHabitaciones.getSelectedValue(), casa);
-				propertyChange(new PropertyChangeEvent(this,"envioHabitacion",true,listaHabitaciones.getSelectedValue()));
+			if(listaAgrupaciones.getSelectedIndex()!=-1) {
+				controladorAgrupaciones.eleminarDispositivo(listaAgrupaciones.getSelectedValue(), listaDispositivos.getSelectedValue());
+			}else {
 				controlador.eleminarDispositivo(listaHabitaciones.getSelectedValue(), listaDispositivos.getSelectedValue());
-				listaDispositivos.clearSelection();
-				eliminar=false;
+			}
+			listaDispositivos.clearSelection();
+			eliminar=false;
 		}else if(arg0.getSource()==listaDispositivos) {
 			if(listaDispositivos.getSelectedIndex()!=-1) {
 				listaDispositivos.getSelectedValue().modificar(this);listaDispositivos.clearSelection();
@@ -370,6 +375,11 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		switch(evt.getPropertyName()) {
 		case "dispositivos":
 			listaDispositivos.setListData(controlador.getDispositivosData(listaHabitaciones.getSelectedValue()));
+			bquitarDispositivo.setEnabled(true);
+			if(listaDispositivos.getModel().getSize()==0)bquitarDispositivo.setEnabled(false);
+			break;
+		case "agrupacion":
+			listaDispositivos.setListData(controladorAgrupaciones.getDispositivosData(listaAgrupaciones.getSelectedValue()));
 			bquitarDispositivo.setEnabled(true);
 			if(listaDispositivos.getModel().getSize()==0)bquitarDispositivo.setEnabled(false);
 			break;

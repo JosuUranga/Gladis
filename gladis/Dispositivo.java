@@ -120,5 +120,8 @@ public class Dispositivo implements Serializable{
 		 }
 		 
 	}
+	public String toString() {
+		return nombre;
+	}
 	
 }
