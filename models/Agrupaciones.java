@@ -43,13 +43,20 @@ public class Agrupaciones extends AbstractListModel<String> {
 	public Map<String, List<Dispositivo>> getMapa() {
 		return mapa;
 	}
-	public void eleminarDispositivo (String nombre,Dispositivo dispositivo) {
-		List<Dispositivo>lista = mapa.get(nombre);
-		lista.remove(dispositivo);
-		mapa.replace(nombre, mapa.get(nombre), lista);
+	public void eleminarDispositivoTodas (Dispositivo dispositivo) {
+		List<String>asdAS=new ArrayList<>();
+		mapa.entrySet().stream().forEach(entry->{
+			entry.getValue().forEach(Disp->{
+				if(Disp.equals(dispositivo))asdAS.add(entry.getKey());
+			});
+		});
+		asdAS.forEach(key->mapa.get(key).remove(dispositivo));
 		this.fireContentsChanged(mapa, 0, mapa.size());
-		soporte.firePropertyChange("agrupacion", false, true);
-		
+	}
+	public void eleminarDispositivo(String nombre, Dispositivo dispositivo) {
+		mapa.get(nombre).remove(dispositivo);
+		this.fireContentsChanged(mapa, 0, mapa.size());
+		soporte.firePropertyChange("agrupacion", true, false);
 	}
 	public boolean isEmpty() {
 		if(mapa.isEmpty())return true;

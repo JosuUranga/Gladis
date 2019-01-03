@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -54,9 +56,11 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 	Agrupaciones controladorAgrupaciones;
 	JList<String>listaAgrupaciones;
 	DialogoAgrupaciones dialogoAgrupacion;
+	List<String>ips;
 	public Principal(){		
 		super ("Gladis");	
-		new EscuchaServidor(this).start();
+		this.ips=new ArrayList<>();
+		new EscuchaServidor(this,ips).start();
 		controlador= new Habitaciones();
 		controlador.addPropertyChangeListener(this);
 		controladorAgrupaciones= new Agrupaciones();
@@ -371,14 +375,16 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				bquitarAgrupacion.setEnabled(false);
 			}
 		}else if (eliminar==true && listaDispositivos.getSelectedIndex()!=-1) {
-			if(listaAgrupaciones.getSelectedIndex()!=-1) {
-				controladorAgrupaciones.eleminarDispositivo(listaAgrupaciones.getSelectedValue(), listaDispositivos.getSelectedValue());
-			}else {
+			if(listaHabitaciones.getSelectedIndex()!=-1) {
+				controladorAgrupaciones.eleminarDispositivoTodas(listaDispositivos.getSelectedValue());
 				controlador.eleminarDispositivo(listaHabitaciones.getSelectedValue(), listaDispositivos.getSelectedValue());
+			}else {
+				controladorAgrupaciones.eleminarDispositivo(listaAgrupaciones.getSelectedValue(),listaDispositivos.getSelectedValue());	
 			}
 			listaDispositivos.clearSelection();
 			eliminar=false;
 		}else if(arg0.getSource()==listaDispositivos) {
+			listaAgrupaciones.clearSelection();
 			if(listaDispositivos.getSelectedIndex()!=-1) {
 				listaDispositivos.getSelectedValue().modificar(this);listaDispositivos.clearSelection();
 			}

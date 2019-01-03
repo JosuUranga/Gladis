@@ -2,14 +2,17 @@ package sockets;
 
 
 import java.net.*;
+import java.util.List;
 import java.beans.PropertyChangeListener;
 import java.io.*;
 
 public class EscuchaServidor extends Thread{
 	PropertyChangeListener listener;
-	public EscuchaServidor (PropertyChangeListener listener) {
+	List<String>ips;
+	public EscuchaServidor (PropertyChangeListener listener,List<String>ips) {
 		super("escuchaCliente");
 		this.listener=listener;
+		this.ips=ips;
 	}
 	
     public void run() {
@@ -19,7 +22,7 @@ public class EscuchaServidor extends Thread{
         ) {
         	
             while (escuchando) {
-	            new ComunicacionServidor(serverSocket.accept(),listener).start();
+	            new ComunicacionServidor(serverSocket.accept(),listener,ips).start();
 	        }
     	} catch (IOException e) {
 

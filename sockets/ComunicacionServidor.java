@@ -8,11 +8,12 @@ import java.io.*;
 
 public class ComunicacionServidor extends Thread {
     private Socket socket = null;
-    List<String>Fichero;
+    List<String>ips;
     PropertyChangeSupport soporte;
-    public ComunicacionServidor(Socket socket,PropertyChangeListener listener) {
+    public ComunicacionServidor(Socket socket,PropertyChangeListener listener,List<String>ips) {
         super("comunicacionCliente");
         this.socket = socket;
+        this.ips=ips;
         soporte=new PropertyChangeSupport(this);
         this.addPropertyChangeListener(listener);
        
@@ -32,6 +33,10 @@ public class ComunicacionServidor extends Thread {
 						 if(((String) object).endsWith(".dat")) {
 						    	nombreArchivo=(String)object;
 						    	out.writeObject("Nombre Recibido");
+						 }
+						 if(((String)object).equals("Hola!")) {
+							 ips.add(socket.getRemoteSocketAddress().toString());
+							 break;
 						 }
 						 if(object.equals("Finalizado")) {
 							 try (ObjectOutputStream outf = new ObjectOutputStream(

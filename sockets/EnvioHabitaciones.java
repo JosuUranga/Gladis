@@ -1,7 +1,13 @@
 package sockets;
 
-import java.io.*;
-import java.net.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.List;
 
 
 public class EnvioHabitaciones extends Thread{
@@ -19,36 +25,42 @@ public class EnvioHabitaciones extends Thread{
         	ObjectInputStream  in = new ObjectInputStream(socket.getInputStream());
         	ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
         ) {
-            Object object;
-            int num=0;
-            Boolean nombre=false;
-            try {
-				while ((object=in.readObject())!= null) {
-					if(object instanceof String) {
-						if(object.equals("Nombre recibido"))nombre=true;
-						if(object.equals("Conexion establecida"))out.writeObject(habitacion);
-					}
-						if(nombre=true && num<2) {
-							try (ObjectInputStream inf = new ObjectInputStream(
-									new FileInputStream(habitacion))) {
-								while(num<=1) {
-									out.writeObject(inf.readObject());
-									num++;
-								}
-								out.writeObject("Finalizado");
-									
-								} catch (FileNotFoundException e) {
-									e.printStackTrace();
-								} catch (IOException e) {
-									e.printStackTrace();
-								} catch (ClassNotFoundException e) {
-									e.printStackTrace();
-								}
-						}
-					}
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
+        	if(habitacion==null) {
+        		Object object;
+                int num=0;
+                Boolean nombre=false;
+                try {
+    				while ((object=in.readObject())!= null) {
+    					if(object instanceof String) {
+    						if(object.equals("Nombre recibido"))nombre=true;
+    						if(object.equals("Conexion establecida"))out.writeObject(habitacion);
+    					}
+    						if(nombre=true && num<2) {
+    							try (ObjectInputStream inf = new ObjectInputStream(
+    									new FileInputStream(habitacion))) {
+    								while(num<=1) {
+    									out.writeObject(inf.readObject());
+    									num++;
+    								}
+    								out.writeObject("Finalizado");
+    									
+    								} catch (FileNotFoundException e) {
+    									e.printStackTrace();
+    								} catch (IOException e) {
+    									e.printStackTrace();
+    								} catch (ClassNotFoundException e) {
+    									e.printStackTrace();
+    								}
+    						}
+    					}
+    			} catch (ClassNotFoundException e) {
+    				e.printStackTrace();
+    			}
+        	}
+        	else {
+        		out.writeObject("Hola!");
+        	}
+            
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + hostname);
         } catch (IOException e) {
