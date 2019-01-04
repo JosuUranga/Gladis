@@ -13,16 +13,18 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Stream;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import javax.swing.AbstractListModel;
+
 import gladis.Dispositivo;
 import gladis.DispositivoTmp;
 import gladis.Habitacion;
@@ -40,11 +42,16 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 		//Reconocedor = new Reconocedor(mapa);
 	}
 	public void inicializar(String casa) {
-		File file= new File("files/"+casa);
+		File file= new File("files/"+casa+"/habitaciones/");
 		File [] habitaciones=file.listFiles();
 		for(int i=0;i<habitaciones.length;i++) {
-			leerFichero("files/"+casa+"/"+habitaciones[i].getName());
+			leerFichero("files/"+casa+"/"+"habitaciones/"+habitaciones[i].getName());
 		}
+	}
+	public void descargarHabitacion(Path p) {
+		mapa.keySet().stream().forEach(keys->{
+			if(keys.toString().equals(p.getFileName()))mapa.remove(keys);
+		});
 	}
 	public void anadirHabitacion(Habitacion habitacion) {		
 		mapa.put(habitacion, new ArrayList<>());		
@@ -160,7 +167,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 	}
 	public void escribirFichero(Entry<Habitacion,List<Dispositivo>> habitacion, String casa) {
 		try (ObjectOutputStream out = new ObjectOutputStream(
-			new FileOutputStream("files/"+casa+"/"+habitacion.getKey().getNombre()+".dat"))) {
+			new FileOutputStream("files/"+casa+"/"+"habitaciones/"+habitacion.getKey().getNombre()+".dat"))) {
 			out.writeObject(habitacion.getKey());
 			out.writeObject(habitacion.getValue());
 			this.fireContentsChanged(mapa, 0, mapa.size());
@@ -179,7 +186,6 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 				List<Dispositivo> value=(List<Dispositivo>) in.readObject();
 				if(mapa.containsKey(key))mapa.remove(key);
 				mapa.put(key, value);
-				System.out.println("AAAAAAADDDDDFFFFFFFGGGGGGGGG");
 				/*for(Dispositivo d:value) {
 					agregarComando(d);
 				}

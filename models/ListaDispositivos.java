@@ -20,11 +20,6 @@ public class ListaDispositivos extends AbstractListModel<Dispositivo> {
 	public List<Dispositivo> getLista() {
 		return lista;
 	}
-
-	public void inicializar(Map<Habitacion, List<Dispositivo>> mapa) {
-		this.add(mapa.get(mapa.keySet().toArray(new Habitacion[0])[0]));
-	}
-
 	public void add(Dispositivo a) {
 		lista.add(a);
 		this.fireContentsChanged(lista, 0, lista.size()-1);

@@ -33,7 +33,7 @@ public class DialogoAgrupaciones extends JDialog implements ActionListener{
 	
 	JButton boton1, botonOK, botonCA;
 	JFrame ventana;
-	JComboBox<String> combobox;
+	JComboBox<Habitacion> combobox;
 	Habitacion[] habitaciones;
 	Map<Habitacion,List<Dispositivo>> mapaCasa;
 	JList<Dispositivo> lista, listaAgrupacion;
@@ -150,10 +150,9 @@ public class DialogoAgrupaciones extends JDialog implements ActionListener{
 		JScrollPane panel = new JScrollPane();
 		lista = new JList<>();
 		lista.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		modeloHabitacion.inicializar(mapaCasa);
 		lista.setModel(modeloHabitacion);
 		panel.setViewportView(lista);
-		
+		mapaCasa.get(combobox.getSelectedItem()).forEach(disp->modeloHabitacion.add(disp));
 		return panel;
 	}
 
@@ -161,7 +160,7 @@ public class DialogoAgrupaciones extends JDialog implements ActionListener{
 		JPanel panel = new JPanel();
 		combobox=new JComboBox<>();		
 		for(int i=0;i<habitaciones.length;i++) {
-			combobox.addItem(habitaciones[i].getNombre());
+			combobox.addItem(habitaciones[i]);
 		}
 		combobox.setSelectedIndex(0);
 		combobox.addActionListener(this);
@@ -191,11 +190,14 @@ public class DialogoAgrupaciones extends JDialog implements ActionListener{
 			
 		}
 		if(e.getSource()==combobox) {
-			int i=0;
+			/*int i=0;
 			for(i=0; i<habitaciones.length;i++) {
-				if(habitaciones[i].getNombre().equals((String)combobox.getSelectedItem())) break;
+				if(habitaciones[i].equals(combobox.getSelectedItem())) break;
 			}
-			lista.setListData(mapaCasa.get(habitaciones[i]).toArray(new Dispositivo[0]));
+			lista.setListData(mapaCasa.get(habitaciones[i]).toArray(new Dispositivo[0]));*/
+			modeloHabitacion.clear();
+			mapaCasa.get(combobox.getSelectedItem()).forEach(disp->modeloHabitacion.add(disp));
+			
 		}
 		if(e.getActionCommand().equals("ok")) {
 			

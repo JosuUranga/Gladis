@@ -25,6 +25,7 @@ public class ComunicacionServidor extends Thread {
         ) {
             String nombreArchivo=null;
             Object object;
+            Boolean esAgrupacion=false;
             List<Object>archivo=new ArrayList<>();
             out.writeObject("Conexion establecida");
             try {
@@ -32,6 +33,7 @@ public class ComunicacionServidor extends Thread {
 					if(object instanceof String) {
 						 if(((String) object).endsWith(".dat")) {
 						    	nombreArchivo=(String)object;
+						    	if (nombreArchivo.contains("/agrupaciones/")) esAgrupacion=true;
 						    	out.writeObject("Nombre Recibido");
 						 }
 						 if(((String)object).equals("Hola!")) {
@@ -44,7 +46,8 @@ public class ComunicacionServidor extends Thread {
 											for(Object a:archivo) {
 												outf.writeObject(a);
 											}
-											soporte.firePropertyChange("habitacionRecibida", true, nombreArchivo);
+											if(esAgrupacion)soporte.firePropertyChange("agrupacionRecibida", true, nombreArchivo);
+											else soporte.firePropertyChange("habitacionRecibida", true, nombreArchivo);
 								} catch (FileNotFoundException e) {
 										e.printStackTrace();
 								} catch (IOException e) {

@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,6 +77,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 //		this.setJMenuBar(crearBarraMenu());
 		this.setContentPane(crearPanelVentana());
 		controlador.inicializar(casa);
+		controladorAgrupaciones.inicializar(casa);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setVisible(true);
 	}
@@ -379,6 +382,8 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				controladorAgrupaciones.eleminarDispositivoTodas(listaDispositivos.getSelectedValue());
 				controlador.eleminarDispositivo(listaHabitaciones.getSelectedValue(), listaDispositivos.getSelectedValue());
 			}else {
+				controlador.escribirHabitacion(controlador.getElementAt(0), casa);
+				controladorAgrupaciones.escribirAgrupacion(listaAgrupaciones.getSelectedValue(), casa); //TEST 
 				controladorAgrupaciones.eleminarDispositivo(listaAgrupaciones.getSelectedValue(),listaDispositivos.getSelectedValue());	
 			}
 			listaDispositivos.clearSelection();
@@ -407,8 +412,17 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			new EnvioHabitaciones("127.0.0.1","files/"+casa+"/"+((Habitacion) evt.getNewValue()).getNombre()+".dat").start();
 			break;
 		case "habitacionRecibida":
-			controlador.leerFichero((String)evt.getNewValue());
-			System.out.println((String)evt.getNewValue());
+			Path p= Paths.get((String)evt.getNewValue());
+			controlador.descargarHabitacion(p);
+			controlador.leerFichero(p.toString());
+			System.out.println(p.toString());
+			propertyChange(new PropertyChangeEvent(this, "dispositivos", true, null));
+			break;
+		case "agrupacionRecibida":
+			Path w= Paths.get((String)evt.getNewValue());
+			controladorAgrupaciones.descargarAgrupacion(w);
+			controladorAgrupaciones.leerFichero(w.toString());
+			System.out.println(w.toString());
 			propertyChange(new PropertyChangeEvent(this, "dispositivos", true, null));
 			break;
 		case "habitacion":
