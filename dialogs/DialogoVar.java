@@ -6,6 +6,8 @@ import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,11 +34,13 @@ public class DialogoVar extends JDialog implements ActionListener{
 	List <JTextField> textVal;
 	List <JTextField> variables;
 	Dispositivo dispositivo;
+	PropertyChangeSupport soporte;
 	public DialogoVar(JFrame ventana, Dispositivo dispositivo){
 		super(ventana);
 		this.dispositivo=dispositivo;
 		variables=new ArrayList<>();
 		crearTamano();
+		soporte = new PropertyChangeSupport(this);
 		textMax = new ArrayList<>();
 		textMin = new ArrayList<>();
 		textVal = new ArrayList<>();
@@ -199,6 +203,13 @@ public class DialogoVar extends JDialog implements ActionListener{
 			   if(!variables.get(i).getText().matches("[a-zA-Z]+"))throw new NombreVariableException("Introduzca un nombre válido");
 			}
 	}
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		soporte.addPropertyChangeListener(listener);
+	}
+
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		soporte.removePropertyChangeListener(listener);
+	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().equals("OK")) {
@@ -210,6 +221,7 @@ public class DialogoVar extends JDialog implements ActionListener{
 			     if(dispositivo.getTipo().equals("Programable tiempo")||dispositivo.getTipo().equals("No programable")) {
 			    	 verificarNombre();
 			    	 guardarValoresVacios();
+			    	 soporte.firePropertyChange("comandosDisp", false, dispositivo);
 			     }
 				 else guardarValoresDefinidos();
 			     this.dispose();

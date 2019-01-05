@@ -298,6 +298,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		
 		switch(e.getActionCommand()) {		
 		case "quitarHabitacion":
+			listaDispositivos.clearSelection();
 			controlador.eliminarDispositivosHabitacion(listaHabitaciones.getSelectedValue());
 			controlador.eliminarHabitacion(listaHabitaciones.getSelectedValue());
 			listaHabitaciones.clearSelection();
@@ -322,7 +323,6 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			DialogoDispositivos dialogoDispositivo = new DialogoDispositivos(this,"Anadir dispositivo",true);
 			if(dialogoDispositivo.getDispositivo()!=null) {
 				controlador.anadirDispositivo(listaHabitaciones.getSelectedValue(), dialogoDispositivo.getDispositivo());
-				
 			}
 			break;
 
@@ -428,7 +428,9 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		case "habitacion":
 			
 			break;
-		
+		case "comandosDisp": controlador.agregarComandoVar((Dispositivo)evt.getNewValue());
+		System.out.println("ASDALSIHDLASHFOAIÑFJAMÑSOIFASPODIAOPSDMAOPSD");
+		break;
 		}
 		
 	}

@@ -19,9 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import gladis.Dispositivo;
-import gladis.DispositivoTmp;
-import gladis.Variable;
+import gladis.*;
 
 
 @SuppressWarnings("serial")
@@ -234,7 +232,10 @@ public class DialogoDispositivos extends JDialog implements ActionListener{
 							for( int i =0; i<numVariables; i++) {
 								dispositivo.addVariable(new Variable(" "));
 							}
-							if(numVariables>0)dialogo=new DialogoVar(ventana,dispositivo);
+							if(numVariables>0) {
+								dialogo=new DialogoVar(ventana,dispositivo);
+								dialogo.addPropertyChangeListener((Principal)ventana);
+							}
 						} catch (NumberFormatException e1) {
 							error=true;
 						}
@@ -246,7 +247,10 @@ public class DialogoDispositivos extends JDialog implements ActionListener{
 							for( int i =0; i<numVariables; i++) {
 								dispositivo.addVariable(new Variable(" "));
 							}
-							if(numVariables>0)dialogo=new DialogoVar(ventana,dispositivo);
+							if(numVariables>0) {
+								dialogo=new DialogoVar(ventana,dispositivo);
+								dialogo.addPropertyChangeListener((Principal)ventana);
+							}
 							break;
 						} catch (NumberFormatException e) {
 							error=true;
