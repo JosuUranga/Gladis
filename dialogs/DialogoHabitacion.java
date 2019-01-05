@@ -38,24 +38,27 @@ public class DialogoHabitacion extends JDialog implements ActionListener {
 		panel.add(crearPanelDatos(),BorderLayout.CENTER);
 		panel.add(crearPanelBotones(),BorderLayout.SOUTH);
 		
-		
 		return panel;
 	}
 
 	private Component crearPanelBotones() {
 		JPanel panel = new JPanel(new GridLayout(1,2,20,0));
+
 		panel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
 		JButton boton1 = new JButton ("OK");
 		boton1.setActionCommand("ok");
 		boton1.addActionListener(this);
-		
+		boton1.setDefaultCapable(true);
 		JButton boton2 = new JButton ("Cancel");
 		boton2.setActionCommand("cancel");
 		boton2.addActionListener(this);
 		
 		panel.add(boton1);
+		this.getRootPane().setDefaultButton(boton1);;
+
 		panel.add(boton2);
-		
+
+
 		return panel;
 	}
 

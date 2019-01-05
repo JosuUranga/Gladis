@@ -68,7 +68,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 		lista.add(dispositivo);
 		mapa.put(habitacion, lista);
 		agregarComando(dispositivo);
-		Reconocedor.actualizaReconocedor();
+		//Reconocedor.actualizaReconocedor();
 		soporte.firePropertyChange("dispositivos", false, true);
 		
 	}
@@ -125,7 +125,6 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 				try {
 					fr.write(linea+"\n");
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			});
@@ -180,7 +179,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Reconocedor.actualizaReconocedor();
+		//Reconocedor.actualizaReconocedor();
 	}
 	
 	public void escribirHabitacion(Habitacion habitacion,String casa) {

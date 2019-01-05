@@ -184,12 +184,14 @@ public class DialogoModificar extends JDialog implements ActionListener{
 		JButton boton1 = new JButton ("OK");
 		boton1.setActionCommand("OK");
 		boton1.addActionListener(this);
-	
+		
 		JButton boton2 = new JButton ("Cancel");
 		boton2.setActionCommand("Cancel");
 		boton2.addActionListener(this);
 		
 		panel.add(boton1);
+		this.getRootPane().setDefaultButton(boton1);;
+
 		panel.add(boton2);
 
 		
@@ -211,11 +213,8 @@ public class DialogoModificar extends JDialog implements ActionListener{
 		return tiempo;
 	}
 	private void verificarInt() {
-			Integer.parseInt(text1.getText());
-		
-			Integer.parseInt(text2.getText());
-		
-		
+		if(text1!=null)	Integer.parseInt(text1.getText());
+		if(text2!=null)	Integer.parseInt(text2.getText());		
 	}
 	private void verificarVacio() throws VacioException{
 		if(dispositivo.getTipo().equals("Programable tiempo")||dispositivo.getTipo().equals("No programable"))	{
@@ -225,7 +224,7 @@ public class DialogoModificar extends JDialog implements ActionListener{
 	}
 
 	private void verificarTiempo() throws TiempoFormatException{
-		if(Integer.valueOf(text2.getText())>59)throw new TiempoFormatException(" ");
+		if(text2!=null)if(Integer.valueOf(text2.getText())>59)throw new TiempoFormatException(" ");
 	}
 
 	@Override

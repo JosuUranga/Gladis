@@ -81,6 +81,7 @@ public class DialogoVar extends JDialog implements ActionListener{
 		JButton boton1 = new JButton ("OK");
 		boton1.addActionListener(this);
 		panel.add(boton1,BorderLayout.CENTER);
+		this.getRootPane().setDefaultButton(boton1);;
 		return panel;
 	}
 	private Component crearPanelDatos() {

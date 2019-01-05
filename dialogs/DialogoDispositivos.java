@@ -274,6 +274,8 @@ public class DialogoDispositivos extends JDialog implements ActionListener{
 			}
 		});
 		panel.add(boton1);
+		this.getRootPane().setDefaultButton(boton1);;
+
 		panel.add(boton2);
 		return panel;
 	}

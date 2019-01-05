@@ -97,6 +97,8 @@ public class DialogoAgrupaciones extends JDialog implements ActionListener{
 		botonCA.setActionCommand("cancel");
 		
 		panel.add(botonOK);
+		this.getRootPane().setDefaultButton(botonOK);;
+
 		panel.add(botonCA);		
 		
 		return panel;
