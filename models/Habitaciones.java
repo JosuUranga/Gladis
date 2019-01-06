@@ -132,7 +132,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 			e.printStackTrace();
 		}
 		reemplazar(fileName,tmp);
-		Reconocedor.actualizaReconocedor();
+		//Reconocedor.actualizaReconocedor();
 	}
 	private void reemplazar(String fileName, String tmp) {
 		String s;

@@ -65,7 +65,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		new EscuchaServidor(this,ips).start();
 		controlador= new Habitaciones();
 		controlador.addPropertyChangeListener(this);
-		controladorAgrupaciones= new Agrupaciones();
+		controladorAgrupaciones= new Agrupaciones(controlador);
 		controladorAgrupaciones.addPropertyChangeListener(this);
 		renderer= new RendererHabitaciones();
 		renderer2= new RendererDispositivos();
@@ -382,7 +382,8 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				controladorAgrupaciones.eleminarDispositivoTodas(listaDispositivos.getSelectedValue());
 				controlador.eleminarDispositivo(listaHabitaciones.getSelectedValue(), listaDispositivos.getSelectedValue());
 			}else {
-				controlador.escribirHabitacion(controlador.getElementAt(0), casa);
+				controlador.escribirHabitacion(controlador.getElementAt(0), casa); //TEST
+				controlador.escribirHabitacion(controlador.getElementAt(1), casa); //TEST
 				controladorAgrupaciones.escribirAgrupacion(listaAgrupaciones.getSelectedValue(), casa); //TEST 
 				controladorAgrupaciones.eleminarDispositivo(listaAgrupaciones.getSelectedValue(),listaDispositivos.getSelectedValue());	
 			}

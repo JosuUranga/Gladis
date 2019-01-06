@@ -24,9 +24,11 @@ import gladis.Habitacion;
 
 public class Agrupaciones extends AbstractListModel<String> {
 	Map<String,List<Dispositivo>>mapa;
+	Map<Habitacion,List<Dispositivo>>mapaCasa;
 	PropertyChangeSupport soporte;
-	public Agrupaciones() {
+	public Agrupaciones(Habitaciones casa) {
 		mapa = new HashMap<>();
+		mapaCasa=casa.getMapa();
 		soporte=new PropertyChangeSupport(this);
 	}
 	public void anadirString(String nombre) {		
@@ -77,6 +79,11 @@ public class Agrupaciones extends AbstractListModel<String> {
 				String key= (String) in.readObject();
 				@SuppressWarnings("unchecked")
 				List<Dispositivo> value=(List<Dispositivo>) in.readObject();
+				mapaCasa.entrySet().forEach(entry->{
+					entry.getValue().forEach(disp->value.forEach(disp2->{
+						if(disp.getNombre().equals(disp2.getNombre()))value.set(value.indexOf(disp2), disp);
+					}));
+				});
 				if(mapa.containsKey(key))mapa.remove(key);
 				mapa.put(key, value);
 				/*for(Dispositivo d:value) {
