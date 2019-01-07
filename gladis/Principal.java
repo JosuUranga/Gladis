@@ -391,9 +391,10 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			listaDispositivos.clearSelection();
 			eliminar=false;
 		}else if(arg0.getSource()==listaDispositivos) {
-			listaAgrupaciones.clearSelection();
 			if(listaDispositivos.getSelectedIndex()!=-1) {
-				listaDispositivos.getSelectedValue().modificar(this);listaDispositivos.clearSelection();
+				if(listaHabitaciones.getSelectedIndex()!=-1)listaDispositivos.getSelectedValue().modificar(this);
+				else if(listaAgrupaciones.getSelectedIndex()!=-1)controladorAgrupaciones.getMapaEstados().get(listaAgrupaciones.getSelectedValue()).get(listaDispositivos.getSelectedIndex()).modificar(this);
+				listaDispositivos.clearSelection();	
 			}
 		}
 	}
@@ -423,7 +424,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		case "agrupacionRecibida":
 			Path w= Paths.get((String)evt.getNewValue());
 			controladorAgrupaciones.descargarAgrupacion(w);
-			controladorAgrupaciones.leerFichero(w.toString());
+			controladorAgrupaciones.leerFichero(w.toString(),controladorAgrupaciones.getMapa());
 			System.out.println(w.toString());
 			propertyChange(new PropertyChangeEvent(this, "dispositivos", true, null));
 			break;
@@ -431,7 +432,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			
 			break;
 		case "comandosDisp": controlador.agregarComandoVar((Dispositivo)evt.getNewValue());
-		System.out.println("ASDALSIHDLASHFOAIÑFJAMÑSOIFASPODIAOPSDMAOPSD");
+		System.out.println("ASDALSIHDLASHFOAIï¿½FJAMï¿½SOIFASPODIAOPSDMAOPSD");
 		break;
 		}
 		

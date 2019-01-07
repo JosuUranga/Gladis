@@ -22,6 +22,7 @@ import java.util.Map.Entry;
 import java.util.stream.Stream;
 
 import javax.swing.AbstractListModel;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import dialogs.DialogoDispositivos;
@@ -30,6 +31,7 @@ import gladis.*;
 
 public class Agrupaciones extends AbstractListModel<String> {
 	Map<String,List<Dispositivo>>mapa;
+	Map<String,List<Dispositivo>>mapaEstados;
 	Map<Habitacion,List<Dispositivo>>mapaCasa;
 	public Map<Habitacion, List<Dispositivo>> getMapaCasa() {
 		return mapaCasa;
@@ -40,6 +42,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 	Habitaciones casa;
 	public Agrupaciones(Habitaciones casa) {
 		mapa = new HashMap<>();
+		mapaEstados=new HashMap<>();
 		mapaCasa=casa.getMapa();
 		this.casa=casa;
 		soporte=new PropertyChangeSupport(this);
@@ -62,6 +65,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 	public void eliminarString (String nombre) {	
 		if (mapa.containsKey(nombre)) {
 			mapa.remove(nombre);
+			mapaEstados.remove(nombre);
 			eliminarComandoAgrupacion(nombre);
 			System.out.println("ELIMINANDO COMANDO: "+nombre);
 			this.fireContentsChanged(mapa, 0, mapa.size());
@@ -89,13 +93,17 @@ public class Agrupaciones extends AbstractListModel<String> {
 	}
 	public void escribirAgrupacion(String agrupacion,String casa) {
 		Set<Entry<String,List<Dispositivo>>> datos = mapa.entrySet();
+		Set<Entry<String,List<Dispositivo>>> datosEstados = mapaEstados.entrySet();
 		datos.stream().forEach(set->{
-			if(set.getKey().equals(agrupacion))escribirFichero(set,casa);
+			if(set.getKey().equals(agrupacion))escribirFichero(set,"files/"+casa+"/"+"agrupaciones/originales/");
+		});
+		datosEstados.stream().forEach(set->{
+			if(set.getKey().equals(agrupacion))escribirFichero(set,"files/"+casa+"/"+"agrupaciones/estados/");
 		});
 	}
 	public void escribirFichero(Entry<String,List<Dispositivo>> habitacion, String casa) {
 		try (ObjectOutputStream out = new ObjectOutputStream(
-			new FileOutputStream("files/"+casa+"/"+"agrupaciones/"+habitacion.getKey()+".dat"))) {
+			new FileOutputStream(casa+habitacion.getKey()+".dat"))) {
 			out.writeObject(habitacion.getKey());
 			out.writeObject(habitacion.getValue());
 			this.fireContentsChanged(mapa, 0, mapa.size());
@@ -111,13 +119,18 @@ public class Agrupaciones extends AbstractListModel<String> {
 		});
 	}
 	public void inicializar(String casa) {
-		File file= new File("files/"+casa+"/agrupaciones/");
+		File file= new File("files/"+casa+"/agrupaciones/originales");
 		File [] habitaciones=file.listFiles();
 		for(int i=0;i<habitaciones.length;i++) {
-			leerFichero("files/"+casa+"/"+"agrupaciones/"+habitaciones[i].getName());
+			leerFichero("files/"+casa+"/"+"agrupaciones/originales/"+habitaciones[i].getName(),mapa);
+		}
+		file= new File("files/"+casa+"/agrupaciones/estados");
+		habitaciones=file.listFiles();
+		for(int i=0;i<habitaciones.length;i++) {
+			leerFichero("files/"+casa+"/"+"agrupaciones/estados/"+habitaciones[i].getName(),mapaEstados);
 		}
 	}
-	public void leerFichero(String filename)
+	public void leerFichero(String filename,Map<String,List<Dispositivo>>map)
 	{
 		try (ObjectInputStream in = new ObjectInputStream(
 				new FileInputStream(filename))) {
@@ -129,14 +142,17 @@ public class Agrupaciones extends AbstractListModel<String> {
 						if(disp.getNombre().equals(disp2.getNombre()))value.set(value.indexOf(disp2), disp);
 					}));
 				});
-				if(mapa.containsKey(key))mapa.remove(key);
-				mapa.put(key, value);
-				/*for(Dispositivo d:value) {
+				if(map.containsKey(key))map.remove(key);
+				map.put(key, value);
+				if(filename.contains("/agupaciones/estados/")) {
+				}else {
+					/*for(Dispositivo d:value) {
 					agregarComando(d);
+					}
+					Reconocedor.actualizaReconocedor();
+					 */
+					this.fireContentsChanged(map, 0, map.size());
 				}
-				Reconocedor.actualizaReconocedor();
-				*/
-				this.fireContentsChanged(mapa, 0, mapa.size());
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -148,17 +164,24 @@ public class Agrupaciones extends AbstractListModel<String> {
 	public String[] getAgrupacionesKeys() {
 		return mapa.keySet().toArray(new String[0]);
 	}
-	public void anadirDispositivos (String nombre,List<Dispositivo> dispositivo) {
+	public void anadirDispositivos (String nombre,List<Dispositivo> dispositivo, Principal principal) {
 		List<Dispositivo>lista = mapa.get(nombre);
 		if(lista==null)lista = new ArrayList<>();
 		lista.addAll(dispositivo);
 		mapa.put(nombre, lista);
+		List<Dispositivo>listaCopy=new ArrayList<>();
+		lista.forEach(disp->listaCopy.add((Dispositivo)disp.clone()));
+		mapaEstados.put(nombre, listaCopy);
 		agregarComandoAgrupacion(nombre);
+		listaCopy.forEach(disp->disp.modificar(principal));
 		System.out.println("ESCRIBIENDO AGRUPACION: "+nombre);
 		this.fireContentsChanged(mapa, 0, mapa.size());
 	}
 	public Map<String, List<Dispositivo>> getMapa() {
 		return mapa;
+	}
+	public Map<String, List<Dispositivo>> getMapaEstados() {
+		return mapaEstados;
 	}
 	public void eleminarDispositivoTodas (Dispositivo dispositivo) {
 		List<String>asdAS=new ArrayList<>();
@@ -172,6 +195,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 	}
 	public void eleminarDispositivo(String nombre, Dispositivo dispositivo) {
 		mapa.get(nombre).remove(dispositivo);
+		mapaEstados.get(nombre).remove(dispositivo);
 		this.fireContentsChanged(mapa, 0, mapa.size());
 		soporte.firePropertyChange("agrupacion", true, false);
 	}

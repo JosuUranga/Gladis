@@ -7,7 +7,7 @@ import java.util.List;
 import dialogs.DialogoModificar;
 
 @SuppressWarnings("serial")
-public class Dispositivo implements Serializable{
+public class Dispositivo implements Serializable, Cloneable{
 
 	String nombre;
 	String imagen;
@@ -130,5 +130,12 @@ public class Dispositivo implements Serializable{
 	public String toString() {
 		return nombre;
 	}
-
+	public Dispositivo clone(){
+        try {
+			return (Dispositivo) super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			return null;
+		}
+    }
 }
