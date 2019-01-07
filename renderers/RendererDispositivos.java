@@ -1,6 +1,7 @@
 package renderers;
 
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -60,6 +61,9 @@ public class RendererDispositivos  implements ListCellRenderer<Dispositivo> {
 			boton.setBorder(BorderFactory.createLoweredBevelBorder());
 			boton.setBackground(new Color(75,140,255));
 			boton.setOpaque(true);
+		}
+		if(dispositivo.isEstado()) {
+			panel.setBorder(BorderFactory.createLineBorder(Color.green));
 		}
 		return panel;
 	     }

@@ -19,7 +19,7 @@ public class Reconocedor {
 	public Reconocedor(	Map<Habitacion,List<Dispositivo>> mapa) {
 		this.mapa=mapa;
 		lista= new ArrayList<>();
-		//iniciarRec();
+//		iniciarRec();
 	}
 
 	

@@ -29,6 +29,10 @@ public class Dispositivo implements Serializable{
 		this.favorito=false;
 		this.usos=0;
 	}
+	public void aumentarUso() {
+		usos++;
+		System.out.println("Usos del idspositivo "+this.getNombre()+": "+usos);
+	}
 	public DialogoModificar getDialogo() {
 		return dialogo;
 	}
@@ -72,6 +76,7 @@ public class Dispositivo implements Serializable{
 	}
 	public void cambiarEstado() {
 		estado = !estado;
+		aumentarUso();
 	}
 
 	public boolean isEstado() {
@@ -86,6 +91,7 @@ public class Dispositivo implements Serializable{
 		else {
 			System.out.println((estado)?"El "+this.nombre+" ya esta encendido":"El "+this.nombre+" ya esta apagado");
 		}
+		aumentarUso();
 	}
 
 	public String getNombre() {
@@ -118,7 +124,7 @@ public class Dispositivo implements Serializable{
 			this.variables=dialogo.getVariables();	
 			this.estado=dialogo.isEstado();
 		 }
-		 
+		aumentarUso();
 	}
 	@Override
 	public String toString() {

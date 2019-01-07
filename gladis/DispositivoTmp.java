@@ -30,6 +30,7 @@ public class DispositivoTmp extends Dispositivo {
 		if (timer.isRunning()) return;
 		estado = true;
 		timer.start();
+		aumentarUso();
 		soporte.firePropertyChange("dispositivoTmp", null, this);
 	}
 	public void stop() {
@@ -55,6 +56,7 @@ public class DispositivoTmp extends Dispositivo {
 	}
 	public void aumentarTiempo() {
 		tiempo.setMinutos(tiempo.getMinutos()+ratio);
+		aumentarUso();
 	}
 	
 	
@@ -66,6 +68,7 @@ public class DispositivoTmp extends Dispositivo {
 			this.estado=dialogo.isEstado();
 			this.tiempo=dialogo.getTiempo();
 		 }
+			aumentarUso();
 	}
 
 }

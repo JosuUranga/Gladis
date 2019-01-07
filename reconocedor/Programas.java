@@ -53,40 +53,44 @@ public class Programas extends ResultAdapter {
 				
 				for(Entry<Habitacion,List<Dispositivo>> entry:set) {
 					lista=entry.getValue();
-					for(Dispositivo a: lista) {
-						if(comando.equals("encender "+ a.getNombre())) {
-							a.setEstado(true);
-							comando="";
-						}
-						else if(comando.equals("apagar "+a.getNombre())) {
-							a.setEstado(false);
-							comando="";
-						}
-						else if(checkVariable(a)) {
-							for(Variable v : a.getVariables()) {
-								System.out.println("El nombre de la variable :"+v.getVar()+":");
-								System.out.println(comando);
-								if(comando.equals("subir "+v.getVar()+" "+a.getNombre())) {
-									System.out.println("Subiendo "+v.getVar()+" "+a.getNombre());
-									v.setVal(v.getVal()+1);
-									System.out.println(v.getVal());
-								}
-								else if(comando.equals("bajar "+v.getVar()+" "+a.getNombre())) {
-									System.out.println("Bajando "+v.getVar()+" "+a.getNombre());
-									v.setVal(v.getVal()-1);
-									System.out.println(v.getVal());
-								}
-							/*	else if(comando.equals("cambiar "+v.getVar()+" "+a.getNombre())) {
-									System.out.println("Subiendo "+v.getVar()+" "+a.getNombre());
-									v.setVal(v.getVal()+1);
-									System.out.println(v.getVal());
-								}*/
+					if(!entry.getKey().isActivo()&& !entry.getKey().isNoMolestar()) {
+						for(Dispositivo a: lista) {
+							if(comando.equals("encender "+ a.getNombre())) {
+								a.setEstado(true);
+								comando="";
 							}
-						}
-						else if(comando.equals("aumentar Tiempo "+a.getNombre()) && a instanceof DispositivoTmp){
-							((DispositivoTmp) a).aumentarTiempo();
-							System.out.println(((DispositivoTmp) a).getTiempo());
-	
+							else if(comando.equals("apagar "+a.getNombre())) {
+								a.setEstado(false);
+								comando="";
+							}
+							else if(checkVariable(a)) {
+								for(Variable v : a.getVariables()) {
+									System.out.println("El nombre de la variable :"+v.getVar()+":");
+									System.out.println(comando);
+									if(comando.equals("subir "+v.getVar()+" "+a.getNombre())) {
+										System.out.println("Subiendo "+v.getVar()+" "+a.getNombre());
+										v.setVal(v.getVal()+1);
+										System.out.println(v.getVal());
+									}
+									else if(comando.equals("bajar "+v.getVar()+" "+a.getNombre())) {
+										System.out.println("Bajando "+v.getVar()+" "+a.getNombre());
+										v.setVal(v.getVal()-1);
+										System.out.println(v.getVal());
+									}
+								/*	else if(comando.equals("cambiar "+v.getVar()+" "+a.getNombre())) {
+										System.out.println("HOLAAAAAAA:    "+Integer.toString(comando.charAt(comando.length())));
+											if(comando.endsWith(Integer.toString(comando.charAt(comando.length()))))
+										System.out.println("Cambiando "+v.getVar()+" "+a.getNombre());
+										v.setVal(Integer.parseInt(String.valueOf(comando.charAt(comando.length()))));
+										System.out.println(v.getVal());
+									}*/
+								}
+							}
+							else if(comando.equals("aumentar Tiempo "+a.getNombre()) && a instanceof DispositivoTmp){
+								((DispositivoTmp) a).aumentarTiempo();
+								System.out.println(((DispositivoTmp) a).getTiempo());
+		
+							}
 						}
 					}
 				}
