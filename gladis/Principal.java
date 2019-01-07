@@ -330,7 +330,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		case "anadirAgrupacion":{
 			if(!controlador.getMapa().keySet().isEmpty()) {
 				dialogoAgrupacion=new DialogoAgrupaciones(this, controladorAgrupaciones);
-				if(dialogoAgrupacion.isCrear())controladorAgrupaciones.anadirDispositivos(dialogoAgrupacion.getNombre(), dialogoAgrupacion.getListaAgrupacion());
+				if(dialogoAgrupacion.isCrear())controladorAgrupaciones.anadirDispositivos(dialogoAgrupacion.getNombre(), dialogoAgrupacion.getListaAgrupacion(), this);
 				listaAgrupaciones.clearSelection();
 				listaHabitaciones.clearSelection();
 				listaDispositivos.setListData(new Dispositivo[0]);
