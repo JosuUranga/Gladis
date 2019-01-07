@@ -6,40 +6,77 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+import java.util.stream.Stream;
 
 import javax.swing.AbstractListModel;
 
-import gladis.Dispositivo;
-import gladis.Habitacion;
+import gladis.*;
 
 public class Agrupaciones extends AbstractListModel<String> {
 	Map<String,List<Dispositivo>>mapa;
 	Map<Habitacion,List<Dispositivo>>mapaCasa;
 	PropertyChangeSupport soporte;
+	Habitaciones casa;
 	public Agrupaciones(Habitaciones casa) {
 		mapa = new HashMap<>();
 		mapaCasa=casa.getMapa();
+		this.casa=casa;
 		soporte=new PropertyChangeSupport(this);
 	}
 	public void anadirString(String nombre) {		
-		mapa.put(nombre, new ArrayList<>());		
+		mapa.put(nombre, new ArrayList<>());
 		this.fireContentsChanged(mapa, 0, mapa.size());
+	}
+	public void agregarComandoAgrupacion(String nombre) {
+		File file = new File("Comandos.txt");
+		try (FileWriter fr= new FileWriter(file, true)){
+				fr.write("\n"+"public <modo"+nombre+"> = <accionAgrupacion> "+nombre+";");
+				fr.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//casa.Reconocedor.actualizaReconocedor();
 	}
 	public void eliminarString (String nombre) {	
 		if (mapa.containsKey(nombre)) {
-			mapa.remove(nombre);	
+			mapa.remove(nombre);
+			eliminarComandoAgrupacion(nombre);
+			System.out.println("ELIMINANDO COMANDO: "+nombre);
 			this.fireContentsChanged(mapa, 0, mapa.size());
 		}
+		
+	}
+	public void eliminarComandoAgrupacion(String nombre) {
+		String fileName="Comandos.txt";
+		String tmp ="tmp.txt";
+		try (Stream<String> stream = Files.lines(Paths.get(fileName));
+				FileWriter fr = new FileWriter(tmp)) {
+			stream.filter(line->!line.trim().contains("public <modo"+nombre+">")).forEach(linea->{
+				try {
+					fr.write(linea+"\n");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		casa.reemplazar(fileName,tmp);
+		//casa.Reconocedor.actualizaReconocedor();
 		
 	}
 	public void escribirAgrupacion(String agrupacion,String casa) {
@@ -108,6 +145,8 @@ public class Agrupaciones extends AbstractListModel<String> {
 		if(lista==null)lista = new ArrayList<>();
 		lista.addAll(dispositivo);
 		mapa.put(nombre, lista);
+		agregarComandoAgrupacion(nombre);
+		System.out.println("ESCRIBIENDO AGRUPACION: "+nombre);
 		this.fireContentsChanged(mapa, 0, mapa.size());
 	}
 	public Map<String, List<Dispositivo>> getMapa() {

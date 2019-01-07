@@ -44,6 +44,7 @@ public class Programas extends ResultAdapter {
 
 			System.out.println();
 			System.out.println("Este es el comando :"+comando+":");
+			if(comando.length()>128) comando=".";
 			if(Programa.equals("gladis")) {
 				comando="";
 			}

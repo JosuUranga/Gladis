@@ -134,7 +134,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 		reemplazar(fileName,tmp);
 		//Reconocedor.actualizaReconocedor();
 	}
-	private void reemplazar(String fileName, String tmp) {
+	public void reemplazar(String fileName, String tmp) {
 		String s;
 		try(FileReader fr = new FileReader(tmp);
 				FileWriter fw = new FileWriter(fileName,false);
@@ -209,12 +209,12 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 				List<Dispositivo> value=(List<Dispositivo>) in.readObject();
 				if(mapa.containsKey(key))mapa.remove(key);
 				mapa.put(key, value);
-				/*for(Dispositivo d:value) {
+				for(Dispositivo d:value) {
 					agregarComando(d);
 					if(d.getTipo().equals("Programable tiempo")||d.getTipo().equals("No Programable")) agregarComandoVar(d);
 				}
-				Reconocedor.actualizaReconocedor();
-				*/
+				//Reconocedor.actualizaReconocedor();
+				
 				this.fireContentsChanged(mapa, 0, mapa.size());
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
