@@ -25,8 +25,10 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
+import exceptions.DialogoNombreRepetidoException;
 import gladis.Dispositivo;
 import gladis.Habitacion;
+import models.Agrupaciones;
 import models.ListaDispositivos;
 
 public class DialogoAgrupaciones extends JDialog implements ActionListener{
@@ -35,22 +37,27 @@ public class DialogoAgrupaciones extends JDialog implements ActionListener{
 	JFrame ventana;
 	JComboBox<Habitacion> combobox;
 	Habitacion[] habitaciones;
-	Map<Habitacion,List<Dispositivo>> mapaCasa;
+	Map<Habitacion,List<Dispositivo>> mapa;
+	Map<String,List<Dispositivo>>mapaAgrupacion;
 	JList<Dispositivo> lista, listaAgrupacion;
 	ListaDispositivos modeloHabitacion;
 	ListaDispositivos modeloAgrupacion;
 	JTextField tnombre;
-	String nombre;
-	
-	public DialogoAgrupaciones(JFrame ventana, Map<Habitacion,List<Dispositivo>> mapa) {
+	boolean crear=false;
+	public void setErrorIgual(boolean errorIgual) {
+		this.errorIgual = errorIgual;
+	}
+
+
+	boolean	errorIgual=false;
+	public DialogoAgrupaciones(JFrame ventana, Agrupaciones controladorAgrupaciones) {
 		super(ventana,"Nueva Agrupacion", true);
 		
-		habitaciones=mapa.keySet().toArray(new Habitacion[0]);
-		mapaCasa=new HashMap<>();
-		mapaCasa.putAll(mapa);
+		habitaciones=controladorAgrupaciones.getMapaCasa().keySet().toArray(new Habitacion[0]);
+		this.mapa=controladorAgrupaciones.getMapaCasa();
+		this.mapaAgrupacion=controladorAgrupaciones.getMapa();
 		modeloHabitacion= new ListaDispositivos();
 		modeloAgrupacion= new ListaDispositivos();
-
 		this.ventana=ventana;
 		this.setSize(600,600);
 		this.setLocation (100,100);
@@ -60,7 +67,7 @@ public class DialogoAgrupaciones extends JDialog implements ActionListener{
 	}
 
 	public String getNombre() {
-		return nombre;
+		return tnombre.getText();
 	}
 	public List<Dispositivo> getListaAgrupacion(){
 		return modeloAgrupacion.getLista();
@@ -154,7 +161,7 @@ public class DialogoAgrupaciones extends JDialog implements ActionListener{
 		lista.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		lista.setModel(modeloHabitacion);
 		panel.setViewportView(lista);
-		mapaCasa.get(combobox.getSelectedItem()).forEach(disp->modeloHabitacion.add(disp));
+		mapa.get(combobox.getSelectedItem()).forEach(disp->modeloHabitacion.add(disp));
 		return panel;
 	}
 
@@ -198,17 +205,23 @@ public class DialogoAgrupaciones extends JDialog implements ActionListener{
 			}
 			lista.setListData(mapaCasa.get(habitaciones[i]).toArray(new Dispositivo[0]));*/
 			modeloHabitacion.clear();
-			mapaCasa.get(combobox.getSelectedItem()).forEach(disp->modeloHabitacion.add(disp));
+			mapa.get(combobox.getSelectedItem()).forEach(disp->modeloHabitacion.add(disp));
 			
 		}
 		if(e.getActionCommand().equals("ok")) {
 			
-			nombre=tnombre.getText();
-			if(nombre.length()==0) {
+			if(this.getListaAgrupacion().isEmpty()) {
+				JOptionPane.showMessageDialog(this, "La lista de la agrupación está vacía","Error",JOptionPane.ERROR_MESSAGE);
+			}
+			else if(tnombre.getText().length()==0) {
 				JOptionPane.showMessageDialog(this, "Debe de introducir un nombre","Error",JOptionPane.ERROR_MESSAGE);
 			}
-			else {
-			this.dispose();
+			else{
+			hayRepetidoNombreAgrupacion(tnombre.getText());
+				if(!errorIgual) {
+				crear=true;
+				this.dispose();
+				}
 			}
 		}
 		if(e.getActionCommand().equals("cancel")) {
@@ -217,5 +230,22 @@ public class DialogoAgrupaciones extends JDialog implements ActionListener{
 		
 		
 		
+	}
+	public void hayRepetidoNombreAgrupacion(String nombreVerificar) {
+		mapaAgrupacion.entrySet().forEach(entry->{
+			if(nombreVerificar.equals(entry.getKey())) {
+					try {
+						throw new DialogoNombreRepetidoException("msg");
+					} catch (DialogoNombreRepetidoException e) {
+						JOptionPane.showMessageDialog(this, "Ya existe una agrupación con ese mismo nombre","Error",JOptionPane.ERROR_MESSAGE);
+						this.setErrorIgual(true);
+					}
+				} 
+		});
+	}
+
+
+	public boolean isCrear() {
+		return crear;
 	}
 }

@@ -24,7 +24,10 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import javax.swing.AbstractListModel;
+import javax.swing.JOptionPane;
 
+import dialogs.DialogoDispositivos;
+import exceptions.DialogoNombreRepetidoException;
 import gladis.*;
 
 import reconocedor.Reconocedor;
@@ -253,5 +256,6 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		soporte.removePropertyChangeListener(listener);
 	}
+	
 
 }

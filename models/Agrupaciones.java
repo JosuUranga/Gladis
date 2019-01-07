@@ -22,12 +22,20 @@ import java.util.Map.Entry;
 import java.util.stream.Stream;
 
 import javax.swing.AbstractListModel;
+import javax.swing.JOptionPane;
 
+import dialogs.DialogoDispositivos;
+import exceptions.DialogoNombreRepetidoException;
 import gladis.*;
 
 public class Agrupaciones extends AbstractListModel<String> {
 	Map<String,List<Dispositivo>>mapa;
 	Map<Habitacion,List<Dispositivo>>mapaCasa;
+	public Map<Habitacion, List<Dispositivo>> getMapaCasa() {
+		return mapaCasa;
+	}
+	
+
 	PropertyChangeSupport soporte;
 	Habitaciones casa;
 	public Agrupaciones(Habitaciones casa) {
@@ -193,4 +201,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 		soporte.removePropertyChangeListener(listener);
 	}
 
+	
+	
+	
 }

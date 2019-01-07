@@ -312,7 +312,8 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			listaHabitaciones.clearSelection();
 			break;
 		
-		case "anadirHabitacion":DialogoHabitacion dialogoHabitacion = new DialogoHabitacion(this);
+		case "anadirHabitacion":
+			DialogoHabitacion dialogoHabitacion = new DialogoHabitacion(this,controlador.getMapa());
 			Habitacion habitacion = dialogoHabitacion.getHabitacion();
 			if(habitacion!=null)controlador.anadirHabitacion(habitacion);
 			listaHabitaciones.clearSelection();
@@ -320,7 +321,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			break;
 			
 		case "anadirDispositivo":
-			DialogoDispositivos dialogoDispositivo = new DialogoDispositivos(this,"Anadir dispositivo",true);
+			DialogoDispositivos dialogoDispositivo = new DialogoDispositivos(this,"Anadir dispositivo",true,controlador.getMapa());
 			if(dialogoDispositivo.getDispositivo()!=null) {
 				controlador.anadirDispositivo(listaHabitaciones.getSelectedValue(), dialogoDispositivo.getDispositivo());
 			}
@@ -328,8 +329,8 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 
 		case "anadirAgrupacion":{
 			if(!controlador.getMapa().keySet().isEmpty()) {
-				dialogoAgrupacion=new DialogoAgrupaciones(this, controlador.getMapa());
-				controladorAgrupaciones.anadirDispositivos(dialogoAgrupacion.getNombre(), dialogoAgrupacion.getListaAgrupacion());
+				dialogoAgrupacion=new DialogoAgrupaciones(this, controladorAgrupaciones);
+				if(dialogoAgrupacion.isCrear())controladorAgrupaciones.anadirDispositivos(dialogoAgrupacion.getNombre(), dialogoAgrupacion.getListaAgrupacion());
 				listaAgrupaciones.clearSelection();
 				listaHabitaciones.clearSelection();
 				listaDispositivos.setListData(new Dispositivo[0]);
