@@ -65,7 +65,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		new EscuchaServidor(this,ips).start();
 		controlador= new Habitaciones();
 		controlador.addPropertyChangeListener(this);
-		controladorAgrupaciones= new Agrupaciones(controlador);
+		controladorAgrupaciones = new Agrupaciones(controlador);
 		controladorAgrupaciones.addPropertyChangeListener(this);
 		renderer= new RendererHabitaciones();
 		renderer2= new RendererDispositivos();

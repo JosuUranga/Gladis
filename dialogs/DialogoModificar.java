@@ -218,8 +218,8 @@ public class DialogoModificar extends JDialog implements ActionListener{
 	}
 	private void verificarVacio() throws VacioException{
 		if(dispositivo.getTipo().equals("Programable tiempo")||dispositivo.getTipo().equals("No programable"))	{
-			if(text1.getText().length()==0)	throw new VacioException("Debe rellenar todos los campos");
-			if(text2.getText().length()==0)	throw new VacioException("Debe rellenar todos los campos");
+			if(text1!=null)if(text1.getText().length()==0)	throw new VacioException("Debe rellenar todos los campos");
+			if(text2!=null)if(text2.getText().length()==0)	throw new VacioException("Debe rellenar todos los campos");
 		}
 	}
 
