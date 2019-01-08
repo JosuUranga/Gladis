@@ -340,14 +340,10 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		}
 			break;
 		case "quitarAgrupacion":{
-			if(!controlador.getMapa().keySet().isEmpty()) {
-				if(listaAgrupaciones.getSelectedValue()!=null)controladorAgrupaciones.eliminarString(listaAgrupaciones.getSelectedValue());
-				listaAgrupaciones.clearSelection();
-				listaHabitaciones.clearSelection();
-				listaDispositivos.setListData(new Dispositivo[0]);
-			}else {
-				JOptionPane.showMessageDialog(this, "No hay habitaciones", "Error", JOptionPane.ERROR_MESSAGE);
-			}
+			if(listaAgrupaciones.getSelectedValue()!=null)controladorAgrupaciones.eliminarString(listaAgrupaciones.getSelectedValue());
+			listaAgrupaciones.clearSelection();
+			listaHabitaciones.clearSelection();
+			listaDispositivos.setListData(new Dispositivo[0]);
 		}
 			break;
 		
