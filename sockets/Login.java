@@ -1,5 +1,6 @@
 package sockets;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -14,6 +15,7 @@ import javax.naming.directory.InitialDirContext;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -23,29 +25,42 @@ import javax.swing.JTextField;
 
 
 @SuppressWarnings("serial")
-public class Login extends JPanel implements ActionListener{
+public class Login extends JDialog implements ActionListener{
 	JTextField usuario;
 	JPasswordField password;
 	JCheckBox recordar;
 	JButton logear;
-	public Login() {
-		this.setLayout(new GridLayout(2,1));
-		this.setBackground(new Color(0,153,255));
-		this.add(crearPanelTitulo(this));
-		this.add(crearPanelCuadro(this));
+	Boolean loginCorrecto;
+	public Login(JFrame ventana) {
+		super(ventana,"Login",true);
+		this.setSize(600,600);
+		this.setLocation (100,100);
+		this.setContentPane(crearPanelGeneral());
+		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);		
+		this.setVisible(true);
+		loginCorrecto=false;
 	}
-	public Container crearPanelTitulo(JPanel panels) {
+	private Container crearPanelGeneral() {
+		JPanel panel = new JPanel(new GridLayout(2,1));
+		panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+		panel.setBackground(new Color(0,153,255));
+		panel.add(crearPanelTitulo());
+		panel.add(crearPanelCuadro());	
+		
+		return panel;
+	}
+	public Container crearPanelTitulo() {
 		JPanel panel=new JPanel();
 		JLabel label= new JLabel("GLADIS");
-		panel.setBackground(panels.getBackground());
+		panel.setBackground(new Color(0,153,255));
 		panel.setBorder(BorderFactory.createEmptyBorder(200,20, 20, 20));
 		panel.add(label);
 		return panel;
 	}
-	public Container crearPanelCuadro(JPanel panels) {
+	public Container crearPanelCuadro() {
 		JPanel panel= new JPanel();
 		panel.setBorder(BorderFactory.createEmptyBorder(20,20, 20, 20));
-		panel.setBackground(panels.getBackground());
+		panel.setBackground(new Color(0,153,255));
 		panel.add(crearPanelLogin());
 		panel.setOpaque(true);
 		return panel;
@@ -106,6 +121,9 @@ public class Login extends JPanel implements ActionListener{
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		checkLogin();
+		loginCorrecto=checkLogin();
+	}
+	public Boolean esCorrecto() {
+		return loginCorrecto;
 	}
 }

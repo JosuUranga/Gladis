@@ -64,7 +64,13 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		super ("Gladis");	
 		this.setSize (800,600);
 		this.setLocation(200,100);
-		this.setContentPane(new Login());
+		Login login = new Login(this);
+		if(!login.esCorrecto()) {
+			this.dispose();
+			System.exit(1);
+		}else {
+			
+		}
 		this.ips=new ArrayList<>();
 		new EscuchaServidor(this,ips).start();
 		controlador= new Habitaciones();
@@ -76,11 +82,12 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		eliminar=false;
 		casa="test";
 		habitacion="salon";
-		//this.setContentPane(crearPanelVentana());
+		this.setContentPane(crearPanelVentana());
 		controlador.inicializar(casa);
 		controladorAgrupaciones.inicializar(casa);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setVisible(true);
+		
 	}
 	private Container crearPanelVentana() {
 		JPanel panel = new JPanel(new BorderLayout());
