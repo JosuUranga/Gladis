@@ -52,7 +52,6 @@ public class DialogoVar extends JDialog implements ActionListener{
 		this.setVisible(true);
 		this.setResizable(false);
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-		//Remove any existing WindowListeners
 		for ( WindowListener wl : this.getWindowListeners())
 		        this.removeWindowListener(wl);
 		this.addWindowListener(new WindowAdapter() {
