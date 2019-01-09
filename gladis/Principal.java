@@ -42,6 +42,7 @@ import renderers.RendererDispositivos;
 import renderers.RendererHabitaciones;
 import sockets.EnvioHabitaciones;
 import sockets.EscuchaServidor;
+import sockets.Login;
 
 public class Principal extends JFrame implements ActionListener, ListSelectionListener, PropertyChangeListener {
 	JMenuBar barra;	
@@ -61,6 +62,9 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 	List<String>ips;
 	public Principal(){		
 		super ("Gladis");	
+		this.setSize (800,600);
+		this.setLocation(200,100);
+		this.setContentPane(new Login());
 		this.ips=new ArrayList<>();
 		new EscuchaServidor(this,ips).start();
 		controlador= new Habitaciones();
@@ -72,9 +76,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		eliminar=false;
 		casa="test";
 		habitacion="salon";
-		this.setSize (800,600);
-		this.setLocation(200,100);
-		this.setContentPane(crearPanelVentana());
+		//this.setContentPane(crearPanelVentana());
 		controlador.inicializar(casa);
 		controladorAgrupaciones.inicializar(casa);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);

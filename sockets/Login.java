@@ -104,10 +104,6 @@ public class Login extends JPanel implements ActionListener{
 			return false;
 		}
 	}
-	
-	public static void main(String[] args) {
-		Login programa = new Login();
-	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		checkLogin();
