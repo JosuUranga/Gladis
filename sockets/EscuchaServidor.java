@@ -20,7 +20,6 @@ public class EscuchaServidor extends Thread{
         try ( 
             ServerSocket serverSocket = new ServerSocket(5001);
         ) {
-        	
             while (escuchando) {
 	            new ComunicacionServidor(serverSocket.accept(),listener,ips).start();
 	        }

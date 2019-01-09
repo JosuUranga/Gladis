@@ -74,62 +74,11 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		habitacion="salon";
 		this.setSize (800,600);
 		this.setLocation(200,100);
-//		this.setJMenuBar(crearBarraMenu());
 		this.setContentPane(crearPanelVentana());
 		controlador.inicializar(casa);
 		controladorAgrupaciones.inicializar(casa);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setVisible(true);
-	}
-	private JMenuBar crearBarraMenu() {
-		barra =  new JMenuBar();
-		barra.add(crearMenuEditar());
-		barra.add(Box.createHorizontalGlue());
-		barra.add(crearMenuSalir());
-		
-		return barra;
-	}
-	private JMenu crearMenuSalir() {
-		salir = new JMenu("Salir");
-		cerrar= new JMenuItem("Salir");
-		cerrar.setIcon(new ImageIcon("img/salir.png"));
-		cerrar.addActionListener(this);
-		cerrar.setActionCommand("cerrar");
-		salir.add(cerrar);		
-		return salir;
-	}
-	
-	private JMenu crearMenuEditar() {
-		editar = new JMenu("Editar");
-		anadirHabitacion= new JMenuItem("Anadir Habitacion");
-		anadirHabitacion.setIcon(new ImageIcon("img/anadir.png"));
-		anadirHabitacion.setActionCommand("anadirHabitacion");
-		anadirHabitacion.addActionListener(this);
-		
-		quitarHabitacion= new JMenuItem("Quitar Habitacion");
-		quitarHabitacion.setIcon(new ImageIcon("img/quitar.png"));
-		quitarHabitacion.setActionCommand("quitarHabitacion");
-		quitarHabitacion.addActionListener(this);	
-		
-		anadirDispositivo= new JMenuItem("Anadir Dispositivo");
-		anadirDispositivo.setIcon(new ImageIcon("img/anadir.png"));
-		anadirDispositivo.setActionCommand("anadirDispositivo");
-		anadirDispositivo.addActionListener(this);
-		
-		quitarDispositivo= new JMenuItem("Quitar Dispositivo");
-		quitarDispositivo.setIcon(new ImageIcon("img/quitar.png"));
-		quitarDispositivo.setActionCommand("quitarDispositivo");
-		quitarDispositivo.addActionListener(this);
-		
-		editar.add(anadirHabitacion);
-		editar.add(quitarHabitacion);
-		editar.addSeparator();
-		editar.add(anadirDispositivo);
-		editar.add(quitarDispositivo);	
-		
-		
-		
-		return editar;
 	}
 	private Container crearPanelVentana() {
 		JPanel panel = new JPanel(new BorderLayout());
