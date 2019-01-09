@@ -113,8 +113,7 @@ public class Login extends JDialog implements ActionListener{
 			ctx = new InitialDirContext(env);
 			return true;
 		} catch (NamingException er) {
-			System.out.println("Problem occurs during context initialization !");
-			er.printStackTrace();
+			System.out.println("No se ha podido establecer conexion con el servidor");
 			return false;
 		}
 	}
@@ -124,5 +123,11 @@ public class Login extends JDialog implements ActionListener{
 	}
 	public Boolean esCorrecto() {
 		return loginCorrecto;
+	}
+	public String getUsername() {
+		return usuario.getText();
+	}
+	public String getPassword() {
+		return String.valueOf(password.getPassword());
 	}
 }
