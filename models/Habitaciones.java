@@ -81,13 +81,13 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 		lista.remove(dispositivo);
 		mapa.replace(habitacion, mapa.get(habitacion), lista);
 		if(!dispositivo.getTipo().equals("Programable tiempo") &&!dispositivo.getTipo().equals("No programable") ) {
-			eliminarComando(dispositivo,"public <"+dispositivo.getNombre()+"> = <accion> [<variables>] "+dispositivo.getNombre()+";");
+			//eliminarComando(dispositivo,"public <"+dispositivo.getNombre()+"> = <accion> [<variables>] "+dispositivo.getNombre()+";");
 		}
 		else {
-			eliminarComando(dispositivo,"public <"+dispositivo.getNombre()+"> = <accion> [<"+dispositivo.getNombre()+"Variables>] "+dispositivo.getNombre()+";");
+			//eliminarComando(dispositivo,"public <"+dispositivo.getNombre()+"> = <accion> [<"+dispositivo.getNombre()+"Variables>] "+dispositivo.getNombre()+";");
 			String lineToRemove=leerLineaVariables(dispositivo);
 			System.out.println("ESTO HA BORRADO: "+lineToRemove);
-			eliminarComando(dispositivo, lineToRemove);
+			//eliminarComando(dispositivo, lineToRemove);
 		}
 		if(dispositivo instanceof DispositivoTmp) eliminarComando(dispositivo, "public <"+dispositivo.getNombre()+"Tiempo> = <tiempo> "+dispositivo.getNombre()+";");
 		soporte.firePropertyChange("dispositivos", true, false);

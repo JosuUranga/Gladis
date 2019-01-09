@@ -6,6 +6,9 @@ import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
@@ -20,6 +23,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 
 import exceptions.MaxMinException;
 import exceptions.NombreVariableException;
@@ -47,8 +51,18 @@ public class DialogoVar extends JDialog implements ActionListener{
 		this.setContentPane(crearPanelVentana());
 		this.setVisible(true);
 		this.setResizable(false);
-		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-	}
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		//Remove any existing WindowListeners
+		for ( WindowListener wl : this.getWindowListeners())
+		        this.removeWindowListener(wl);
+		this.addWindowListener(new WindowAdapter() {
+		        @Override
+		        public void windowClosing(WindowEvent e) {
+		                 if ("Optional condition" != null) {
+		                      JOptionPane.showMessageDialog(null, "No puedes cerrar esta ventana", "Aviso", JOptionPane.WARNING_MESSAGE);
+		                 }
+		        }
+		});	}
 
 	private void crearTamano() {
 		if(dispositivo.getTipo().equals("Programable tiempo")||dispositivo.getTipo().equals("No programable"))	{
@@ -237,7 +251,7 @@ public class DialogoVar extends JDialog implements ActionListener{
 			} catch (ValorInicialException c) {
 				JOptionPane.showMessageDialog(this, "El valor inicial tiene que estar entre los valores Maximos y Minimos", "Aviso" , JOptionPane.WARNING_MESSAGE);
 			} catch (NombreVariableException c) {
-				JOptionPane.showMessageDialog(this, "Introduce un nombre valido", "Aviso" , JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(this, "Introduce un nombre de variable valido", "Aviso" , JOptionPane.WARNING_MESSAGE);
 			}
 		}
 	}

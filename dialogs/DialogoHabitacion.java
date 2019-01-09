@@ -29,7 +29,7 @@ public class DialogoHabitacion extends JDialog implements ActionListener {
 	boolean errorIgual=false;
 	Map<Habitacion,List<Dispositivo>> mapa;
 	public DialogoHabitacion(JFrame ventana,Map<Habitacion,List<Dispositivo>> mapa) {
-		super (ventana, "Aï¿½adir Habitacion",true);	
+		super (ventana, "Añadir Habitacion",true);	
 		this.mapa=mapa;
 		this.setSize(550,250);
 		this.setLocation(260,180);

@@ -160,119 +160,118 @@ public class DialogoDispositivos extends JDialog implements ActionListener{
 				
 				check(nombre.getText());	
 				if(!errorRellenar && !errorIgual) {
-				switch((String) comboTipo.getSelectedItem()) {
-				case "Luz Normal":{
-					dispositivo=new Dispositivo(nombre.getText(),"img/luz.png",null,(String) comboTipo.getSelectedItem());
-					break;
-				}
-				case "Luz RGB":{
-					dispositivo=new Dispositivo(nombre.getText(),"img/luz.png",null,(String) comboTipo.getSelectedItem());
-					dispositivo.addVariable(new Variable("Color"));
-					 dialogo=new DialogoVar(ventana,dispositivo);
-					break;
-				}
-				case "Luz Gradual":{
-					dispositivo=new Dispositivo(nombre.getText(),"img/luz.png",null,(String) comboTipo.getSelectedItem());
-					dispositivo.addVariable(new Variable("Intensidad"));
-					 dialogo=new DialogoVar(ventana,dispositivo);
-					break;
-				}
-				case "Frigorífico":{
-					dispositivo=new Dispositivo(nombre.getText(),"img/frigorifico.png",null,(String) comboTipo.getSelectedItem());
-					dispositivo.addVariable(new Variable("Temperatura"));
-					 dialogo=new DialogoVar(ventana,dispositivo);
-					break;
-				}
-				case "Lavadora":{
-					dispositivo=new Dispositivo(nombre.getText(),"img/lavadora.png",null,(String) comboTipo.getSelectedItem());
-					dispositivo.addVariable(new Variable("Programa"));
-					 dialogo=new DialogoVar(ventana,dispositivo);
-					break;
-				}
-				case "Lavavajillas":{
-					dispositivo=new Dispositivo(nombre.getText(),"img/lavavajillas.png",null,(String) comboTipo.getSelectedItem());
-					dispositivo.addVariable(new Variable("Modo"));
-					 dialogo=new DialogoVar(ventana,dispositivo);
-					break;
-				}
-				case "Microondas":{
-					dispositivo=new DispositivoTmp(nombre.getText(),"img/microondas.png",null,(String) comboTipo.getSelectedItem(), 60);
-					dispositivo.addVariable(new Variable("Modo"));
-					 dialogo=new DialogoVar(ventana,dispositivo);
-					break;
-				}
-				case "Horno":{
-					dispositivo=new DispositivoTmp(nombre.getText(),"img/horno.png",null,(String) comboTipo.getSelectedItem(), 300);
-					dispositivo.addVariable(new Variable("Temperatura"));
-					 dialogo=new DialogoVar(ventana,dispositivo);
-					break;
-				}
-				case "Equipo de música": {
-					dispositivo=new Dispositivo(nombre.getText(),"img/equipodemusica.png",null,(String) comboTipo.getSelectedItem());
-					dispositivo.addVariable(new Variable("Volumen"));
-					dispositivo.addVariable(new Variable("Cancion"));
-					 dialogo=new DialogoVar(ventana,dispositivo);
-					break;
-				}
-				case "Despertador":{
-					dispositivo=new DispositivoTmp(nombre.getText(),"img/despertador.png",null,(String) comboTipo.getSelectedItem(),60);
-					 dialogo=new DialogoVar(ventana,dispositivo);
-					break;
-				}
-				case "Temperatura":{
-					dispositivo=new DispositivoTmp(nombre.getText(),"img/temperatura.png",null,(String) comboTipo.getSelectedItem(), 300);
-					dispositivo.addVariable(new Variable("Temperatura"));
-					 dialogo=new DialogoVar(ventana,dispositivo);
-					break;
-				}
-				case "Televisión":{
-					dispositivo=new Dispositivo(nombre.getText(),"img/television.png",null,(String) comboTipo.getSelectedItem());
-					dispositivo.addVariable(new Variable("Volumen"));
-					dispositivo.addVariable(new Variable("Canal"));
-					 dialogo=new DialogoVar(ventana,dispositivo);
-					break;
-				}
-				case "Programable tiempo":
-					try {
-						numVariables= Integer.parseInt(tvariables.getText());
-						int intRatio= Integer.parseInt(tratio.getText());
-						dispositivo=new DispositivoTmp(nombre.getText(),"img/otros.png",null,(String) comboTipo.getSelectedItem(), intRatio);
-						for( int i =0; i<numVariables; i++) {
-							dispositivo.addVariable(new Variable(" "));
-						}
-						if(numVariables>0) {
-							dialogo=new DialogoVar(ventana,dispositivo);
-							dialogo.addPropertyChangeListener((Principal)ventana);
-						}
-					} catch (NumberFormatException e1) {
-						errorRellenar=true;
+				System.out.println("entro");
+					switch((String) comboTipo.getSelectedItem()) {
+					case "Luz Normal":{
+						dispositivo=new Dispositivo(nombre.getText(),"img/luz.png",null,(String) comboTipo.getSelectedItem());
+						break;
 					}
-					break;
-				case "No programable":
-					try {
-						numVariables= Integer.parseInt(tvariables.getText());
-						dispositivo=new Dispositivo(nombre.getText(),"img/otros.png",null,(String) comboTipo.getSelectedItem());
-						for( int i =0; i<numVariables; i++) {
-							dispositivo.addVariable(new Variable(" "));
-						}
-						if(numVariables>0) {
-							dialogo=new DialogoVar(ventana,dispositivo);
-							dialogo.addPropertyChangeListener((Principal)ventana);
+					case "Luz RGB":{
+						dispositivo=new Dispositivo(nombre.getText(),"img/luz.png",null,(String) comboTipo.getSelectedItem());
+						dispositivo.addVariable(new Variable("Color"));
+						 dialogo=new DialogoVar(ventana,dispositivo);
+						break;
+					}
+					case "Luz Gradual":{
+						dispositivo=new Dispositivo(nombre.getText(),"img/luz.png",null,(String) comboTipo.getSelectedItem());
+						dispositivo.addVariable(new Variable("Intensidad"));
+						 dialogo=new DialogoVar(ventana,dispositivo);
+						break;
+					}
+					case "Frigorífico":{
+						dispositivo=new Dispositivo(nombre.getText(),"img/frigorifico.png",null,(String) comboTipo.getSelectedItem());
+						dispositivo.addVariable(new Variable("Temperatura"));
+						 dialogo=new DialogoVar(ventana,dispositivo);
+						break;
+					}
+					case "Lavadora":{
+						dispositivo=new Dispositivo(nombre.getText(),"img/lavadora.png",null,(String) comboTipo.getSelectedItem());
+						dispositivo.addVariable(new Variable("Programa"));
+						 dialogo=new DialogoVar(ventana,dispositivo);
+						break;
+					}
+					case "Lavavajillas":{
+						dispositivo=new Dispositivo(nombre.getText(),"img/lavavajillas.png",null,(String) comboTipo.getSelectedItem());
+						dispositivo.addVariable(new Variable("Modo"));
+						 dialogo=new DialogoVar(ventana,dispositivo);
+						break;
+					}
+					case "Microondas":{
+						dispositivo=new DispositivoTmp(nombre.getText(),"img/microondas.png",null,(String) comboTipo.getSelectedItem(), 60);
+						dispositivo.addVariable(new Variable("Modo"));
+						 dialogo=new DialogoVar(ventana,dispositivo);
+						break;
+					}
+					case "Horno":{
+						dispositivo=new DispositivoTmp(nombre.getText(),"img/horno.png",null,(String) comboTipo.getSelectedItem(), 300);
+						dispositivo.addVariable(new Variable("Temperatura"));
+						 dialogo=new DialogoVar(ventana,dispositivo);
+						break;
+					}
+					case "Equipo de música": {
+						dispositivo=new Dispositivo(nombre.getText(),"img/equipodemusica.png",null,(String) comboTipo.getSelectedItem());
+						dispositivo.addVariable(new Variable("Volumen"));
+						dispositivo.addVariable(new Variable("Cancion"));
+						 dialogo=new DialogoVar(ventana,dispositivo);
+						break;
+					}
+					case "Despertador":{
+						dispositivo=new DispositivoTmp(nombre.getText(),"img/despertador.png",null,(String) comboTipo.getSelectedItem(),60);
+						 dialogo=new DialogoVar(ventana,dispositivo);
+						break;
+					}
+					case "Temperatura":{
+						dispositivo=new DispositivoTmp(nombre.getText(),"img/temperatura.png",null,(String) comboTipo.getSelectedItem(), 300);
+						dispositivo.addVariable(new Variable("Temperatura"));
+						 dialogo=new DialogoVar(ventana,dispositivo);
+						break;
+					}
+					case "Televisión":{
+						dispositivo=new Dispositivo(nombre.getText(),"img/television.png",null,(String) comboTipo.getSelectedItem());
+						dispositivo.addVariable(new Variable("Volumen"));
+						dispositivo.addVariable(new Variable("Canal"));
+						 dialogo=new DialogoVar(ventana,dispositivo);
+						break;
+					}
+					case "Programable tiempo":
+						try {
+							numVariables= Integer.parseInt(tvariables.getText());
+							int intRatio= Integer.parseInt(tratio.getText());
+							dispositivo=new DispositivoTmp(nombre.getText(),"img/otros.png",null,(String) comboTipo.getSelectedItem(), intRatio);
+							for( int i =0; i<numVariables; i++) {
+								dispositivo.addVariable(new Variable(" "));
+							}
+							if(numVariables>0) {
+								dialogo=new DialogoVar(ventana,dispositivo);
+								dialogo.addPropertyChangeListener((Principal)ventana);
+							}
+						} catch (NumberFormatException e1) {
+							errorRellenar=true;
 						}
 						break;
-					} catch (NumberFormatException e) {
-						errorRellenar=true;
-					}
-					break;				
-				default: break;
-				}	
-							
+					case "No programable":
+						try {
+							numVariables= Integer.parseInt(tvariables.getText());
+							dispositivo=new Dispositivo(nombre.getText(),"img/otros.png",null,(String) comboTipo.getSelectedItem());
+							for( int i =0; i<numVariables; i++) {
+								dispositivo.addVariable(new Variable(" "));
+							}
+							if(numVariables>0) {
+								dialogo=new DialogoVar(ventana,dispositivo);
+								dialogo.addPropertyChangeListener((Principal)ventana);
+							}
+							break;
+						} catch (NumberFormatException e) {
+							errorRellenar=true;
+						}
+						break;				
+					default: break;
+					}	
 				DialogoDispositivos.this.dispose();
 				}
 				else {
-					if(!errorIgual)JOptionPane.showMessageDialog(DialogoDispositivos.this, "Debe rellenar todos los campos","Error",JOptionPane.ERROR_MESSAGE);
+					if(!errorIgual)JOptionPane.showMessageDialog(DialogoDispositivos.this, "Debe rellenar todos los camposxd","Error",JOptionPane.ERROR_MESSAGE);
 				}
-				
 			}
 		});
 	
@@ -289,9 +288,12 @@ public class DialogoDispositivos extends JDialog implements ActionListener{
 		return panel;
 	}
 	private void check(String nombreVerificar) {
+		errorRellenar=false;
+		errorIgual=false;
 		if(nombre.getText().length()==0) {
 			errorRellenar=true;
 		}
+
 		hayRepetidoNombreDispositivo(nombreVerificar);	
 	}
 	public void hayRepetidoNombreDispositivo(String nombreVerificar){
