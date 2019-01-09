@@ -34,7 +34,7 @@ public class Login extends JDialog implements ActionListener{
 	public Login(JFrame ventana) {
 		super(ventana,"Login",true);
 		this.setSize(600,600);
-		this.setLocation (100,100);
+		this.setLocation (600,200);
 		this.setContentPane(crearPanelGeneral());
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);		
 		this.setVisible(true);
@@ -46,7 +46,6 @@ public class Login extends JDialog implements ActionListener{
 		panel.setBackground(new Color(0,153,255));
 		panel.add(crearPanelTitulo());
 		panel.add(crearPanelCuadro());	
-		
 		return panel;
 	}
 	public Container crearPanelTitulo() {

@@ -65,7 +65,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		this.setSize (800,600);
 		this.setLocation(200,100);
 		Login login = new Login(this);
-		if(!login.esCorrecto()) {
+		if(login.esCorrecto()) {
 			this.dispose();
 			System.exit(1);
 		}else {
