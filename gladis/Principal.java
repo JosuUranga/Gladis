@@ -10,8 +10,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -40,9 +38,9 @@ import models.Agrupaciones;
 import models.Habitaciones;
 import renderers.RendererDispositivos;
 import renderers.RendererHabitaciones;
-import sockets.EnvioHabitaciones;
-import sockets.EscuchaServidor;
 import sockets.Login;
+import sockets.envioFTP;
+import sockets.recibirFTP;
 
 public class Principal extends JFrame implements ActionListener, ListSelectionListener, PropertyChangeListener {
 	JMenuBar barra;	
@@ -59,11 +57,12 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 	Agrupaciones controladorAgrupaciones;
 	JList<String>listaAgrupaciones;
 	DialogoAgrupaciones dialogoAgrupacion;
-	List<String>ips;
 	public Principal(){		
 		super ("Gladis");	
 		this.setSize (800,600);
 		this.setLocation(200,100);
+		envioFTP asadsad=new envioFTP("172.17.23.143","test","Administrador","12345678aA@");
+		asadsad.start();
 		Login login = new Login(this);
 		if(login.esCorrecto()) {
 			this.dispose();
@@ -71,8 +70,6 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		}else {
 			
 		}
-		this.ips=new ArrayList<>();
-		new EscuchaServidor(this,ips).start();
 		controlador= new Habitaciones();
 		controlador.addPropertyChangeListener(this);
 		controladorAgrupaciones = new Agrupaciones(controlador);
@@ -366,7 +363,6 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			if(listaDispositivos.getModel().getSize()==0)bquitarDispositivo.setEnabled(false);
 			break;
 		case "envioHabitacion":
-			new EnvioHabitaciones("127.0.0.1","files/"+casa+"/"+((Habitacion) evt.getNewValue()).getNombre()+".dat").start();
 			break;
 		case "habitacionRecibida":
 			Path p= Paths.get((String)evt.getNewValue());
