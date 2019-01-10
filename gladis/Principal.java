@@ -310,6 +310,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			if(listaHabitaciones.getSelectedIndex()==-1) {
 				bquitarHabitacion.setEnabled(false);
 			}else {
+				
 				propertyChange(new PropertyChangeEvent(this, "dispositivos", true, null));
 				bquitarHabitacion.setEnabled(true);
 				banadirDispositivo.setEnabled(true);
@@ -357,14 +358,12 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			if(listaDispositivos.getModel().getSize()==0)bquitarDispositivo.setEnabled(false);
 			break;
 		case "envioHabitacion":
-			new EnvioHabitaciones("127.0.0.1","files/"+casa+"/"+((Habitacion) evt.getNewValue()).getNombre()+".dat").start();
+			new EnvioHabitaciones("127.0.0.1","files/"+casa+"/habitaciones"+((Habitacion) evt.getNewValue()).getNombre()+".dat").start();
 			break;
 		case "habitacionRecibida":
 			Path p= Paths.get((String)evt.getNewValue());
 			controlador.descargarHabitacion(p);
 			controlador.leerFichero(p.toString());
-			System.out.println(p.toString());
-			propertyChange(new PropertyChangeEvent(this, "dispositivos", true, null));
 			break;
 		case "agrupacionRecibida":
 			Path w= Paths.get((String)evt.getNewValue());
