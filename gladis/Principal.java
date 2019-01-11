@@ -345,6 +345,8 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			if(listaHabitaciones.getSelectedIndex()!=-1) {
 				controladorAgrupaciones.eleminarDispositivoTodas(listaDispositivos.getSelectedValue());
 				controlador.eleminarDispositivo(listaHabitaciones.getSelectedValue(), listaDispositivos.getSelectedValue());
+				controlador.escribirHabitacion(listaHabitaciones.getSelectedValue(), casa);
+				propertyChange(new PropertyChangeEvent(this, "envioHabitacion", "enviar", listaHabitaciones.getSelectedValue()));
 			}else {
 				controladorAgrupaciones.eleminarDispositivo(listaAgrupaciones.getSelectedValue(),listaDispositivos.getSelectedValue());	
 			}
@@ -352,8 +354,16 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			eliminar=false;
 		}else if(arg0.getSource()==listaDispositivos) {
 			if(listaDispositivos.getSelectedIndex()!=-1) {
-				if(listaHabitaciones.getSelectedIndex()!=-1)listaDispositivos.getSelectedValue().modificar(this);
-				else if(listaAgrupaciones.getSelectedIndex()!=-1)controladorAgrupaciones.getMapaEstados().get(listaAgrupaciones.getSelectedValue()).get(listaDispositivos.getSelectedIndex()).modificar(this);
+				if(listaHabitaciones.getSelectedIndex()!=-1) {
+					listaDispositivos.getSelectedValue().modificar(this);
+					controlador.escribirHabitacion(listaHabitaciones.getSelectedValue(), casa);
+					propertyChange(new PropertyChangeEvent(this, "envioHabitacion", "enviar", listaHabitaciones.getSelectedValue()));
+				}
+				else if(listaAgrupaciones.getSelectedIndex()!=-1) {
+					controladorAgrupaciones.getMapaEstados().get(listaAgrupaciones.getSelectedValue()).get(listaDispositivos.getSelectedIndex()).modificar(this);
+					controladorAgrupaciones.escribirAgrupacion(listaAgrupaciones.getSelectedValue(), casa);
+					propertyChange(new PropertyChangeEvent(this, "envioAgrupacion", "enviar", listaAgrupaciones.getSelectedValue()));
+				}
 				listaDispositivos.clearSelection();	
 			}
 		}

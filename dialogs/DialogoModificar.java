@@ -8,6 +8,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -31,7 +32,7 @@ import gladis.Principal;
 import gladis.Tiempo;
 import gladis.Variable;
 
-public class DialogoModificar extends JDialog implements ActionListener{
+public class DialogoModificar extends JDialog implements ActionListener, Serializable{
 	
 	JRadioButton on, off;
 	Dispositivo dispositivo;
@@ -256,7 +257,7 @@ public class DialogoModificar extends JDialog implements ActionListener{
 			} catch (VacioException e1) {
 				JOptionPane.showMessageDialog(this, "Debe rellenar todos los campos", "Aviso" , JOptionPane.WARNING_MESSAGE);
 			} catch (TiempoFormatException e1) {
-				JOptionPane.showMessageDialog(this, "Debe introducir un tiempo válido", "Aviso" , JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(this, "Debe introducir un tiempo vï¿½lido", "Aviso" , JOptionPane.WARNING_MESSAGE);
 
 			}
 			break;

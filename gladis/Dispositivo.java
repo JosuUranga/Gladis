@@ -8,7 +8,6 @@ import dialogs.DialogoModificar;
 
 @SuppressWarnings("serial")
 public class Dispositivo implements Serializable, Cloneable{
-
 	String nombre;
 	String imagen;
 	String ip;
