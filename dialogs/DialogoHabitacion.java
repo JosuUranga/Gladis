@@ -87,22 +87,21 @@ public class DialogoHabitacion extends JDialog implements ActionListener {
 		return habitacion;
 	}
 	public void hayRepetidoNombreHabitacion(String nombreVerificar) {
+		errorIgual=false;
 		mapa.entrySet().forEach(entry->{
 			if(nombreVerificar.equals(entry.getKey().getNombre())) {
 				try {
 					throw new DialogoNombreRepetidoException("msg");
 				} catch (DialogoNombreRepetidoException e) {
 					JOptionPane.showMessageDialog(this, "Ya existe una habitacion con ese mismo nombre","Error",JOptionPane.ERROR_MESSAGE);
-					this.setErrorIgual(true);
+					errorIgual=true;
 				}
 			} 	
 		});	
 	}
-	public void setErrorIgual(boolean errorIgual) {
-		this.errorIgual = errorIgual;
-	}
-
+	
 	private void check(String nombreVerificar) {
+		errorRellenar=false;
 		if(nombre.getText().length()==0) {
 			errorRellenar=true;
 		}
