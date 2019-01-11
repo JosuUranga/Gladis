@@ -25,7 +25,7 @@ public class EnvioHabitaciones extends Thread{
         	ObjectInputStream  in = new ObjectInputStream(socket.getInputStream());
         	ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
         ) {
-        	if(habitacion==null) {
+        	if(habitacion!=null) {
         		Object object;
                 int num=0;
                 Boolean nombre=false;

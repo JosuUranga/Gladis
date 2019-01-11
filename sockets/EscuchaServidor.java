@@ -8,11 +8,9 @@ import java.io.*;
 
 public class EscuchaServidor extends Thread{
 	PropertyChangeListener listener;
-	List<String>ips;
-	public EscuchaServidor (PropertyChangeListener listener,List<String>ips) {
+	public EscuchaServidor (PropertyChangeListener listener) {
 		super("escuchaCliente");
 		this.listener=listener;
-		this.ips=ips;
 	}
 	
     public void run() {
@@ -21,7 +19,7 @@ public class EscuchaServidor extends Thread{
             ServerSocket serverSocket = new ServerSocket(5001);
         ) {
             while (escuchando) {
-	            new ComunicacionServidor(serverSocket.accept(),listener,ips).start();
+	            new ComunicacionServidor(serverSocket.accept(),listener).start();
 	        }
     	} catch (IOException e) {
 

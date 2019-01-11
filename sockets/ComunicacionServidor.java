@@ -8,37 +8,31 @@ import java.io.*;
 
 public class ComunicacionServidor extends Thread {
     private Socket socket = null;
-    List<String>ips;
     PropertyChangeSupport soporte;
-    public ComunicacionServidor(Socket socket,PropertyChangeListener listener,List<String>ips) {
+    public ComunicacionServidor(Socket socket,PropertyChangeListener listener) {
         super("comunicacionCliente");
         this.socket = socket;
-        this.ips=ips;
         soporte=new PropertyChangeSupport(this);
         this.addPropertyChangeListener(listener);
-       
     }
     public void run() {
         try (
         		ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
         		ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
         ) {
-            String nombreArchivo=null;
+            String nombreArchivo="";
             Object object;
             Boolean esAgrupacion=false;
             List<Object>archivo=new ArrayList<>();
             out.writeObject("Conexion establecida");
             try {
 				while ((object = in.readObject()) != null) {
-					if(object instanceof String) {
+					 System.out.println(object);
+					if(object instanceof String&& !nombreArchivo.contains((String) object)) {
 						 if(((String) object).endsWith(".dat")) {
 						    	nombreArchivo=(String)object;
 						    	if (nombreArchivo.contains("/agrupaciones/")) esAgrupacion=true;
 						    	out.writeObject("Nombre Recibido");
-						 }
-						 if(((String)object).equals("Hola!")) {
-							 ips.add(socket.getRemoteSocketAddress().toString());
-							 break;
 						 }
 						 if(object.equals("Finalizado")) {
 							 try (ObjectOutputStream outf = new ObjectOutputStream(

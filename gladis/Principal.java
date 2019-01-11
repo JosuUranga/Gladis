@@ -58,11 +58,10 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 	Agrupaciones controladorAgrupaciones;
 	JList<String>listaAgrupaciones;
 	DialogoAgrupaciones dialogoAgrupacion;
-	List<String>ips;
 	public Principal(){		
 		super ("Gladis");	
-		this.ips=new ArrayList<>();
-		new EscuchaServidor(this,ips).start();
+		new EscuchaServidor(this).start();
+		new EnvioHabitaciones("172.17.21.64", null).start();
 		controlador= new Habitaciones();
 		controlador.addPropertyChangeListener(this);
 		controladorAgrupaciones = new Agrupaciones(controlador);
@@ -320,6 +319,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				listaDispositivos.setListData(controladorAgrupaciones.getDispositivosData(listaAgrupaciones.getSelectedValue()));
 				bquitarAgrupacion.setEnabled(true);
 				banadirDispositivo.setEnabled(false);
+				bquitarDispositivo.setEnabled(true);
 			}else {
 				bquitarAgrupacion.setEnabled(false);
 			}
@@ -331,6 +331,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				controlador.escribirHabitacion(controlador.getElementAt(0), casa); //TEST
 				controlador.escribirHabitacion(controlador.getElementAt(1), casa); //TEST
 				controladorAgrupaciones.escribirAgrupacion(listaAgrupaciones.getSelectedValue(), casa); //TEST 
+				propertyChange(new PropertyChangeEvent(this, "envioHabitacion", null,controlador.getElementAt(0)));
 				controladorAgrupaciones.eleminarDispositivo(listaAgrupaciones.getSelectedValue(),listaDispositivos.getSelectedValue());	
 			}
 			listaDispositivos.clearSelection();
@@ -357,21 +358,17 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			if(listaDispositivos.getModel().getSize()==0)bquitarDispositivo.setEnabled(false);
 			break;
 		case "envioHabitacion":
-			new EnvioHabitaciones("127.0.0.1","files/"+casa+"/"+((Habitacion) evt.getNewValue()).getNombre()+".dat").start();
+			new EnvioHabitaciones("172.17.21.64","files/"+casa+"/habitaciones/"+((Habitacion) evt.getNewValue()).getNombre()+".dat").start();
 			break;
 		case "habitacionRecibida":
 			Path p= Paths.get((String)evt.getNewValue());
 			controlador.descargarHabitacion(p);
 			controlador.leerFichero(p.toString());
-			System.out.println(p.toString());
-			propertyChange(new PropertyChangeEvent(this, "dispositivos", true, null));
 			break;
 		case "agrupacionRecibida":
 			Path w= Paths.get((String)evt.getNewValue());
 			controladorAgrupaciones.descargarAgrupacion(w);
 			controladorAgrupaciones.leerFichero(w.toString(),controladorAgrupaciones.getMapa());
-			System.out.println(w.toString());
-			propertyChange(new PropertyChangeEvent(this, "dispositivos", true, null));
 			break;
 		case "habitacion":
 			
