@@ -50,12 +50,15 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 			leerFichero("files/"+casa+"/"+"habitaciones/"+habitaciones[i].getName());
 		}
 	}
-	public void descargarHabitacion(Path p) {
+	public void descargarHabitacion(Path p,Agrupaciones controladorAgrupaciones) {
 		List<Habitacion>asd=new ArrayList<>();
 		mapa.keySet().stream().forEach(keys->{
 			if(keys.toString().equals(p.getFileName().toString().replaceAll(".dat", "")))asd.add(keys);
 		});
-		asd.forEach(key->mapa.remove(key));
+		asd.forEach(key->{
+			mapa.get(key).forEach(dispo->controladorAgrupaciones.eleminarDispositivoTodas(dispo));
+			mapa.remove(key);
+		});
 		this.fireContentsChanged(mapa, 0, mapa.size());
 	}
 	public void anadirHabitacion(Habitacion habitacion) {		
@@ -64,7 +67,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 	}
 	public void eliminarHabitacion (Habitacion habitacion) {	
 		if (mapa.containsKey(habitacion)) {
-			mapa.remove(habitacion);	
+			mapa.remove(habitacion);
 			this.fireContentsChanged(mapa, 0, mapa.size());
 		}
 	}

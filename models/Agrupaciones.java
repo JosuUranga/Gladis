@@ -100,7 +100,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 		datosEstados.stream().forEach(set->{
 			if(set.getKey().equals(agrupacion)) {
 				escribirFichero(set,"files/"+casa+"/"+"agrupaciones/estados/");
-				soporte.firePropertyChange("envioAgrupacion", true, agrupacion);
+				soporte.firePropertyChange("envioAgrupacion", "enviar", agrupacion);
 			}
 		});
 	}

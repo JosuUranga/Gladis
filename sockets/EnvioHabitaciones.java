@@ -13,10 +13,12 @@ import java.util.List;
 public class EnvioHabitaciones extends Thread{
 	String hostname;
 	String habitacion;
+	String modo;
 	int portNumber=5001;
-    public EnvioHabitaciones(String hostname,String habitacion) {
+    public EnvioHabitaciones(String hostname,String habitacion,String modo) {
     	this.hostname=hostname;
     	this.habitacion=habitacion;
+    	this.modo=modo;
     	this.portNumber=5001;
     }
     public void run () {
@@ -32,10 +34,14 @@ public class EnvioHabitaciones extends Thread{
                 try {
     				while ((object=in.readObject())!= null) {
     					if(object instanceof String) {
-    						if(object.equals("Nombre recibido"))nombre=true;
+    						if(object.equals("Nombre Recibido"))nombre=true;
+    						if(nombre && modo.equals("borrar")) {
+    							out.writeObject("borrar");
+    							break;
+    						}
     						if(object.equals("Conexion establecida"))out.writeObject(habitacion);
     					}
-    						if(nombre=true && num<2) {
+    						if(nombre && num<2) {
     							System.out.println(habitacion);
     							try (ObjectInputStream inf = new ObjectInputStream(
     									new FileInputStream(habitacion))) {

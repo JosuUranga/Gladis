@@ -23,14 +23,14 @@ public class ComunicacionServidor extends Thread {
         		ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
         		ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
         ) {
-            String nombreArchivo=null;
+            String nombreArchivo="";
             Object object;
             Boolean esAgrupacion=false;
             List<Object>archivo=new ArrayList<>();
             out.writeObject("Conexion establecida");
             try {
 				while ((object = in.readObject()) != null) {
-					if(object instanceof String) {
+					if(object instanceof String && !nombreArchivo.contains((String) object)) {
 						 if(((String) object).endsWith(".dat")) {
 						    	nombreArchivo=(String)object;
 						    	if (nombreArchivo.contains("/agrupaciones/")) esAgrupacion=true;
@@ -38,6 +38,13 @@ public class ComunicacionServidor extends Thread {
 						 }
 						 if(((String)object).equals("Hola!")) {
 							 ips.add(socket.getRemoteSocketAddress().toString().substring(1, socket.getRemoteSocketAddress().toString().lastIndexOf(":")));
+							 break;
+						 }
+						 if(((String)object).equals("borrar")) {
+							 File file = new File(nombreArchivo);
+							 if(esAgrupacion)soporte.firePropertyChange("borrarAgrupacion", true, nombreArchivo);
+							 else soporte.firePropertyChange("borrarHabitacion", true, nombreArchivo);
+							 file.delete();
 							 break;
 						 }
 						 if(object.equals("Finalizado")) {
@@ -49,6 +56,7 @@ public class ComunicacionServidor extends Thread {
 											}
 											if(esAgrupacion)soporte.firePropertyChange("agrupacionRecibida", true, nombreArchivo);
 											else soporte.firePropertyChange("habitacionRecibida", true, nombreArchivo);
+											break;
 								} catch (FileNotFoundException e) {
 										e.printStackTrace();
 								} catch (IOException e) {
