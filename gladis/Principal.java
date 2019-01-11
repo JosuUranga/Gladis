@@ -248,6 +248,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		switch(e.getActionCommand()) {		
 		case "quitarHabitacion":
 			listaDispositivos.clearSelection();
+			controlador.getMapa().get(listaHabitaciones.getSelectedValue()).forEach(dispo->controladorAgrupaciones.eleminarDispositivoTodas(dispo));
 			controlador.eliminarDispositivosHabitacion(listaHabitaciones.getSelectedValue());
 			controlador.eliminarHabitacion(listaHabitaciones.getSelectedValue());
 			listaHabitaciones.clearSelection();
@@ -310,7 +311,6 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			if(listaHabitaciones.getSelectedIndex()==-1) {
 				bquitarHabitacion.setEnabled(false);
 			}else {
-				
 				propertyChange(new PropertyChangeEvent(this, "dispositivos", true, null));
 				bquitarHabitacion.setEnabled(true);
 				banadirDispositivo.setEnabled(true);
@@ -358,7 +358,14 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			if(listaDispositivos.getModel().getSize()==0)bquitarDispositivo.setEnabled(false);
 			break;
 		case "envioHabitacion":
-			new EnvioHabitaciones("127.0.0.1","files/"+casa+"/habitaciones"+((Habitacion) evt.getNewValue()).getNombre()+".dat").start();
+			ips.forEach(ip->new EnvioHabitaciones(ip,"files/"+casa+"/habitaciones/"+((Habitacion) evt.getNewValue()).getNombre()+".dat").start());
+			break;
+		case "envioAgrupacion":
+			ips.forEach(ip->{
+				new EnvioHabitaciones(ip,"files/"+casa+"/agrupaciones/originales/"+evt.getNewValue()+".dat").start();
+				new EnvioHabitaciones(ip,"files/"+casa+"/agrupaciones/estados/"+evt.getNewValue()+".dat").start();
+				System.out.println(evt.getNewValue());
+			});
 			break;
 		case "habitacionRecibida":
 			Path p= Paths.get((String)evt.getNewValue());
@@ -369,8 +376,6 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			Path w= Paths.get((String)evt.getNewValue());
 			controladorAgrupaciones.descargarAgrupacion(w);
 			controladorAgrupaciones.leerFichero(w.toString(),controladorAgrupaciones.getMapa());
-			System.out.println(w.toString());
-			propertyChange(new PropertyChangeEvent(this, "dispositivos", true, null));
 			break;
 		case "habitacion":
 			

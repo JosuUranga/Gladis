@@ -37,13 +37,14 @@ public class ComunicacionServidor extends Thread {
 						    	out.writeObject("Nombre Recibido");
 						 }
 						 if(((String)object).equals("Hola!")) {
-							 ips.add(socket.getRemoteSocketAddress().toString());
+							 ips.add(socket.getRemoteSocketAddress().toString().substring(1, socket.getRemoteSocketAddress().toString().lastIndexOf(":")));
 							 break;
 						 }
 						 if(object.equals("Finalizado")) {
 							 try (ObjectOutputStream outf = new ObjectOutputStream(
 										new FileOutputStream(nombreArchivo))) {
 											for(Object a:archivo) {
+		
 												outf.writeObject(a);
 											}
 											if(esAgrupacion)soporte.firePropertyChange("agrupacionRecibida", true, nombreArchivo);

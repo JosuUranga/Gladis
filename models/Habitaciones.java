@@ -52,7 +52,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 	}
 	public void descargarHabitacion(Path p) {
 		List<Habitacion>asd=new ArrayList<>();
-		mapa.keySet().stream().forEach(keys->{ //Quitar for each
+		mapa.keySet().stream().forEach(keys->{
 			if(keys.toString().equals(p.getFileName().toString().replaceAll(".dat", "")))asd.add(keys);
 		});
 		asd.forEach(key->mapa.remove(key));

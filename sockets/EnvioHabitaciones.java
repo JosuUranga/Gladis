@@ -36,10 +36,13 @@ public class EnvioHabitaciones extends Thread{
     						if(object.equals("Conexion establecida"))out.writeObject(habitacion);
     					}
     						if(nombre=true && num<2) {
+    							System.out.println(habitacion);
     							try (ObjectInputStream inf = new ObjectInputStream(
     									new FileInputStream(habitacion))) {
     								while(num<=1) {
-    									out.writeObject(inf.readObject());
+    									Object obj=inf.readObject();
+    									System.out.println(obj);
+    									out.writeObject(obj);
     									num++;
     								}
     								out.writeObject("Finalizado");
