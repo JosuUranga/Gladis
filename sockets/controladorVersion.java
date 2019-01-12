@@ -1,5 +1,7 @@
 package sockets;
 
+import java.io.DataInputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -8,55 +10,91 @@ import org.apache.commons.net.ftp.FTPSClient;
 
 public class controladorVersion extends Thread{
 	String hostname,name,password,casa;
+	Long versionProg,versionTMP;
+	Boolean inicializar;
 	
 	public controladorVersion(String hostname,String casa,String name,String password) {
 		this.hostname=hostname;
 		this.casa=casa;
 		this.name=name;
+		versionProg=0L;
+		inicializar=true;
 		this.password=password;
 		
 	}
 	public void run() {
-		FTPSClient ftpClient=new FTPSClient();
+		FTPSClient ftpClient=new FTPSClient(false);
 		try {
-			ftpClient.connect(hostname);
-			ftpClient.execPBSZ(0);
-			ftpClient.execPROT("P");
-			ftpClient.enterLocalPassiveMode();
-			ftpClient.login(name, password);
-			ftpClient.changeWorkingDirectory("/"+casa);
-			System.out.println("1");
-			FTPFile[] files=ftpClient.listFiles();
-			if(files!=null&&files.length>0) {
-				for(FTPFile file:files) {
-					System.out.println(file.getName());
-					if(file.isDirectory())ftpClient.changeWorkingDirectory("/"+casa+"/"+file.getName());
-					FTPFile[] files2=ftpClient.listFiles();
-					for(FTPFile file2:files2) {
-						System.out.println(file2.getName());
-						if(file2.isDirectory()){
-							ftpClient.changeWorkingDirectory("/"+casa+"/"+file.getName()+"/"+file2.getName());
-							FTPFile[] files3=ftpClient.listFiles();
-							for(FTPFile file3:files3) {
-								System.out.println(file3.getName());
-								guardarArchivo(ftpClient, file3);
+			while(true) {
+				ftpClient.connect(hostname);
+				ftpClient.execPBSZ(0);
+				ftpClient.execPROT("P");
+				ftpClient.enterLocalPassiveMode();
+				ftpClient.login(name, password);
+				ftpClient.changeWorkingDirectory("/"+casa);
+				FTPFile[] files=ftpClient.listFiles();
+				if(files!=null&&files.length>0) {
+					for(FTPFile fileV:files) {
+						if(fileV.getName().contains("version")) {
+							try(DataInputStream version=new DataInputStream(ftpClient.retrieveFileStream(fileV.getName()))){
+								versionTMP=version.readLong();
+								ftpClient.completePendingCommand();
+							if(versionProg<versionTMP && !inicializar) {
+								versionProg=versionTMP;
+								File file=new File("files/"+casa+"/");
+								borrarTodoLocal(file.listFiles());
+								recibirFTP(ftpClient,files);
 							}
-						}else guardarArchivo(ftpClient, file2);
+							inicializar=false;
+							if(versionProg<versionTMP)versionProg=versionTMP;
+							}
+						}				
+					}
+					ftpClient.logout();
+					ftpClient.disconnect();
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
 					}
 				}
-			}
-			ftpClient.logout();
-			ftpClient.disconnect();
+			}	
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+	public void recibirFTP(FTPSClient ftpClient,FTPFile[] files) {
+		try {
+			for(FTPFile file:files) {
+				if(!file.isFile()) {
+					ftpClient.changeWorkingDirectory(file.getName());
+					recibirFTP(ftpClient,ftpClient.listFiles());
+					ftpClient.changeToParentDirectory();
+				}else {
+					guardarArchivo(ftpClient,file);
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	public void borrarTodoLocal(File[]files) {
+		for(File file:files) {
+			if(!file.isFile()) {
+				File tmp=new File(file.getPath());
+				borrarTodoLocal(tmp.listFiles());
+			}else {
+				file.delete();
+			}
+		}
+	}
 	public void guardarArchivo(FTPSClient ftpClient,FTPFile file) {
-
 		try(FileOutputStream OutStream=new FileOutputStream("files"+ftpClient.printWorkingDirectory()+"/"+file.getName())) {
 			ftpClient.retrieveFile(file.getName(), OutStream);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	public void subirVersion() {
+		versionProg=versionProg+1;
 	}
 }

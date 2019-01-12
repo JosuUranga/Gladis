@@ -43,6 +43,7 @@ import renderers.RendererDispositivos;
 import renderers.RendererHabitaciones;
 import sockets.EnvioHabitaciones;
 import sockets.EscuchaServidor;
+import sockets.controladorVersion;
 import sockets.envioFTP;
 
 public class Principal extends JFrame implements ActionListener, ListSelectionListener, PropertyChangeListener {
@@ -61,9 +62,13 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 	JList<String>listaAgrupaciones;
 	DialogoAgrupaciones dialogoAgrupacion;
 	List<String>ips;
+	controladorVersion cVersion;
 	public Principal(){		
 		super ("Gladis");	
+		casa="test";
 		this.ips=new ArrayList<>();
+		cVersion=new controladorVersion("192.168.0.14",casa,"Administrador","123456789aA@");
+		cVersion.start();
 		new EscuchaServidor(this,ips).start();
 		controlador= new Habitaciones();
 		controlador.addPropertyChangeListener(this);
@@ -72,7 +77,6 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		renderer= new RendererHabitaciones();
 		renderer2= new RendererDispositivos();
 		eliminar=false;
-		casa="test";
 		habitacion="salon";
 		this.setSize (800,600);
 		this.setLocation(200,100);
@@ -292,7 +296,6 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				if(dialogoAgrupacion.isCrear()) {
 					controladorAgrupaciones.anadirDispositivos(dialogoAgrupacion.getNombre(), dialogoAgrupacion.getListaAgrupacion(), this);
 					controladorAgrupaciones.escribirAgrupacion(dialogoAgrupacion.getNombre(), casa);
-					propertyChange(new PropertyChangeEvent(this, "envioAgrupacion", "enviar", dialogoAgrupacion.getNombre()));
 					
 				}
 				listaAgrupaciones.clearSelection();
@@ -382,18 +385,18 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			if(listaDispositivos.getModel().getSize()==0)bquitarDispositivo.setEnabled(false);
 			break;
 		case "envioHabitacion":
-			ips.forEach(ip->new EnvioHabitaciones(ip,"files/"+casa+"/habitaciones/"+((Habitacion) evt.getNewValue()).getNombre()+".dat",(String)evt.getOldValue()).start());
-			new envioFTP("172.17.24.31",casa,"Administrador","12345678aA@");
+			ips.forEach(ip->new EnvioHabitaciones(ip,"files/"+casa+"/habitaciones/"+((Habitacion) evt.getNewValue()).getNombre()+".dat",(String)evt.getOldValue(),this).start());
+			
 			if(((String)evt.getOldValue()).equals("borrar")) {
 				File file = new File("files/"+casa+"/habitaciones/"+((Habitacion) evt.getNewValue()).getNombre()+".dat");
 				file.delete();
 			}
-			
+			new envioFTP("192.168.0.14",casa,"Administrador","123456789aA@").start();
 			break;
 		case "envioAgrupacion":
 			ips.forEach(ip->{
-				new EnvioHabitaciones(ip,"files/"+casa+"/agrupaciones/originales/"+evt.getNewValue()+".dat",(String)evt.getOldValue()).start();
-				new EnvioHabitaciones(ip,"files/"+casa+"/agrupaciones/estados/"+evt.getNewValue()+".dat",(String)evt.getOldValue()).start();
+				new EnvioHabitaciones(ip,"files/"+casa+"/agrupaciones/originales/"+evt.getNewValue()+".dat",(String)evt.getOldValue(),this).start();
+				new EnvioHabitaciones(ip,"files/"+casa+"/agrupaciones/estados/"+evt.getNewValue()+".dat",(String)evt.getOldValue(),this).start();
 			});
 			if(((String)evt.getOldValue()).equals("borrar")) {
 				File file = new File("files/"+casa+"/agrupaciones/originales/"+evt.getNewValue()+".dat");
@@ -401,7 +404,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				file = new File("files/"+casa+"/agrupaciones/estados/"+evt.getNewValue()+".dat");
 				file.delete();
 			}
-			new envioFTP("172.17.24.31",casa,"Administrador","12345678aA@");
+			new envioFTP("192.168.0.14",casa,"Administrador","123456789aA@").start();
 			break;
 		case "habitacionRecibida":
 			Path p= Paths.get((String)evt.getNewValue());
@@ -413,8 +416,8 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			controladorAgrupaciones.descargarAgrupacion(w);
 			controladorAgrupaciones.leerFichero(w.toString(),controladorAgrupaciones.getMapa());
 			break;
-		case "habitacion":
-			
+		case "quitarIp":
+			ips.remove(evt.getNewValue());
 			break;
 		case "borrarHabitacion":
 			Path p2= Paths.get((String)evt.getNewValue());

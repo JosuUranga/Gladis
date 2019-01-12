@@ -75,7 +75,8 @@ public class ComunicacionServidor extends Thread {
 				e.printStackTrace();
 			}
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Conexion perdida con:"+socket.getRemoteSocketAddress().toString().substring(1, socket.getRemoteSocketAddress().toString().lastIndexOf(":"))+", sacandolo de la lista de ips..");
+            soporte.firePropertyChange("quitarIp", true, socket.getRemoteSocketAddress().toString().substring(1, socket.getRemoteSocketAddress().toString().lastIndexOf(":")));
         }
     }
 	public void addPropertyChangeListener(PropertyChangeListener listener) {

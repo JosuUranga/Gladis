@@ -100,9 +100,9 @@ public class Agrupaciones extends AbstractListModel<String> {
 		datosEstados.stream().forEach(set->{
 			if(set.getKey().equals(agrupacion)) {
 				escribirFichero(set,"files/"+casa+"/"+"agrupaciones/estados/");
-				soporte.firePropertyChange("envioAgrupacion", "enviar", agrupacion);
 			}
 		});
+		soporte.firePropertyChange("envioAgrupacion", "enviar", agrupacion);
 	}
 	public void escribirFichero(Entry<String,List<Dispositivo>> habitacion, String casa) {
 		try (ObjectOutputStream out = new ObjectOutputStream(
