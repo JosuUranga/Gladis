@@ -308,7 +308,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			break;
 		case "quitarAgrupacion":{
 			if(listaAgrupaciones.getSelectedValue()!=null) {
-				
+				propertyChange(new PropertyChangeEvent(this, "envioAgrupacion", "borrar", listaAgrupaciones.getSelectedValue()));
 				controladorAgrupaciones.eliminarString(listaAgrupaciones.getSelectedValue());
 			}
 			listaAgrupaciones.clearSelection();
@@ -391,6 +391,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				File file = new File("files/"+casa+"/habitaciones/"+((Habitacion) evt.getNewValue()).getNombre()+".dat");
 				file.delete();
 			}
+			cVersion.subirVersion();
 			new envioFTP("192.168.0.14",casa,"Administrador","123456789aA@").start();
 			break;
 		case "envioAgrupacion":
@@ -404,6 +405,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				file = new File("files/"+casa+"/agrupaciones/estados/"+evt.getNewValue()+".dat");
 				file.delete();
 			}
+			cVersion.subirVersion();
 			new envioFTP("192.168.0.14",casa,"Administrador","123456789aA@").start();
 			break;
 		case "habitacionRecibida":

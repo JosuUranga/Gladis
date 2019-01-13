@@ -1,10 +1,10 @@
 package sockets;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPSClient;
 
@@ -59,6 +59,7 @@ public class controladorVersion extends Thread{
 				}
 			}	
 		} catch (IOException e) {
+			System.out.println("No se ha podido conectar con el servidor FTP");
 			e.printStackTrace();
 		}
 	}
@@ -96,5 +97,10 @@ public class controladorVersion extends Thread{
 	}
 	public void subirVersion() {
 		versionProg=versionProg+1;
+		try(DataOutputStream Sversion=new DataOutputStream(new FileOutputStream("files/"+casa+"/version.txt"))){
+			Sversion.writeLong(versionProg);
+		}catch(IOException e) {
+			System.out.println("No se ha podido abrir version.txt");
+		}
 	}
 }
