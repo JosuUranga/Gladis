@@ -12,6 +12,7 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -34,6 +35,7 @@ import gladis.Variable;
 public class DialogoModificar extends JDialog implements ActionListener{
 	
 	JRadioButton on, off;
+	JButton fav;
 	Dispositivo dispositivo;
 	JPanel panelContenido;
 	boolean estado;
@@ -71,10 +73,18 @@ public class DialogoModificar extends JDialog implements ActionListener{
 	}
 
 	private Component crearContenido() {
-		panelContenido = new JPanel(new GridLayout(1,1, 50, 50));
+		panelContenido = new JPanel(new GridLayout(2,1, 10, 10));
 		panelContenido.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-		JPanel panel =new JPanel(new GridLayout(1,2, 10, 10)); 
+		JPanel panel =new JPanel(new GridLayout(1,3, 10, 10)); 
+		
 		ButtonGroup grupo=new ButtonGroup();
+		if(dispositivo.isFavorito())
+			fav=new JButton(new ImageIcon("img/estrella.png"));
+		else
+			fav=new JButton(new ImageIcon("img/estrellaVacia.png"));
+		fav.addActionListener(this);
+		fav.setActionCommand("fav");
+		fav.setSize(40, 38);
 		
 		on=new JRadioButton("ON");
 		grupo.add(on);
@@ -84,6 +94,7 @@ public class DialogoModificar extends JDialog implements ActionListener{
 		off=new JRadioButton("OFF");
 		grupo.add(off);
 		panel.add(off);
+		panel.add(fav);
 		panelContenido.add(panel);
 		
 		if(dispositivo.isEstado())
@@ -260,6 +271,17 @@ public class DialogoModificar extends JDialog implements ActionListener{
 
 			}
 			break;
+		case "fav":
+			if(dispositivo.isFavorito()) {
+				dispositivo.setFavorito(false);
+				fav.setIcon(new ImageIcon("img/estrellaVacia.png"));
+				System.out.println();
+			}
+			else{
+				dispositivo.setFavorito(true);
+				fav.setIcon(new ImageIcon("img/estrella.png"));			}
+			break;
+		}
 		}
 	
 	}
@@ -267,4 +289,4 @@ public class DialogoModificar extends JDialog implements ActionListener{
 	
 
 
-}
+

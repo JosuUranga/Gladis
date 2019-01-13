@@ -341,6 +341,9 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				if(listaHabitaciones.getSelectedIndex()!=-1)listaDispositivos.getSelectedValue().modificar(this);
 				else if(listaAgrupaciones.getSelectedIndex()!=-1)controladorAgrupaciones.getMapaEstados().get(listaAgrupaciones.getSelectedValue()).get(listaDispositivos.getSelectedIndex()).modificar(this);
 				listaDispositivos.clearSelection();	
+				controlador.ordenarListas();
+				listaDispositivos.setListData(controlador.getDispositivosData(listaHabitaciones.getSelectedValue()));
+			
 			}
 		}
 	}

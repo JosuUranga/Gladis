@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,12 +25,11 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import javax.swing.AbstractListModel;
-import javax.swing.JOptionPane;
 
-import dialogs.DialogoDispositivos;
-import exceptions.DialogoNombreRepetidoException;
-import gladis.*;
-
+import gladis.Dispositivo;
+import gladis.DispositivoTmp;
+import gladis.Habitacion;
+import gladis.Variable;
 import reconocedor.Reconocedor;
 
 @SuppressWarnings("serial")
@@ -49,6 +49,14 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 		for(int i=0;i<habitaciones.length;i++) {
 			leerFichero("files/"+casa+"/"+"habitaciones/"+habitaciones[i].getName());
 		}
+	}
+	public void ordenarListas() {
+		Set<Habitacion>mapakeys=this.mapa.keySet();
+		for(Habitacion habitacion: mapakeys) {
+			List<Dispositivo>lista=mapa.get(habitacion);
+			Collections.sort(lista);
+		}
+		
 	}
 	public void descargarHabitacion(Path p) {
 		mapa.keySet().stream().forEach(keys->{

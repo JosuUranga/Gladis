@@ -19,16 +19,18 @@ import javax.swing.ListCellRenderer;
 import gladis.Dispositivo;
 
 public class RendererDispositivos  implements ListCellRenderer<Dispositivo> {
-	JPanel panel,panelBoton;
+	JPanel panel,panelBoton, panelContenido, panelFav;
 	JButton boton ;
-	JLabel lImagen;
+	JLabel lImagen, fav;
 	JLabel lNombre;
 
 	@Override
 	public Component getListCellRendererComponent(JList<? extends Dispositivo> list,
 			Dispositivo dispositivo ,int index,boolean isSelected,boolean cellHasFocus)
 	     {
-		panel= new JPanel(new GridLayout(1,3));
+		panelFav=new JPanel(new GridLayout());
+		panel= new JPanel(new BorderLayout(1,2));
+		panelContenido=new JPanel(new GridLayout(1,3)); 
 		panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		panel.setPreferredSize(new Dimension(panel.getWidth(),100));
 		panel.setBackground(new Color(230, 230, 230));//gris
@@ -43,25 +45,33 @@ public class RendererDispositivos  implements ListCellRenderer<Dispositivo> {
 		boton = new JButton("Modificar");	
 		boton.setPreferredSize(new Dimension(100,20));
 		lImagen= new JLabel();
+		fav= new JLabel();
 		lNombre= new JLabel(dispositivo.toString());//dispositivo.getNombre
 		lNombre.setFont( new Font("Times New Roman",Font.ITALIC,30));
 		lNombre.setForeground(Color.BLUE);
 		lNombre.setHorizontalAlignment(JLabel.CENTER);
 		
 		lImagen.setIcon(new ImageIcon("iconos/cocina.png"));//getImagen
-		
+		fav.setIcon(new ImageIcon("img/estrella.png"));
 	
-		
-		panel.add(lImagen);
-		panel.add(lNombre);
+		panelFav.add(fav);
+		panelContenido.add(lImagen);
+		panelContenido.add(lNombre);
 		panelBoton.add(boton);
-		panel.add(panelBoton);
+		panelContenido.add(panelBoton);
+		
+		panel.add(panelContenido, BorderLayout.CENTER);
+		panel.add(panelFav, BorderLayout.EAST);
 		
 		if(isSelected) {
 			boton.setBorder(BorderFactory.createLoweredBevelBorder());
 			boton.setBackground(new Color(75,140,255));
 			boton.setOpaque(true);
 		}
+		if(dispositivo.isFavorito()) {
+			fav.setVisible(true);
+		}
+		else fav.setVisible(false);
 		if(dispositivo.isEstado()) {
 			panel.setBorder(BorderFactory.createLineBorder(Color.green));
 		}

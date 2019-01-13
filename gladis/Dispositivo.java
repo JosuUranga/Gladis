@@ -7,7 +7,7 @@ import java.util.List;
 import dialogs.DialogoModificar;
 
 @SuppressWarnings("serial")
-public class Dispositivo implements Serializable, Cloneable{
+public class Dispositivo implements Serializable, Cloneable, Comparable<Dispositivo>{
 
 	String nombre;
 	String imagen;
@@ -138,4 +138,25 @@ public class Dispositivo implements Serializable, Cloneable{
 			return null;
 		}
     }
+	@Override
+	public int compareTo(Dispositivo b) {
+		int ret=0;
+		Dispositivo a=this;
+		if (a.isFavorito()&&!b.isFavorito())ret=-1;
+		else if (a.isFavorito()&&!b.isFavorito())ret=-1;
+		else if (!a.isFavorito()&&b.isFavorito())ret=1;
+		else if (a.isFavorito()&&b.isFavorito()) {
+			if(a.getUsos()>b.getUsos())ret=-1;
+			else if(a.getUsos()<b.getUsos())ret=1;
+			else ret=0;
+		}
+		else if (!a.isFavorito()&&!b.isFavorito()) {
+			if(a.getUsos()>b.getUsos())ret=-1;
+			else if(a.getUsos()<b.getUsos())ret=1;
+			else ret=0;
+		}
+		else ret=0;
+		
+		return ret ;
+	}
 }
