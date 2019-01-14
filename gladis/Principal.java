@@ -368,7 +368,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				}
 				listaDispositivos.clearSelection();	
 				controlador.ordenarListas();
-				listaDispositivos.setListData(controlador.getDispositivosData(listaHabitaciones.getSelectedValue()));
+				if(listaHabitaciones.getSelectedValue()!=null)listaDispositivos.setListData(controlador.getDispositivosData(listaHabitaciones.getSelectedValue()));
 			
 			}
 		}
