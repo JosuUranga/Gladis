@@ -51,7 +51,12 @@ public class DialogoModificar extends JDialog implements ActionListener, Seriali
 		super(p, "Modificar", true);
 		variables=dispositivo.getVariablesCopia();
 		tipo="";
-		tiempo=new Tiempo();
+		if(dispositivo instanceof DispositivoTmp) {
+			this.tiempo=((DispositivoTmp) dispositivo).getTiempo();
+			System.out.println(this.tiempo.getSegundos());
+		}else {
+			this.tiempo=null;
+		}
 		f=new Font ("Arial",Font.PLAIN,18);
 	
 
@@ -151,7 +156,7 @@ public class DialogoModificar extends JDialog implements ActionListener, Seriali
 		JPanel panelProgramar=new JPanel(new GridLayout(1,2,10,10));
 		JLabel dosPuntos = new JLabel(":");
 		panelProgramar.add(new JLabel("Programar Tiempo"));
-		
+		System.out.println("TEASDSADSADSADSAD");
 		
 		JPanel panel=new JPanel(new GridLayout(1, 3));
 		JPanel Ptext1 = new JPanel(new BorderLayout());
@@ -159,7 +164,7 @@ public class DialogoModificar extends JDialog implements ActionListener, Seriali
 		JPanel Ptext2 = new JPanel(new BorderLayout());
 		Ptext2.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
 
-		text1=new JTextField("0");
+		text1=new JTextField(String.valueOf(this.tiempo.getMinutos()));
 		text1.setHorizontalAlignment(0);
 		Ptext1.add(text1,BorderLayout.CENTER);
 		panel.add(Ptext1);
@@ -167,7 +172,7 @@ public class DialogoModificar extends JDialog implements ActionListener, Seriali
 		dosPuntos.setFont(f);
 		panel.add(dosPuntos);
 		
-		text2=new JTextField("0");
+		text2=new JTextField(String.valueOf(this.tiempo.getSegundos()));
 		text2.setHorizontalAlignment(0);
 		Ptext2.add(text2,BorderLayout.CENTER);
 		panel.add(Ptext2);
