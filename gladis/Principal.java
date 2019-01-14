@@ -89,41 +89,29 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 	private Container crearPanelVentana() {
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		
-		
 		panel.add(crearPanelCentral(),BorderLayout.CENTER);
-		
-		
 		return panel;
 	}
 	private Component crearPanelToolbarHabitaciones() {
 		JToolBar toolbar = new JToolBar();
-		
-		
 		banadirHabitacion = new JButton(new ImageIcon("img/anadir.png"));
 		banadirHabitacion.addActionListener(this);
 		banadirHabitacion.setActionCommand("anadirHabitacion");
-		
 		toolbar.add(banadirHabitacion);
-		
 		bquitarHabitacion = new JButton(new ImageIcon("img/quitar.png"));
 		bquitarHabitacion.addActionListener(this);
 		bquitarHabitacion.setActionCommand("quitarHabitacion");
 		bquitarHabitacion.setEnabled(false);
 		toolbar.add(bquitarHabitacion);
-		
 		return toolbar;
 	}
 	private Component crearPanelToolbarDispositivos() {
 		JToolBar toolbar = new JToolBar();
-		
-		
 		banadirDispositivo = new JButton(new ImageIcon("img/anadir.png"));
 		banadirDispositivo.addActionListener(this);
 		banadirDispositivo.setActionCommand("anadirDispositivo");
 		banadirDispositivo.setEnabled(false);
 		toolbar.add(banadirDispositivo);
-		
 		bquitarDispositivo = new JButton(new ImageIcon("img/quitar.png"));
 		bquitarDispositivo.addActionListener(this);
 		bquitarDispositivo.setActionCommand("quitarDispositivo");

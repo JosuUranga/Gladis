@@ -123,6 +123,7 @@ public class Dispositivo implements Serializable, Cloneable{
 			this.variables=dialogo.getVariables();	
 			this.estado=dialogo.isEstado();
 		 }
+		 this.dialogo=null;
 		aumentarUso();
 	}
 	@Override
