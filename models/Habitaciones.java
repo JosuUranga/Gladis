@@ -52,9 +52,9 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 	}
 	public void ordenarListas() {
 		Set<Habitacion>mapakeys=this.mapa.keySet();
-		for(Habitacion habitacion: mapakeys) {
-			Collections.sort(lista);
+		for(Habitacion habitacion: mapakeys) {		
 			List<Dispositivo>lista=mapa.get(habitacion);
+			Collections.sort(lista);
 		}
 		
 	}
