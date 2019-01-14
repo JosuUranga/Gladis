@@ -67,7 +67,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		super ("Gladis");	
 		casa="test";
 		this.ips=new ArrayList<>();
-		cVersion=new controladorVersion("192.168.0.14",casa,"Administrador","123456789aA@");
+		cVersion=new controladorVersion("172.17.23.143",casa,"Administrador","123456789aA@");
 		cVersion.start();
 		new EscuchaServidor(this,ips).start();
 		controlador= new Habitaciones();
@@ -380,7 +380,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				file.delete();
 			}
 			cVersion.subirVersion();
-			new envioFTP("192.168.0.14",casa,"Administrador","123456789aA@").start();
+			new envioFTP("172.17.23.143",casa,"Administrador","123456789aA@").start();
 			break;
 		case "envioAgrupacion":
 			ips.forEach(ip->{
@@ -394,7 +394,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				file.delete();
 			}
 			cVersion.subirVersion();
-			new envioFTP("192.168.0.14",casa,"Administrador","123456789aA@").start();
+			new envioFTP("172.17.23.143",casa,"Administrador","123456789aA@").start();
 			break;
 		case "habitacionRecibida":
 			Path p= Paths.get((String)evt.getNewValue());
