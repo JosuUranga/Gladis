@@ -124,7 +124,7 @@ public class Dispositivo implements Serializable, Cloneable, Comparable<Disposit
 			this.variables=dialogo.getVariables();	
 			this.estado=dialogo.isEstado();
 		 }
-		 dialogo=null;
+		 this.dialogo=null;
 		aumentarUso();
 	}
 	@Override

@@ -60,7 +60,8 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 	JList<String>listaAgrupaciones;
 	DialogoAgrupaciones dialogoAgrupacion;
 	public Principal(){		
-		super ("Gladis");	
+		super ("Gladis");
+		casa="test";	
 		new EscuchaServidor(this).start();
 		new EnvioHabitaciones("172.17.21.64", null,"").start();
 		controlador= new Habitaciones();
@@ -70,7 +71,6 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		renderer= new RendererHabitaciones();
 		renderer2= new RendererDispositivos();
 		eliminar=false;
-		casa="test";
 		habitacion="salon";
 		this.setSize (800,600);
 		this.setLocation(200,100);
@@ -290,7 +290,6 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				if(dialogoAgrupacion.isCrear()) {
 					controladorAgrupaciones.anadirDispositivos(dialogoAgrupacion.getNombre(), dialogoAgrupacion.getListaAgrupacion(), this);
 					controladorAgrupaciones.escribirAgrupacion(dialogoAgrupacion.getNombre(), casa);
-					propertyChange(new PropertyChangeEvent(this,"envioAgrupacion", "enviar", dialogoAgrupacion.getNombre()));
 				}
 				listaAgrupaciones.clearSelection();
 				listaHabitaciones.clearSelection();

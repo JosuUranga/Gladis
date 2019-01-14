@@ -7,7 +7,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.List;
 
 
 public class EnvioHabitaciones extends Thread{
@@ -50,6 +49,7 @@ public class EnvioHabitaciones extends Thread{
     								}
     								out.writeObject("Finalizado");
     									
+    								break;
     								} catch (FileNotFoundException e) {
     									e.printStackTrace();
     								} catch (IOException e) {
