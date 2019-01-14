@@ -52,7 +52,8 @@ public class DialogoModificar extends JDialog implements ActionListener{
 		super(p, "Modificar", true);
 		variables=dispositivo.getVariablesCopia();
 		tipo="";
-		tiempo=new Tiempo();
+		if(dispositivo instanceof DispositivoTmp) tiempo = ((DispositivoTmp) dispositivo).getTiempo();
+		else tiempo = null;
 		f=new Font ("Arial",Font.PLAIN,18);
 	
 
@@ -169,7 +170,7 @@ public class DialogoModificar extends JDialog implements ActionListener{
 		JPanel Ptext2 = new JPanel(new BorderLayout());
 		Ptext2.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
 
-		text1=new JTextField("0");
+		text1=new JTextField(String.valueOf(tiempo.getMinutos()));
 		text1.setHorizontalAlignment(0);
 		Ptext1.add(text1,BorderLayout.CENTER);
 		panel.add(Ptext1);
@@ -177,7 +178,7 @@ public class DialogoModificar extends JDialog implements ActionListener{
 		dosPuntos.setFont(f);
 		panel.add(dosPuntos);
 		
-		text2=new JTextField("0");
+		text2=new JTextField(String.valueOf(tiempo.getSegundos()));
 		text2.setHorizontalAlignment(0);
 		Ptext2.add(text2,BorderLayout.CENTER);
 		panel.add(Ptext2);
@@ -240,7 +241,6 @@ public class DialogoModificar extends JDialog implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		int i;
 		if(on.isSelected()) {
 			estado=true;
 		}
