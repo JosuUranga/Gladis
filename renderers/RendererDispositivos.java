@@ -7,6 +7,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -51,7 +52,10 @@ public class RendererDispositivos  implements ListCellRenderer<Dispositivo> {
 		lNombre.setForeground(Color.BLUE);
 		lNombre.setHorizontalAlignment(JLabel.CENTER);
 		
-		lImagen.setIcon(new ImageIcon("iconos/cocina.png"));//getImagen
+		Image img = (new ImageIcon(dispositivo.getImagen())).getImage();		
+		Image newimg = img.getScaledInstance(80, 80,  java.awt.Image.SCALE_SMOOTH);
+		ImageIcon imageIcon = new ImageIcon(newimg); 
+		lImagen.setIcon(imageIcon);
 		fav.setIcon(new ImageIcon("img/estrella.png"));
 	
 		panelFav.add(fav);
