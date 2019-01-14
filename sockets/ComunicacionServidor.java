@@ -34,6 +34,13 @@ public class ComunicacionServidor extends Thread {
 						    	if (nombreArchivo.contains("/agrupaciones/")) esAgrupacion=true;
 						    	out.writeObject("Nombre Recibido");
 						 }
+						 if(object.equals("borrar")) {
+							 File file= new File(nombreArchivo);
+							 if(esAgrupacion)soporte.firePropertyChange("borrarAgrupacion", true, nombreArchivo);
+								else soporte.firePropertyChange("borrarHabitacion", true, nombreArchivo);
+							 file.delete();
+							 break;
+						 }
 						 if(object.equals("Finalizado")) {
 							 try (ObjectOutputStream outf = new ObjectOutputStream(
 										new FileOutputStream(nombreArchivo))) {

@@ -98,7 +98,10 @@ public class Agrupaciones extends AbstractListModel<String> {
 			if(set.getKey().equals(agrupacion))escribirFichero(set,"files/"+casa+"/"+"agrupaciones/originales/");
 		});
 		datosEstados.stream().forEach(set->{
-			if(set.getKey().equals(agrupacion))escribirFichero(set,"files/"+casa+"/"+"agrupaciones/estados/");
+			if(set.getKey().equals(agrupacion)) {
+				escribirFichero(set,"files/"+casa+"/"+"agrupaciones/estados/");
+				soporte.firePropertyChange("envioAgrupacion", "enviar", agrupacion);
+			}
 		});
 	}
 	public void escribirFichero(Entry<String,List<Dispositivo>> habitacion, String casa) {
@@ -114,9 +117,12 @@ public class Agrupaciones extends AbstractListModel<String> {
 		}
 	}
 	public void descargarAgrupacion(Path p) {
-		mapa.keySet().stream().forEach(keys->{
-			if(keys.toString().equals(p.getFileName()))mapa.remove(keys);
+		List<String>asd=new ArrayList<>(); 
+		mapa.keySet().stream().forEach(keys->{ 
+			if(keys.toString().equals(p.getFileName().toString().replaceAll(".dat", "")))asd.add(keys); 
 		});
+		asd.forEach(key->mapa.remove(key)); 
+		this.fireContentsChanged(mapa, 0, mapa.size()); 
 	}
 	public void inicializar(String casa) {
 		File file= new File("files/"+casa+"/agrupaciones/originales");

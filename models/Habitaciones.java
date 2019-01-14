@@ -53,15 +53,21 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 	public void ordenarListas() {
 		Set<Habitacion>mapakeys=this.mapa.keySet();
 		for(Habitacion habitacion: mapakeys) {
-			List<Dispositivo>lista=mapa.get(habitacion);
 			Collections.sort(lista);
+			List<Dispositivo>lista=mapa.get(habitacion);
 		}
 		
 	}
-	public void descargarHabitacion(Path p) {
-		mapa.keySet().stream().forEach(keys->{
-			if(keys.toString().equals(p.getFileName()))mapa.remove(keys);
+	public void descargarHabitacion(Path p, Agrupaciones controladorAgrupaciones) {
+		List<Habitacion>asd=new ArrayList<>(); 
+		mapa.keySet().stream().forEach(keys->{ 
+			if(keys.toString().equals(p.getFileName().toString().replaceAll(".dat", "")))asd.add(keys); 
 		});
+		asd.forEach(key->{ 
+			mapa.get(key).forEach(dispo->controladorAgrupaciones.eleminarDispositivoTodas(dispo)); 
+			mapa.remove(key);
+		});
+		this.fireContentsChanged(mapa, 0, mapa.size()); 
 	}
 	public void anadirHabitacion(Habitacion habitacion) {		
 		mapa.put(habitacion, new ArrayList<>());		
