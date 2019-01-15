@@ -11,15 +11,13 @@ import dialogs.DialogoModificar;
 
 public class DispositivoTmp extends Dispositivo {
 	Tiempo tiempo;
-	Timer timer=null;
-	PropertyChangeSupport soporte;
+	Timer timer; 
 	int ratio;
 	
 	public DispositivoTmp(String nombre, String imagen, String ip, String tipo, int ratio) {
 		super(nombre, imagen, ip, tipo);
 		tiempo = new Tiempo();
 		timer = new Timer(1000,new MiTimer());
-		soporte = new PropertyChangeSupport (this);
 		this.ratio=ratio;
 	}
 	public Tiempo getTiempo() {
@@ -30,16 +28,9 @@ public class DispositivoTmp extends Dispositivo {
 		estado = true;
 		timer.start();
 		aumentarUso();
-		soporte.firePropertyChange("dispositivoTmp", null, this);
 	}
 	public void stop() {
 		if(timer.isRunning()) timer.stop();
-	}
-	public void addPropertyChangeListener (PropertyChangeListener listener) {
-		soporte.addPropertyChangeListener(listener);
-	}
-	public void removePropertyChangeListener (PropertyChangeListener listener) {
-		soporte.removePropertyChangeListener(listener);
 	}
 	public class MiTimer implements ActionListener {
 		@Override
@@ -50,7 +41,6 @@ public class DispositivoTmp extends Dispositivo {
 				timer.stop();
 				estado = false;
 			}
-			DispositivoTmp.this.soporte.firePropertyChange("dispositivoTmp", null, DispositivoTmp.this);
 		}
 	}
 	public void aumentarTiempo() {
@@ -74,13 +64,15 @@ public class DispositivoTmp extends Dispositivo {
 	@Override
 	public void modificar(Principal d) {
 		dialogo = new DialogoModificar(d, this);
-		 if(dialogo.getVariables()!=null) {
-			this.variables=dialogo.getVariables();	
-			this.tiempo=dialogo.getTiempo();
-			this.setEstado(dialogo.isEstado());
-		 }
-		 this.dialogo=null;
-			aumentarUso();
+		if(dialogo.getVariables()!=null) { 
+			this.variables=dialogo.getVariables();	 
+			this.estado=dialogo.isEstado(); 
+			if(dialogo.isEstado()==true) this.start(); 
+			else this.stop(); 
+			this.tiempo=dialogo.getTiempo(); 
+		 } 
+		 dialogo=null; 
+		 aumentarUso();
 	}
 
 }

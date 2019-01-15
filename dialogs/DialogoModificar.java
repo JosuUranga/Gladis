@@ -13,6 +13,7 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -35,6 +36,7 @@ import gladis.Variable;
 public class DialogoModificar extends JDialog implements ActionListener, Serializable{
 	
 	JRadioButton on, off;
+	JButton fav; 
 	Dispositivo dispositivo;
 	JPanel panelContenido;
 	boolean estado;
@@ -51,6 +53,8 @@ public class DialogoModificar extends JDialog implements ActionListener, Seriali
 		super(p, "Modificar", true);
 		variables=dispositivo.getVariablesCopia();
 		tipo="";
+		if(dispositivo instanceof DispositivoTmp) tiempo = ((DispositivoTmp) dispositivo).getTiempo(); 
+		else tiempo = null; 
 		if(dispositivo instanceof DispositivoTmp) {
 			this.tiempo=((DispositivoTmp) dispositivo).getTiempo();
 			System.out.println(this.tiempo.getSegundos());
@@ -77,11 +81,17 @@ public class DialogoModificar extends JDialog implements ActionListener, Seriali
 	}
 
 	private Component crearContenido() {
-		panelContenido = new JPanel(new GridLayout(1,1, 50, 50));
+		panelContenido = new JPanel(new GridLayout(2,1, 10, 10)); 
 		panelContenido.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-		JPanel panel =new JPanel(new GridLayout(1,2, 10, 10)); 
+		JPanel panel =new JPanel(new GridLayout(1,3, 10, 10));  
 		ButtonGroup grupo=new ButtonGroup();
-		
+		if(dispositivo.isFavorito()) 
+			fav=new JButton(new ImageIcon("img/estrella.png")); 
+		else 
+			fav=new JButton(new ImageIcon("img/estrellaVacia.png")); 
+		fav.addActionListener(this); 
+		fav.setActionCommand("fav"); 
+		fav.setSize(40, 38); 
 		on=new JRadioButton("ON");
 		grupo.add(on);
 		panel.add(on);
@@ -90,6 +100,7 @@ public class DialogoModificar extends JDialog implements ActionListener, Seriali
 		off=new JRadioButton("OFF");
 		grupo.add(off);
 		panel.add(off);
+		panel.add(fav); 
 		panelContenido.add(panel);
 		
 		if(dispositivo.isEstado())
@@ -164,7 +175,7 @@ public class DialogoModificar extends JDialog implements ActionListener, Seriali
 		JPanel Ptext2 = new JPanel(new BorderLayout());
 		Ptext2.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
 
-		text1=new JTextField(String.valueOf(this.tiempo.getMinutos()));
+		text1=new JTextField(String.valueOf(tiempo.getMinutos()));
 		text1.setHorizontalAlignment(0);
 		Ptext1.add(text1,BorderLayout.CENTER);
 		panel.add(Ptext1);
@@ -172,7 +183,7 @@ public class DialogoModificar extends JDialog implements ActionListener, Seriali
 		dosPuntos.setFont(f);
 		panel.add(dosPuntos);
 		
-		text2=new JTextField(String.valueOf(this.tiempo.getSegundos()));
+		text2=new JTextField(String.valueOf(tiempo.getSegundos()));
 		text2.setHorizontalAlignment(0);
 		Ptext2.add(text2,BorderLayout.CENTER);
 		panel.add(Ptext2);
@@ -235,7 +246,6 @@ public class DialogoModificar extends JDialog implements ActionListener, Seriali
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		int i;
 		if(on.isSelected()) {
 			estado=true;
 		}
@@ -266,11 +276,16 @@ public class DialogoModificar extends JDialog implements ActionListener, Seriali
 
 			}
 			break;
+		case "fav":
+			if(dispositivo.isFavorito()) {
+				dispositivo.setFavorito(false);
+				fav.setIcon(new ImageIcon("img/estrellaVacia.png"));
+				System.out.println();
+			}
+			else{
+				dispositivo.setFavorito(true);
+				fav.setIcon(new ImageIcon("img/estrella.png"));			}
+			break;
 		}
-	
+		}
 	}
-
-	
-
-
-}

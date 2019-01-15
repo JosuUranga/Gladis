@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +49,13 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 		File [] habitaciones=file.listFiles();
 		for(int i=0;i<habitaciones.length;i++) {
 			leerFichero("files/"+casa+"/"+"habitaciones/"+habitaciones[i].getName());
+		}
+	}
+	public void ordenarListas() { 
+		Set<Habitacion>mapakeys=this.mapa.keySet(); 
+		for(Habitacion habitacion: mapakeys) { 
+			List<Dispositivo>lista=mapa.get(habitacion); 
+			Collections.sort(lista); 
 		}
 	}
 	public void descargarHabitacion(Path p,Agrupaciones controladorAgrupaciones) {

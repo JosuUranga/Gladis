@@ -356,6 +356,8 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 					propertyChange(new PropertyChangeEvent(this, "envioAgrupacion", "enviar", listaAgrupaciones.getSelectedValue()));
 				}
 				listaDispositivos.clearSelection();	
+				controlador.ordenarListas(); 
+				if(listaHabitaciones.getSelectedValue()!=null)listaDispositivos.setListData(controlador.getDispositivosData(listaHabitaciones.getSelectedValue())); 
 			}
 		}
 	}
