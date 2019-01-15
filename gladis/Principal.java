@@ -63,7 +63,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		super ("Gladis");
 		casa="test";	
 		new EscuchaServidor(this).start();
-		new EnvioHabitaciones("172.17.21.64", null,"").start();
+		new EnvioHabitaciones("192.168.0.11", null,"").start();
 		controlador= new Habitaciones();
 		controlador.addPropertyChangeListener(this);
 		controladorAgrupaciones = new Agrupaciones(controlador);
@@ -386,15 +386,15 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			if(listaDispositivos.getModel().getSize()==0)bquitarDispositivo.setEnabled(false);
 			break;
 		case "envioHabitacion":
-			new EnvioHabitaciones("172.17.21.64","files/"+casa+"/habitaciones/"+((Habitacion) evt.getNewValue()).getNombre()+".dat",(String) evt.getOldValue()).start();
+			new EnvioHabitaciones("192.168.0.11","files/"+casa+"/habitaciones/"+((Habitacion) evt.getNewValue()).getNombre()+".dat",(String) evt.getOldValue()).start();
 			if(((String)evt.getOldValue()).equals("borrar")) {
 				File file = new File("files/"+casa+"/habitaciones/"+evt.getNewValue()+".dat");
 				file.delete();
 			}
 			break;
 		case "envioAgrupacion":
-			new EnvioHabitaciones("172.17.21.64","files/"+casa+"/agrupaciones/originales/"+evt.getNewValue()+".dat",(String) evt.getOldValue()).start();
-			new EnvioHabitaciones("172.17.21.64","files/"+casa+"/agrupaciones/estados/"+evt.getNewValue()+".dat",(String) evt.getOldValue()).start();
+			new EnvioHabitaciones("192.168.0.11","files/"+casa+"/agrupaciones/originales/"+evt.getNewValue()+".dat",(String) evt.getOldValue()).start();
+			new EnvioHabitaciones("192.168.0.11","files/"+casa+"/agrupaciones/estados/"+evt.getNewValue()+".dat",(String) evt.getOldValue()).start();
 			if(((String)evt.getOldValue()).equals("borrar")) {
 				File file = new File("files/"+casa+"/agrupaciones/originales/"+evt.getNewValue()+".dat");
 				file.delete();
@@ -410,7 +410,12 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		case "agrupacionRecibida":
 			Path w= Paths.get((String)evt.getNewValue());
 			controladorAgrupaciones.descargarAgrupacion(w);
-			controladorAgrupaciones.leerFichero(w.toString(),controladorAgrupaciones.getMapa());
+			System.out.println("W--> "+w.toString());
+			if(w.toString().contains("/estados")) {
+				controladorAgrupaciones.leerFichero(w.toString(),controladorAgrupaciones.getMapaEstados());
+			}else {
+				controladorAgrupaciones.leerFichero(w.toString(),controladorAgrupaciones.getMapa());
+			}
 			break;
 		case "borrarHabitacion":
 			Path p2= Paths.get((String)evt.getNewValue());
