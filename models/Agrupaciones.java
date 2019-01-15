@@ -116,14 +116,13 @@ public class Agrupaciones extends AbstractListModel<String> {
 			e.printStackTrace();
 		}
 	}
-	public void descargarAgrupacion(Path p) {
+	public void descargarAgrupacion(File p) {
 		List<String>asd=new ArrayList<>();
 		mapa.keySet().stream().forEach(keys->{
-			if(keys.toString().equals(p.getFileName().toString().replaceAll(".dat", "")))asd.add(keys);
+			if(keys.toString().equals(p.getName().toString().replaceAll(".dat", "")))asd.add(keys);
 		});
 		asd.forEach(key->{
-			System.out.println(p.toString());
-			if(p.toString().contains("/estados")){
+			if(p.toString().contains("agrupaciones/estados")){
 				mapaEstados.remove(key);
 			}else {
 				mapa.remove(key);

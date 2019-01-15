@@ -404,10 +404,9 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			controlador.leerFichero(p.toString());
 			break;
 		case "agrupacionRecibida":
-			Path w= Paths.get((String)evt.getNewValue());
+			File w= new File((String)evt.getNewValue());
 			controladorAgrupaciones.descargarAgrupacion(w);
-			System.out.println("he entrado en estados"+w.toString());
-			if(w.toString().contains("/estados")) {
+			if(w.getParent().toString().contains("/estados/")) {
 				controladorAgrupaciones.leerFichero(w.toString(),controladorAgrupaciones.getMapaEstados());
 			}else {
 				controladorAgrupaciones.leerFichero(w.toString(),controladorAgrupaciones.getMapa());
@@ -422,7 +421,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			controlador.descargarHabitacion(p2,controladorAgrupaciones);
 			break;
 		case "borrarAgrupacion":
-			Path p3= Paths.get((String)evt.getNewValue());
+			File p3= new File((String)evt.getNewValue());
 			controladorAgrupaciones.descargarAgrupacion(p3);
 			break;
 		case "comandosDisp": controlador.agregarComandoVar((Dispositivo)evt.getNewValue());
