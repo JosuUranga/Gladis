@@ -45,12 +45,13 @@ import sockets.EnvioHabitaciones;
 import sockets.EscuchaServidor;
 import sockets.controladorVersion;
 import sockets.envioFTP;
+import serialcomm.*;
 
 public class Principal extends JFrame implements ActionListener, ListSelectionListener, PropertyChangeListener {
 	JMenuBar barra;	
 	JMenu editar,salir;
 	JMenuItem anadirHabitacion,quitarHabitacion,anadirDispositivo,quitarDispositivo,cerrar;
-	JButton banadirHabitacion,bquitarHabitacion,banadirDispositivo,bquitarDispositivo,bcerrar,banadirAgrupacion,bquitarAgrupacion,bactivarAgrupacion;
+	JButton banadirHabitacion,bquitarHabitacion,banadirDispositivo,bquitarDispositivo,bcerrar,banadirAgrupacion,bquitarAgrupacion,bactivarAgrupacion,botonAlarma;
 	Boolean eliminar;
 	JList<Habitacion>listaHabitaciones;
 	Habitaciones controlador;
@@ -63,6 +64,8 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 	DialogoAgrupaciones dialogoAgrupacion;
 	List<String>ips;
 	controladorVersion cVersion;
+	Alarma alarma;
+
 	public Principal(){		
 		super ("Gladis");	
 		casa="test";
@@ -117,6 +120,11 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		bquitarDispositivo.setActionCommand("quitarDispositivo");
 		bquitarDispositivo.setEnabled(false);
 		toolbar.add(bquitarDispositivo);
+		toolbar.add(Box.createHorizontalGlue());
+		botonAlarma = new JButton(new ImageIcon("img/alarma.png"));
+		botonAlarma.addActionListener(this);
+		botonAlarma.setActionCommand("activarAlarma");
+		toolbar.add(botonAlarma);
 		return toolbar;
 	}
 
@@ -309,7 +317,14 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			eliminar=true;
 			listaDispositivos.clearSelection();
 			break;
+		case "activarAlarma":{
+			alarma=null;
+			alarma = new Alarma();
+			alarma.accion();
+
+			}
 		}
+		
 		
 	}
 	@Override
