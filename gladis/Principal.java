@@ -39,6 +39,7 @@ import dialogs.DialogoDispositivos;
 import dialogs.DialogoHabitacion;
 import models.Agrupaciones;
 import models.Habitaciones;
+import renderers.RendererAgrupaciones;
 import renderers.RendererDispositivos;
 import renderers.RendererHabitaciones;
 import sockets.EnvioHabitaciones;
@@ -51,12 +52,13 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 	JMenuBar barra;	
 	JMenu editar,salir;
 	JMenuItem anadirHabitacion,quitarHabitacion,anadirDispositivo,quitarDispositivo,cerrar;
-	JButton banadirHabitacion,bquitarHabitacion,banadirDispositivo,bquitarDispositivo,bcerrar,banadirAgrupacion,bquitarAgrupacion,bactivarAgrupacion,botonAlarma;
+	JButton banadirHabitacion,bquitarHabitacion,banadirDispositivo,bquitarDispositivo,bcerrar,banadirAgrupacion,bquitarAgrupacion,bactivarAgrupacion, noMolestar; 
 	Boolean eliminar;
 	JList<Habitacion>listaHabitaciones;
 	Habitaciones controlador;
 	RendererHabitaciones renderer;
 	RendererDispositivos renderer2;
+	RendererAgrupaciones renderer3;
 	JList<Dispositivo>listaDispositivos;
 	String casa,habitacion;
 	Agrupaciones controladorAgrupaciones;
@@ -79,6 +81,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		controladorAgrupaciones.addPropertyChangeListener(this);
 		renderer= new RendererHabitaciones();
 		renderer2= new RendererDispositivos();
+		renderer3= new RendererAgrupaciones(); 
 		eliminar=false;
 		habitacion="salon";
 		this.setSize (800,600);
@@ -121,10 +124,13 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		bquitarDispositivo.setEnabled(false);
 		toolbar.add(bquitarDispositivo);
 		toolbar.add(Box.createHorizontalGlue());
-		botonAlarma = new JButton(new ImageIcon("img/alarma.png"));
-		botonAlarma.addActionListener(this);
-		botonAlarma.setActionCommand("activarAlarma");
-		toolbar.add(botonAlarma);
+		toolbar.add(Box.createHorizontalGlue()); 
+		 
+		noMolestar=new JButton(new ImageIcon("img/noMolestar.png")); 
+		noMolestar.addActionListener(this); 
+		noMolestar.setActionCommand("noMolestar"); 
+		noMolestar.setEnabled(false); 
+		toolbar.add(noMolestar); 
 		return toolbar;
 	}
 
@@ -157,6 +163,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		listaAgrupaciones = new JList<>();	
 		listaAgrupaciones.setModel(controladorAgrupaciones);
 		listaAgrupaciones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listaAgrupaciones.setCellRenderer(renderer3); 	
 		listaAgrupaciones.setBackground(new Color(230, 230, 230));
 		listaAgrupaciones.setOpaque(true);
 		listaAgrupaciones.addListSelectionListener(this);
@@ -317,12 +324,34 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			eliminar=true;
 			listaDispositivos.clearSelection();
 			break;
-		case "activarAlarma":{
+		case "activarAlarma":
 			alarma=null;
 			alarma = new Alarma();
 			alarma.accion();
-
-			}
+			break;
+		case "noMolestar": 
+			Habitacion habit = listaHabitaciones.getSelectedValue(); 
+			if(!habit.isNoMolestar()) { 
+				habit.setNoMolestar(true); 
+				for(Dispositivo disp: controlador.getMapa().get(habit)) { 
+					disp.setNoMolestar(true); 
+				} 
+				listaDispositivos.setListData(controlador.getDispositivosData(listaHabitaciones.getSelectedValue())); 
+				 
+				banadirDispositivo.setEnabled(false); 
+				bquitarDispositivo.setEnabled(false); 
+			} 
+			else { 
+				habit.setNoMolestar(false); 
+				for(Dispositivo disp: controlador.getMapa().get(habit)) { 
+					disp.setNoMolestar(false); 
+				} 
+				listaDispositivos.setListData(controlador.getDispositivosData(listaHabitaciones.getSelectedValue())); 
+				banadirDispositivo.setEnabled(true); 
+				bquitarDispositivo.setEnabled(true); 
+			} 
+			controlador.noMolestar(); 
+			break; 
 		}
 		
 		
@@ -333,10 +362,13 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			listaAgrupaciones.clearSelection();
 			if(listaHabitaciones.getSelectedIndex()==-1) {
 				bquitarHabitacion.setEnabled(false);
+				banadirHabitacion.setEnabled(false); 
+				noMolestar.setEnabled(false); 
 			}else {
 				propertyChange(new PropertyChangeEvent(this, "dispositivos", true, null));
 				bquitarHabitacion.setEnabled(true);
 				banadirDispositivo.setEnabled(true);
+				noMolestar.setEnabled(true);
 			}
 		}else if(arg0.getSource()==listaAgrupaciones) {
 			listaHabitaciones.clearSelection();
@@ -344,6 +376,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				listaDispositivos.setListData(controladorAgrupaciones.getDispositivosData(listaAgrupaciones.getSelectedValue()));
 				bquitarAgrupacion.setEnabled(true);
 				banadirDispositivo.setEnabled(false);
+				noMolestar.setEnabled(false); 
 			}else {
 				bquitarAgrupacion.setEnabled(false);
 			}
@@ -358,7 +391,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			}
 			listaDispositivos.clearSelection();
 			eliminar=false;
-		}else if(arg0.getSource()==listaDispositivos) {
+		}else if(arg0.getSource()==listaDispositivos&& !listaHabitaciones.getSelectedValue().isNoMolestar()) {
 			if(listaDispositivos.getSelectedIndex()!=-1) {
 				if(listaHabitaciones.getSelectedIndex()!=-1) {
 					listaDispositivos.getSelectedValue().modificar(this);

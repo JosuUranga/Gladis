@@ -12,6 +12,7 @@ public class Dispositivo implements Serializable, Cloneable,Comparable<Dispositi
 	String imagen;
 	String ip;
 	String tipo;
+	boolean noMolestar; 
 	boolean estado;
 	boolean favorito;
 	int usos;
@@ -23,6 +24,7 @@ public class Dispositivo implements Serializable, Cloneable,Comparable<Dispositi
 		this.imagen=imagen;
 		this.tipo=tipo;
 		this.ip=ip;
+		this.noMolestar=false; 
 		this.variables= new ArrayList<>();
 		this.estado=false;
 		this.favorito=false;
@@ -38,6 +40,12 @@ public class Dispositivo implements Serializable, Cloneable,Comparable<Dispositi
 	public void setDialogo(DialogoModificar dialogo) {
 		this.dialogo = dialogo;
 	}
+	public boolean isNoMolestar() { 
+		return noMolestar; 
+	} 
+	public void setNoMolestar(boolean noMolestar) { 
+		this.noMolestar = noMolestar; 
+	} 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}

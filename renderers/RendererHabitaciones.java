@@ -21,11 +21,23 @@ public class RendererHabitaciones extends JLabel implements ListCellRenderer<Hab
 		
 		if (isSelected) {
 			setFont( new Font("Times New Roman",Font.BOLD,30));
-			setForeground(Color.BLACK);  //new Color(190, 190, 190));
-			setBackground(new Color(75,140,255));		
+			if(value.isNoMolestar()) {
+				this.setForeground(Color.RED);
+			}
+			else {
+				setForeground(Color.BLACK);  //new Color(190, 190, 190));
+			}
+			setBackground(new Color(75,140,255));	
+			
+		
 		}else {
 			setFont( new Font("Times New Roman",Font.ITALIC,26));
-			setForeground(Color.BLUE);
+			if(value.isNoMolestar()) {
+				this.setForeground(Color.RED);
+			}
+			else {
+				setForeground(Color.blue); 
+			}
 			this.setBackground(new Color(230, 230, 230));//gris
 			
 		}	
