@@ -70,7 +70,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		super ("Gladis");	
 		casa="test";
 		this.ips=new ArrayList<>();
-		cVersion=new controladorVersion("192.168.0.143",casa,"Administrador","123456789aA@");
+		cVersion=new controladorVersion("172.17.23.143",casa,"Administrador","123456789aA@");
 		cVersion.start();
 		new EscuchaServidor(this,ips).start();
 		controlador= new Habitaciones();
@@ -364,11 +364,11 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 					listaDispositivos.getSelectedValue().modificar(this);
 					controlador.escribirHabitacion(listaHabitaciones.getSelectedValue(), casa);
 					propertyChange(new PropertyChangeEvent(this, "envioHabitacion", "enviar", listaHabitaciones.getSelectedValue()));
+					controladorAgrupaciones.dispositivoModificado(listaDispositivos.getSelectedValue());
 				}
 				else if(listaAgrupaciones.getSelectedIndex()!=-1) {
 					controladorAgrupaciones.getMapaEstados().get(listaAgrupaciones.getSelectedValue()).get(listaDispositivos.getSelectedIndex()).modificar(this);
 					controladorAgrupaciones.escribirAgrupacion(listaAgrupaciones.getSelectedValue(), casa);
-					propertyChange(new PropertyChangeEvent(this, "envioAgrupacion", "enviar", listaAgrupaciones.getSelectedValue()));
 				}
 				listaDispositivos.clearSelection();	
 				controlador.ordenarListas(); 
@@ -397,7 +397,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				file.delete();
 			}
 			cVersion.subirVersion();
-			new envioFTP("192.168.0.143",casa,"Administrador","123456789aA@").start();
+			new envioFTP("172.17.23.143",casa,"Administrador","123456789aA@").start();
 			break;
 		case "envioAgrupacion":
 			ips.forEach(ip->{
@@ -411,7 +411,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				file.delete();
 			}
 			cVersion.subirVersion();
-			new envioFTP("192.168.0.143",casa,"Administrador","123456789aA@").start();
+			new envioFTP("172.17.23.143",casa,"Administrador","123456789aA@").start();
 			break;
 		case "habitacionRecibida":
 			Path p= Paths.get((String)evt.getNewValue());
@@ -421,7 +421,8 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		case "agrupacionRecibida":
 			File w= new File((String)evt.getNewValue());
 			controladorAgrupaciones.descargarAgrupacion(w);
-			if(w.getParent().toString().contains("/estados/")) {
+			System.out.println(w.toString());
+			if(w.toString().contains("estados")) {
 				controladorAgrupaciones.leerFichero(w.toString(),controladorAgrupaciones.getMapaEstados());
 			}else {
 				controladorAgrupaciones.leerFichero(w.toString(),controladorAgrupaciones.getMapa());

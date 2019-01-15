@@ -149,8 +149,8 @@ public class Agrupaciones extends AbstractListModel<String> {
 				String key= (String) in.readObject();
 				@SuppressWarnings("unchecked")
 				List<Dispositivo> value=(List<Dispositivo>) in.readObject();
-				if(filename.toString().contains("/agrupaciones/estados/")) {
-					mapaEstados.put(key, value);
+				if(filename.toString().contains("estados")) {
+					map.put(key, value);
 				}else {
 					mapaCasa.entrySet().forEach(entry->{
 						entry.getValue().forEach(disp->value.forEach(disp2->{
@@ -163,7 +163,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 					}
 					Reconocedor.actualizaReconocedor();
 					 */
-					this.fireContentsChanged(map, 0, map.size());
+					this.fireContentsChanged(mapa, 0, mapa.size());
 				}
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -204,6 +204,15 @@ public class Agrupaciones extends AbstractListModel<String> {
 		});
 		asdAS.forEach(key->mapa.get(key).remove(dispositivo));
 		this.fireContentsChanged(mapa, 0, mapa.size());
+	}
+	public void dispositivoModificado(Dispositivo dispositivo) {
+		List<String>asdAS=new ArrayList<>();
+		mapa.entrySet().stream().forEach(entry->{
+			entry.getValue().forEach(Disp->{
+				if(Disp.equals(dispositivo))asdAS.add(entry.getKey());
+			});
+		});
+		asdAS.forEach(key->soporte.firePropertyChange("envioAgrupacion", "enviar", key));
 	}
 	public void eleminarDispositivo(String nombre, Dispositivo dispositivo) {
 		mapa.get(nombre).remove(dispositivo);

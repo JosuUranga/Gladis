@@ -40,7 +40,7 @@ public class DialogoVar extends JDialog implements ActionListener{
 	Dispositivo dispositivo;
 	PropertyChangeSupport soporte;
 	public DialogoVar(JFrame ventana, Dispositivo dispositivo){
-		super(ventana);
+		super(ventana,"variables",true);
 		this.dispositivo=dispositivo;
 		variables=new ArrayList<>();
 		crearTamano();
