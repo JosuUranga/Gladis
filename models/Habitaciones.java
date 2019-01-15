@@ -26,10 +26,7 @@ import java.util.stream.Stream;
 
 import javax.swing.AbstractListModel;
 
-import gladis.Dispositivo;
-import gladis.DispositivoTmp;
-import gladis.Habitacion;
-import gladis.Variable;
+import gladis.*;
 import reconocedor.Reconocedor;
 
 @SuppressWarnings("serial")
@@ -38,10 +35,10 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 	Map<Habitacion,List<Dispositivo>>mapa;
 	PropertyChangeSupport soporte;
 	
-	public Habitaciones() {
+	public Habitaciones(PropertyChangeListener principal) {
 		mapa = new HashMap<>();
 		soporte=new PropertyChangeSupport(this);
-		Reconocedor = new Reconocedor(mapa);
+		Reconocedor = new Reconocedor(mapa, principal);
 	}
 	public void inicializar(String casa) {
 		File file= new File("files/"+casa+"/habitaciones/");
@@ -70,17 +67,49 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 		this.fireContentsChanged(mapa, 0, mapa.size()); 
 	}
 	public void anadirHabitacion(Habitacion habitacion) {		
-		mapa.put(habitacion, new ArrayList<>());		
+		mapa.put(habitacion, new ArrayList<>());
+		escribirComandoHabitacion(habitacion);
 		this.fireContentsChanged(mapa, 0, mapa.size());
+		Reconocedor.actualizaReconocedor();
 	}
+	private void escribirComandoHabitacion(Habitacion habitacion) {
+		File file = new File("Comandos.txt");
+		try (FileWriter fr= new FileWriter(file, true)){
+			fr.write("\n"+"public <noMolestar"+habitacion+"> = <noMolestar> "+habitacion+";");
+			fr.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+	}
+	
 	public void noMolestar() {
 		this.fireContentsChanged(mapa, 0, mapa.size());
 	}
 	public void eliminarHabitacion (Habitacion habitacion) {	
 		if (mapa.containsKey(habitacion)) {
+			eliminarComandoHabitacion(habitacion);
 			mapa.remove(habitacion);	
 			this.fireContentsChanged(mapa, 0, mapa.size());
+			Reconocedor.actualizaReconocedor();
 		}
+	}
+	private void eliminarComandoHabitacion(Habitacion habitacion) {
+		String fileName="Comandos.txt";
+		String tmp ="tmp.txt";
+		try (Stream<String> stream = Files.lines(Paths.get(fileName));
+				FileWriter fr = new FileWriter(tmp)) {
+			stream.filter(line->!line.trim().contains("public <noMolestar"+habitacion)).forEach(linea->{
+				try {
+					fr.write(linea+"\n");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		reemplazar(fileName,tmp);
+		Reconocedor.actualizaReconocedor();		
 	}
 	public void anadirDispositivo (Habitacion habitacion,Dispositivo dispositivo) {
 		List<Dispositivo>lista = mapa.get(habitacion);

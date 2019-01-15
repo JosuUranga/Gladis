@@ -11,6 +11,8 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -64,7 +66,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		casa="test";	
 		new EscuchaServidor(this).start();
 		new EnvioHabitaciones("192.168.0.11", null,"").start();
-		controlador= new Habitaciones();
+		controlador= new Habitaciones(this);
 		controlador.addPropertyChangeListener(this);
 		controladorAgrupaciones = new Agrupaciones(controlador);
 		controladorAgrupaciones.addPropertyChangeListener(this);
@@ -332,6 +334,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				banadirDispositivo.setEnabled(true);
 				bquitarDispositivo.setEnabled(true);
 			}
+			System.out.println("ACTION PERFORMED");
 			controlador.noMolestar();
 			break;
 		case "quitarAgrupacion":{
@@ -415,14 +418,18 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 	public void propertyChange(PropertyChangeEvent evt) {
 		switch(evt.getPropertyName()) {
 		case "dispositivos":
-			listaDispositivos.setListData(controlador.getDispositivosData(listaHabitaciones.getSelectedValue()));
-			bquitarDispositivo.setEnabled(true);
-			if(listaDispositivos.getModel().getSize()==0)bquitarDispositivo.setEnabled(false);
+			if(listaHabitaciones.getSelectedIndex()>-1) {
+				listaDispositivos.setListData(controlador.getDispositivosData(listaHabitaciones.getSelectedValue()));
+				bquitarDispositivo.setEnabled(true);
+				if(listaDispositivos.getModel().getSize()==0)bquitarDispositivo.setEnabled(false);
+			}
 			break;
 		case "agrupacion":
-			listaDispositivos.setListData(controladorAgrupaciones.getDispositivosData(listaAgrupaciones.getSelectedValue()));
-			bquitarDispositivo.setEnabled(true);
-			if(listaDispositivos.getModel().getSize()==0)bquitarDispositivo.setEnabled(false);
+			if(listaAgrupaciones.getSelectedIndex()>-1) {
+				listaDispositivos.setListData(controladorAgrupaciones.getDispositivosData(listaAgrupaciones.getSelectedValue()));
+				bquitarDispositivo.setEnabled(true);
+				if(listaDispositivos.getModel().getSize()==0)bquitarDispositivo.setEnabled(false);
+			}
 			break;
 		case "envioHabitacion":
 			new EnvioHabitaciones("192.168.0.11","files/"+casa+"/habitaciones/"+((Habitacion) evt.getNewValue()).getNombre()+".dat",(String) evt.getOldValue()).start();
@@ -470,6 +477,35 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		case "comandosDisp": controlador.agregarComandoVar((Dispositivo)evt.getNewValue());
 		System.out.println("ASDALSIHDLASHFOAI�FJAM�SOIFASPODIAOPSDMAOPSD");
 		break;
+		case "noMolestar": 
+			List<Habitacion>habi=new ArrayList<>(); 
+			controlador.getMapa().keySet().forEach(key->{ 
+				if(key.getNombre().equals((String)evt.getNewValue()))habi.add(key); 
+			}); 
+			Habitacion hab=habi.get(0); 
+			if(!hab.isNoMolestar()) {  
+				for(Dispositivo disp: controlador.getMapa().get(hab)) {  
+					disp.setNoMolestar(true);  
+				}  
+				hab.setNoMolestar(true);  
+				listaDispositivos.setListData(controlador.getDispositivosData(hab));  
+				banadirDispositivo.setEnabled(false);  
+				bquitarDispositivo.setEnabled(false);  
+			}  
+			else {  
+				for(Dispositivo disp: controlador.getMapa().get(hab)) {  
+					disp.setNoMolestar(false);  
+				}  
+				hab.setNoMolestar(false);  
+				listaDispositivos.setListData(controlador.getDispositivosData(hab));  
+				banadirDispositivo.setEnabled(true);  
+				if(listaDispositivos.getModel().getSize()==0)bquitarDispositivo.setEnabled(false); 
+				else bquitarDispositivo.setEnabled(true);  
+				 
+			} 
+			System.out.println("MODO NO MOLESTAR SALA");
+			controlador.noMolestar();  
+			break; 
 		}
 		
 	}

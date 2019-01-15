@@ -1,4 +1,6 @@
 package reconocedor;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -11,19 +13,30 @@ import javax.speech.recognition.ResultAdapter;
 import javax.speech.recognition.ResultEvent;
 import javax.speech.recognition.ResultToken;
 
-import gladis.*;
+import gladis.Dispositivo;
+import gladis.DispositivoTmp;
+import gladis.Habitacion;
+import gladis.Variable;
 public class Programas extends ResultAdapter {
 	static Recognizer oreja;
 	String Programa;
 	String comando="";
+	PropertyChangeSupport soporte;
 	List<Dispositivo> lista;
 	Map<Habitacion,List<Dispositivo>> mapa;
 
-	public Programas(Map<Habitacion,List<Dispositivo>> mapa) {
+	public Programas(Map<Habitacion,List<Dispositivo>> mapa ) {
 		this.mapa=mapa;
 		lista = new ArrayList<>();
+		soporte=new PropertyChangeSupport(this);
+	}
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		soporte.addPropertyChangeListener(listener);
 	}
 
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		soporte.removePropertyChangeListener(listener);
+	}
 	public void resultAccepted(ResultEvent e){
 		try {
 			Result res = (Result)(e.getSource());
@@ -52,16 +65,27 @@ public class Programas extends ResultAdapter {
 				Set<Entry<Habitacion,List<Dispositivo>>> set = mapa.entrySet();
 				
 				for(Entry<Habitacion,List<Dispositivo>> entry:set) {
+					if(comando.equals("modo no molestar "+entry.getKey())) {
+						lista=entry.getValue();
+						lista.forEach(disp->disp.setNoMolestar(true));
+						soporte.firePropertyChange("noMolestar", false, entry.getKey().toString());
+						System.out.println("Cambiando modo no molestar");
+						System.out.println(soporte.hasListeners(""));
+						comando="";
+					}
+					
 					lista=entry.getValue();
 					if(!entry.getKey().isActivo()&& !entry.getKey().isNoMolestar()) {
 						for(Dispositivo a: lista) {
 							if(comando.equals("encender "+ a.getNombre())) {
 								a.setEstado(true);
 								comando="";
+								soporte.firePropertyChange("dispositivos", false, true);
 							}
 							else if(comando.equals("apagar "+a.getNombre())) {
 								a.setEstado(false);
 								comando="";
+								soporte.firePropertyChange("dispositivos", false, true);
 							}
 							else if(checkVariable(a)) {
 								for(Variable v : a.getVariables()) {
