@@ -15,6 +15,7 @@ public class Dispositivo implements Serializable, Cloneable, Comparable<Disposit
 	String tipo;
 	boolean estado;
 	boolean favorito;
+	boolean noMolestar;
 	int usos;
 	List<Variable> variables;
 	DialogoModificar dialogo;
@@ -27,6 +28,7 @@ public class Dispositivo implements Serializable, Cloneable, Comparable<Disposit
 		this.variables= new ArrayList<>();
 		this.estado=false;
 		this.favorito=false;
+		this.noMolestar=false;
 		this.usos=0;
 	}
 	public void aumentarUso() {
@@ -38,6 +40,12 @@ public class Dispositivo implements Serializable, Cloneable, Comparable<Disposit
 	}
 	public void setDialogo(DialogoModificar dialogo) {
 		this.dialogo = dialogo;
+	}
+	public boolean isNoMolestar() {
+		return noMolestar;
+	}
+	public void setNoMolestar(boolean noMolestar) {
+		this.noMolestar = noMolestar;
 	}
 	public void setNombre(String nombre) {
 		this.nombre = nombre;

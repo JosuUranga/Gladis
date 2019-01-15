@@ -41,7 +41,7 @@ public class RendererDispositivos  implements ListCellRenderer<Dispositivo> {
 		panelBoton = new JPanel(new GridLayout(1,1));
 		panelBoton.setBorder(BorderFactory.createEmptyBorder(35, 15, 35, 15));
 		panelBoton.setBackground(new Color(230, 230, 230));
-		panelBoton.setOpaque(true);
+		panelBoton.setOpaque(false);
 		
 		boton = new JButton("Modificar");	
 		boton.setPreferredSize(new Dimension(100,20));
@@ -67,7 +67,15 @@ public class RendererDispositivos  implements ListCellRenderer<Dispositivo> {
 		panel.add(panelContenido, BorderLayout.CENTER);
 		panel.add(panelFav, BorderLayout.EAST);
 		
-		if(isSelected) {
+		if(dispositivo.isNoMolestar()) {
+			boton.setEnabled(false);
+			
+		}
+		else {
+			boton.setEnabled(true);
+		}
+		
+		if(isSelected && !dispositivo.isNoMolestar()) {
 			boton.setBorder(BorderFactory.createLoweredBevelBorder());
 			boton.setBackground(new Color(75,140,255));
 			boton.setOpaque(true);

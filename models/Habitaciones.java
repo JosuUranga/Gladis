@@ -73,6 +73,9 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 		mapa.put(habitacion, new ArrayList<>());		
 		this.fireContentsChanged(mapa, 0, mapa.size());
 	}
+	public void noMolestar() {
+		this.fireContentsChanged(mapa, 0, mapa.size());
+	}
 	public void eliminarHabitacion (Habitacion habitacion) {	
 		if (mapa.containsKey(habitacion)) {
 			mapa.remove(habitacion);	
