@@ -20,6 +20,7 @@ public class controladorVersion extends Thread{
 		versionProg=0L;
 		inicializar=true;
 		this.password=password;
+		this.subirVersion();
 		
 	}
 	public void run() {
@@ -45,6 +46,7 @@ public class controladorVersion extends Thread{
 								borrarTodoLocal(file.listFiles());
 								recibirFTP(ftpClient,files);
 							}
+							System.out.println(versionProg);
 							inicializar=false;
 							if(versionProg<versionTMP)versionProg=versionTMP;
 							}

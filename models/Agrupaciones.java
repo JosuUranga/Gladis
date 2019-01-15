@@ -121,7 +121,14 @@ public class Agrupaciones extends AbstractListModel<String> {
 		mapa.keySet().stream().forEach(keys->{
 			if(keys.toString().equals(p.getFileName().toString().replaceAll(".dat", "")))asd.add(keys);
 		});
-		asd.forEach(key->mapa.remove(key));
+		asd.forEach(key->{
+			System.out.println(p.toString());
+			if(p.toString().contains("/estados")){
+				mapaEstados.remove(key);
+			}else {
+				mapa.remove(key);
+			}
+		});
 		this.fireContentsChanged(mapa, 0, mapa.size());
 	}
 	public void inicializar(String casa) {
@@ -143,15 +150,15 @@ public class Agrupaciones extends AbstractListModel<String> {
 				String key= (String) in.readObject();
 				@SuppressWarnings("unchecked")
 				List<Dispositivo> value=(List<Dispositivo>) in.readObject();
-				mapaCasa.entrySet().forEach(entry->{
-					entry.getValue().forEach(disp->value.forEach(disp2->{
-						if(disp.getNombre().equals(disp2.getNombre()))value.set(value.indexOf(disp2), disp);
-					}));
-				});
-				if(map.containsKey(key))map.remove(key);
-				map.put(key, value);
-				if(filename.contains("/agupaciones/estados/")) {
+				if(filename.toString().contains("/agrupaciones/estados/")) {
+					mapaEstados.put(key, value);
 				}else {
+					mapaCasa.entrySet().forEach(entry->{
+						entry.getValue().forEach(disp->value.forEach(disp2->{
+							if(disp.getNombre().equals(disp2.getNombre()))value.set(value.indexOf(disp2), disp);
+						}));
+					});
+					map.put(key, value);
 					/*for(Dispositivo d:value) {
 					agregarComando(d);
 					}

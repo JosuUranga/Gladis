@@ -37,7 +37,9 @@ public class ComunicacionServidor extends Thread {
 						    	out.writeObject("Nombre Recibido");
 						 }
 						 if(((String)object).equals("Hola!")) {
-							 ips.add(socket.getRemoteSocketAddress().toString().substring(1, socket.getRemoteSocketAddress().toString().lastIndexOf(":")));
+							 if (!ips.contains(socket.getRemoteSocketAddress().toString().substring(1, socket.getRemoteSocketAddress().toString().lastIndexOf(":")))) {
+								 ips.add(socket.getRemoteSocketAddress().toString().substring(1, socket.getRemoteSocketAddress().toString().lastIndexOf(":")));
+							 }
 							 break;
 						 }
 						 if(((String)object).equals("borrar")) {
