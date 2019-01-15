@@ -24,7 +24,7 @@ public class Reconocedor {
 		programas =new Programas(mapa);
 		programas.addPropertyChangeListener(p);
 		System.out.println(p);
-		iniciarRec();
+	//	iniciarRec();
 
 	}
 

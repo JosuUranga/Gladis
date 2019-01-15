@@ -314,28 +314,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		}
 			break;
 		case "noMolestar":
-			Habitacion habit = listaHabitaciones.getSelectedValue();
-			if(!habit.isNoMolestar()) {
-				habit.setNoMolestar(true);
-				for(Dispositivo disp: controlador.getMapa().get(habit)) {
-					disp.setNoMolestar(true);
-				}
-				listaDispositivos.setListData(controlador.getDispositivosData(listaHabitaciones.getSelectedValue()));
-				
-				banadirDispositivo.setEnabled(false);
-				bquitarDispositivo.setEnabled(false);
-			}
-			else {
-				habit.setNoMolestar(false);
-				for(Dispositivo disp: controlador.getMapa().get(habit)) {
-					disp.setNoMolestar(false);
-				}
-				listaDispositivos.setListData(controlador.getDispositivosData(listaHabitaciones.getSelectedValue()));
-				banadirDispositivo.setEnabled(true);
-				bquitarDispositivo.setEnabled(true);
-			}
-			System.out.println("ACTION PERFORMED");
-			controlador.noMolestar();
+			propertyChange(new PropertyChangeEvent(this, "noMolestar", true, listaHabitaciones.getSelectedValue().getNombre()));
 			break;
 		case "quitarAgrupacion":{
 			if(listaAgrupaciones.getSelectedValue()!=null) {
@@ -503,7 +482,6 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				else bquitarDispositivo.setEnabled(true);  
 				 
 			} 
-			System.out.println("MODO NO MOLESTAR SALA");
 			controlador.noMolestar();  
 			break; 
 		}

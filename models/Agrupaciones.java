@@ -60,7 +60,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		casa.Reconocedor.actualizaReconocedor();
+		//casa.Reconocedor.actualizaReconocedor();
 	}
 	public void eliminarString (String nombre) {	
 		if (mapa.containsKey(nombre)) {
@@ -88,7 +88,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 			e.printStackTrace();
 		}
 		casa.reemplazar(fileName,tmp);
-		casa.Reconocedor.actualizaReconocedor();
+		//casa.Reconocedor.actualizaReconocedor();
 		
 	}
 	public void escribirAgrupacion(String agrupacion,String casa) {
@@ -149,12 +149,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 				String key= (String) in.readObject();
 				@SuppressWarnings("unchecked")
 				List<Dispositivo> value=(List<Dispositivo>) in.readObject();
-				/*mapaCasa.entrySet().forEach(entry->{
-					entry.getValue().forEach(disp->value.forEach(disp2->{
-						if(disp.getNombre().equals(disp2.getNombre()))value.set(value.indexOf(disp2), disp);
-					}));
-				});
-				if(map.containsKey(key))map.remove(key);*/
+			
 				map.put(key, value);
 				if(filename.toString().contains("/agrupaciones/estados/")) {
 					mapaEstados.put(key, value);

@@ -70,7 +70,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 		mapa.put(habitacion, new ArrayList<>());
 		escribirComandoHabitacion(habitacion);
 		this.fireContentsChanged(mapa, 0, mapa.size());
-		Reconocedor.actualizaReconocedor();
+	//	Reconocedor.actualizaReconocedor();
 	}
 	private void escribirComandoHabitacion(Habitacion habitacion) {
 		File file = new File("Comandos.txt");
@@ -90,7 +90,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 			eliminarComandoHabitacion(habitacion);
 			mapa.remove(habitacion);	
 			this.fireContentsChanged(mapa, 0, mapa.size());
-			Reconocedor.actualizaReconocedor();
+		//	Reconocedor.actualizaReconocedor();
 		}
 	}
 	private void eliminarComandoHabitacion(Habitacion habitacion) {
@@ -109,7 +109,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 			e.printStackTrace();
 		}
 		reemplazar(fileName,tmp);
-		Reconocedor.actualizaReconocedor();		
+	//	Reconocedor.actualizaReconocedor();		
 	}
 	public void anadirDispositivo (Habitacion habitacion,Dispositivo dispositivo) {
 		List<Dispositivo>lista = mapa.get(habitacion);
@@ -117,7 +117,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 		lista.add(dispositivo);
 		mapa.put(habitacion, lista);
 		agregarComando(dispositivo);
-		Reconocedor.actualizaReconocedor();
+	//	Reconocedor.actualizaReconocedor();
 		soporte.firePropertyChange("dispositivos", false, true);
 		
 	}
@@ -181,7 +181,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 			e.printStackTrace();
 		}
 		reemplazar(fileName,tmp);
-		Reconocedor.actualizaReconocedor();
+	//	Reconocedor.actualizaReconocedor();
 	}
 	public void reemplazar(String fileName, String tmp) {
 		String s;
@@ -228,7 +228,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Reconocedor.actualizaReconocedor();
+	//	Reconocedor.actualizaReconocedor();
 	}
 	
 	public void escribirHabitacion(Habitacion habitacion,String casa) {
@@ -262,7 +262,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 					agregarComando(d);
 					if(d.getTipo().equals("Programable tiempo")||d.getTipo().equals("No Programable")) agregarComandoVar(d);
 				}
-				Reconocedor.actualizaReconocedor();
+		//		Reconocedor.actualizaReconocedor();
 				
 				this.fireContentsChanged(mapa, 0, mapa.size());
 			} catch (FileNotFoundException e) {
