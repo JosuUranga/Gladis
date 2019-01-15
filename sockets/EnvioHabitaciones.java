@@ -43,6 +43,10 @@ public class EnvioHabitaciones extends Thread{
     							out.writeObject("borrar");
     							break;
     						}
+    						if(nombre && modo.equals("noMolestar")) {
+    							out.writeObject("noMolestar");
+    							break;
+    						}
     						if(object.equals("Conexion establecida"))out.writeObject(habitacion);
     					}
     						if(nombre && num<2) {
