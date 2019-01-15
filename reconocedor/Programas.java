@@ -71,19 +71,29 @@ public class Programas extends ResultAdapter {
 										System.out.println("Subiendo "+v.getVar()+" "+a.getNombre());
 										v.setVal(v.getVal()+1);
 										System.out.println(v.getVal());
+										comando="";
 									}
 									else if(comando.equals("bajar "+v.getVar()+" "+a.getNombre())) {
 										System.out.println("Bajando "+v.getVar()+" "+a.getNombre());
 										v.setVal(v.getVal()-1);
 										System.out.println(v.getVal());
+										comando="";
 									}
-								/*	else if(comando.equals("cambiar "+v.getVar()+" "+a.getNombre())) {
-										System.out.println("HOLAAAAAAA:    "+Integer.toString(comando.charAt(comando.length())));
-											if(comando.endsWith(Integer.toString(comando.charAt(comando.length()))))
-										System.out.println("Cambiando "+v.getVar()+" "+a.getNombre());
-										v.setVal(Integer.parseInt(String.valueOf(comando.charAt(comando.length()))));
-										System.out.println(v.getVal());
-									}*/
+									else if(comando.contains("cambiar "+v.getVar()+" "+a.getNombre())) {
+										String []split=comando.split(" ");
+										try {
+											int valor=Integer.parseInt(split[3]);
+											v.setVal(valor);
+											System.out.println("Cambiando "+v.getVar()+" "+a.getNombre());
+											System.out.println(v.getVal());
+
+										}catch(NumberFormatException aposjd) {
+											System.out.println("EXCEPTIOOON");
+										}finally {
+											comando="";
+										}
+											
+									}
 								}
 							}
 							else if(comando.equals("aumentar Tiempo "+a.getNombre()) && a instanceof DispositivoTmp){

@@ -358,13 +358,12 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			listaAgrupaciones.clearSelection();
 			if(listaHabitaciones.getSelectedIndex()==-1) {
 				bquitarHabitacion.setEnabled(false);
-				banadirHabitacion.setEnabled(false);
 				noMolestar.setEnabled(false);
 
 			}else {
 				propertyChange(new PropertyChangeEvent(this, "dispositivos", true, null));
 				bquitarHabitacion.setEnabled(true);
-				banadirDispositivo.setEnabled(true);
+				banadirHabitacion.setEnabled(true);
 				noMolestar.setEnabled(true);
 			}
 		}else if(arg0.getSource()==listaAgrupaciones) {

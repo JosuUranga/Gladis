@@ -60,7 +60,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//casa.Reconocedor.actualizaReconocedor();
+		casa.Reconocedor.actualizaReconocedor();
 	}
 	public void eliminarString (String nombre) {	
 		if (mapa.containsKey(nombre)) {
@@ -88,7 +88,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 			e.printStackTrace();
 		}
 		casa.reemplazar(fileName,tmp);
-		//casa.Reconocedor.actualizaReconocedor();
+		casa.Reconocedor.actualizaReconocedor();
 		
 	}
 	public void escribirAgrupacion(String agrupacion,String casa) {
