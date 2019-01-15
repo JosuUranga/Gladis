@@ -39,6 +39,7 @@ import dialogs.DialogoDispositivos;
 import dialogs.DialogoHabitacion;
 import models.Agrupaciones;
 import models.Habitaciones;
+import renderers.RendererAgrupaciones;
 import renderers.RendererDispositivos;
 import renderers.RendererHabitaciones;
 import sockets.EnvioHabitaciones;
@@ -54,6 +55,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 	Habitaciones controlador;
 	RendererHabitaciones renderer;
 	RendererDispositivos renderer2;
+	RendererAgrupaciones renderer3;
 	JList<Dispositivo>listaDispositivos;
 	String casa,habitacion;
 	Agrupaciones controladorAgrupaciones;
@@ -70,6 +72,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		controladorAgrupaciones.addPropertyChangeListener(this);
 		renderer= new RendererHabitaciones();
 		renderer2= new RendererDispositivos();
+		renderer3= new RendererAgrupaciones();
 		eliminar=false;
 		habitacion="salon";
 		this.setSize (800,600);
@@ -155,6 +158,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		listaAgrupaciones = new JList<>();	
 		listaAgrupaciones.setModel(controladorAgrupaciones);
 		listaAgrupaciones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listaAgrupaciones.setCellRenderer(renderer3);
 		listaAgrupaciones.setBackground(new Color(230, 230, 230));
 		listaAgrupaciones.setOpaque(true);
 		listaAgrupaciones.addListSelectionListener(this);
