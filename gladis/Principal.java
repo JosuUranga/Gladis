@@ -334,9 +334,6 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		}
 			break;
 		
-		case "activarAgrupacion":{
-			break;
-		}
 		case "quitarDispositivo":
 			eliminar=true;
 			listaDispositivos.clearSelection();
