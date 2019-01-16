@@ -64,8 +64,8 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 		asd.forEach(key->{ 
 			mapa.get(key).forEach(dispo->controladorAgrupaciones.eleminarDispositivoTodas(dispo)); 
 			mapa.remove(key);
+			eliminarComandoHabitacion(key);
 		});
-		
 		this.fireContentsChanged(mapa, 0, mapa.size()); 
 	}
 	public void anadirHabitacion(Habitacion habitacion) {		
