@@ -35,7 +35,7 @@ public class envioFTP extends Thread{
 			ftpClient.logout();
 			ftpClient.disconnect();
 		} catch (IOException e) {
-			System.out.println("No se ha podido conectar con el servidor FTP");
+			System.err.println("No se ha podido conectar con el servidor FTP");
 		}
 	}
 	public void enviarTodoFTP(FTPSClient ftpClient,File[]files) {
@@ -51,14 +51,14 @@ public class envioFTP extends Thread{
 				}
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.err.println("No se ha podido enviar al servidor FTP");
 		}
 	}
 	public void subirArchivo(FTPSClient ftpClient, File file) {
 		try(FileInputStream InputStream =new FileInputStream(file)) {
 			ftpClient.storeFile(file.getName(),InputStream);
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.err.println("No se ha podido enviar al servidor FTP");
 		}
 	}
 	public void borrarTodoFTP(FTPSClient ftpClient,FTPFile[]files) {
@@ -73,7 +73,7 @@ public class envioFTP extends Thread{
 				}
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.err.println("No se ha podido borrar del servidor FTP");
 		}
 	}
 }

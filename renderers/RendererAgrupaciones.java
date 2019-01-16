@@ -8,32 +8,24 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
-import gladis.Habitacion;
-
+@SuppressWarnings("serial")
 public class RendererAgrupaciones extends JLabel implements ListCellRenderer<String> {
 
 	@Override
 	public Component getListCellRendererComponent(JList<? extends String> list,
 			String value, int index, boolean isSelected, boolean cellHasFocus){
-		
-		
-		
-		
+				
 		if (isSelected) {
-			setFont( new Font("Times New Roman",Font.BOLD,30));
-			setForeground(Color.BLACK);  //new Color(190, 190, 190));
-			setBackground(new Color(75,140,255));		
+			setFont(new Font("Garamond",Font.BOLD,28));
+			setForeground(Color.BLACK);
+			setBackground(new Color(230,230,180));	
 		}else {
-			setFont( new Font("Times New Roman",Font.ITALIC,26));
-			setForeground(Color.BLUE);
-			this.setBackground(new Color(230, 230, 230));//gris
-			
+			setFont(new Font("Garamond",Font.PLAIN,26));
+			setForeground(new Color(35,35,5));
+			this.setBackground(new Color(230, 230, 230));
 		}	
-		
-		this.setText(value.toString());
-		
+		this.setText(value.toString().toUpperCase());
 		this.setOpaque(true);
-	
 		return this;
 	}
 	

@@ -61,8 +61,7 @@ public class controladorVersion extends Thread{
 				}
 			}	
 		} catch (IOException e) {
-			System.out.println("No se ha podido conectar con el servidor FTP");
-			e.printStackTrace();
+			System.err.println("No se ha podido conectar con el servidor FTP");
 		}
 	}
 	public void recibirFTP(FTPSClient ftpClient,FTPFile[] files) {

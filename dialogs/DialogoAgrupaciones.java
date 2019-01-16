@@ -6,7 +6,6 @@ import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,12 +24,13 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
-import exceptions.DialogoNombreRepetidoException;
+import exceptions.NombreRepetidoException;
 import gladis.Dispositivo;
 import gladis.Habitacion;
 import models.Agrupaciones;
 import models.ListaDispositivos;
 
+@SuppressWarnings("serial")
 public class DialogoAgrupaciones extends JDialog implements ActionListener{
 	
 	JButton boton1, botonOK, botonCA;
@@ -211,7 +211,7 @@ public class DialogoAgrupaciones extends JDialog implements ActionListener{
 		if(e.getActionCommand().equals("ok")) {
 			
 			if(this.getListaAgrupacion().isEmpty()) {
-				JOptionPane.showMessageDialog(this, "La lista de la agrupación está vacía","Error",JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, "La lista de la agrupaciï¿½n estï¿½ vacï¿½a","Error",JOptionPane.ERROR_MESSAGE);
 			}
 			else if(tnombre.getText().length()==0) {
 				JOptionPane.showMessageDialog(this, "Debe de introducir un nombre","Error",JOptionPane.ERROR_MESSAGE);
@@ -235,9 +235,9 @@ public class DialogoAgrupaciones extends JDialog implements ActionListener{
 		mapaAgrupacion.entrySet().forEach(entry->{
 			if(nombreVerificar.equals(entry.getKey())) {
 					try {
-						throw new DialogoNombreRepetidoException("msg");
-					} catch (DialogoNombreRepetidoException e) {
-						JOptionPane.showMessageDialog(this, "Ya existe una agrupación con ese mismo nombre","Error",JOptionPane.ERROR_MESSAGE);
+						throw new NombreRepetidoException("msg");
+					} catch (NombreRepetidoException e) {
+						JOptionPane.showMessageDialog(this, "Ya existe una agrupaciï¿½n con ese mismo nombre","Error",JOptionPane.ERROR_MESSAGE);
 						this.setErrorIgual(true);
 					}
 				} 

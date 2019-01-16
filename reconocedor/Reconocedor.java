@@ -2,6 +2,8 @@ package reconocedor;
 import javax.speech.*;
 import javax.speech.recognition.*;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,13 +15,17 @@ public class Reconocedor {
 
 	static Recognizer oreja;
 	String palabra;
+	Programas programas;
 	Map<Habitacion,List<Dispositivo>> mapa;
 	List<Dispositivo> lista;
-
-	public Reconocedor(	Map<Habitacion,List<Dispositivo>> mapa) {
+	public Reconocedor(	Map<Habitacion,List<Dispositivo>> mapa, PropertyChangeListener p) {
 		this.mapa=mapa;
 		lista= new ArrayList<>();
-//		iniciarRec();
+		programas =new Programas(mapa);
+		programas.addPropertyChangeListener(p);
+		System.out.println(p);
+		//iniciarRec();
+
 	}
 
 	
@@ -33,7 +39,7 @@ public class Reconocedor {
 			FileReader grammar1 =new FileReader("Comandos.txt"); //ruta donde esta el archivo con las Frases
 			RuleGrammar rg = oreja.loadJSGF(grammar1);//Establece la forma en que debe de estar estructurado el archive grammar 
 			rg.setEnabled(true); //accesa al archivo
-			oreja.addResultListener(new Programas(mapa));  //Se hace referencia a la clase de escucha del reconocedor
+			oreja.addResultListener(programas);  //Se hace referencia a la clase de escucha del reconocedor
 			for(int i=0;i<=5;i++){
 				System.out.println("");
 			}

@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import exceptions.DialogoNombreRepetidoException;
+import exceptions.NombreRepetidoException;
 import gladis.Dispositivo;
 import gladis.Habitacion;
 
@@ -29,7 +29,7 @@ public class DialogoHabitacion extends JDialog implements ActionListener {
 	boolean errorIgual=false;
 	Map<Habitacion,List<Dispositivo>> mapa;
 	public DialogoHabitacion(JFrame ventana,Map<Habitacion,List<Dispositivo>> mapa) {
-		super (ventana, "Añadir Habitacion",true);	
+		super (ventana, "Aï¿½adir Habitacion",true);	
 		this.mapa=mapa;
 		this.setSize(550,250);
 		this.setLocation(260,180);
@@ -87,22 +87,21 @@ public class DialogoHabitacion extends JDialog implements ActionListener {
 		return habitacion;
 	}
 	public void hayRepetidoNombreHabitacion(String nombreVerificar) {
+		errorIgual=false;
 		mapa.entrySet().forEach(entry->{
 			if(nombreVerificar.equals(entry.getKey().getNombre())) {
 				try {
-					throw new DialogoNombreRepetidoException("msg");
-				} catch (DialogoNombreRepetidoException e) {
+					throw new NombreRepetidoException("msg");
+				} catch (NombreRepetidoException e) {
 					JOptionPane.showMessageDialog(this, "Ya existe una habitacion con ese mismo nombre","Error",JOptionPane.ERROR_MESSAGE);
-					this.setErrorIgual(true);
+					errorIgual=true;
 				}
 			} 	
 		});	
 	}
-	public void setErrorIgual(boolean errorIgual) {
-		this.errorIgual = errorIgual;
-	}
-
+	
 	private void check(String nombreVerificar) {
+		errorRellenar=false;
 		if(nombre.getText().length()==0) {
 			errorRellenar=true;
 		}

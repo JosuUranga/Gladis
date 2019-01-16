@@ -49,12 +49,12 @@ public class Cam2 extends Thread{
 		
 		 k=0; cont=0;
 		try {
-			ImageIO.write(webcam.getImage(), "JPG", new File("C:/Users/Densuke/Desktop/firstCapture.jpg"));
+			ImageIO.write(webcam.getImage(), "JPG", new File("capturas/firstCapture.jpg"));
 			TimeUnit.MILLISECONDS.sleep(200);
-			ImageIO.write(webcam.getImage(), "JPG", new File("C:/Users/Densuke/Desktop/secondCapture.jpg"));
-			File archivo=new File("C:/Users/Densuke/Desktop/firstCapture.jpg");
+			ImageIO.write(webcam.getImage(), "JPG", new File("capturas/secondCapture.jpg"));
+			File archivo=new File("capturas/firstCapture.jpg");
 			
-			File archivo2=new File("C:/Users/Densuke/Desktop/secondCapture.jpg");
+			File archivo2=new File("capturas/secondCapture.jpg");
 			
 			
 			
@@ -104,9 +104,6 @@ public class Cam2 extends Thread{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		
-		
-		
 		webcam.close();
 	}
 }

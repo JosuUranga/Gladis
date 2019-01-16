@@ -2,10 +2,12 @@ package models;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -26,7 +28,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import dialogs.DialogoDispositivos;
-import exceptions.DialogoNombreRepetidoException;
+import exceptions.NombreRepetidoException;
 import gladis.*;
 
 public class Agrupaciones extends AbstractListModel<String> {
@@ -40,11 +42,13 @@ public class Agrupaciones extends AbstractListModel<String> {
 
 	PropertyChangeSupport soporte;
 	Habitaciones casa;
-	public Agrupaciones(Habitaciones casa) {
+	String nCasa;
+	public Agrupaciones(Habitaciones casa,String nCasa) {
 		mapa = new HashMap<>();
 		mapaEstados=new HashMap<>();
 		mapaCasa=casa.getMapa();
 		this.casa=casa;
+		this.nCasa=nCasa;
 		soporte=new PropertyChangeSupport(this);
 	}
 	public void encenderAgrupacion(String keyAgrup) {
@@ -71,8 +75,8 @@ public class Agrupaciones extends AbstractListModel<String> {
 	public void agregarComandoAgrupacion(String nombre) {
 		File file = new File("Comandos.txt");
 		try (FileWriter fr= new FileWriter(file, true)){
-				fr.write("\n"+"public <modo"+nombre+"> = <accionAgrupacion> "+nombre+";");
-				fr.close();
+			fr.write("\n"+"public <modo"+nombre+"> = modo "+nombre+";"); 	
+			fr.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -92,15 +96,12 @@ public class Agrupaciones extends AbstractListModel<String> {
 	public void eliminarComandoAgrupacion(String nombre) {
 		String fileName="Comandos.txt";
 		String tmp ="tmp.txt";
-		try (Stream<String> stream = Files.lines(Paths.get(fileName));
-				FileWriter fr = new FileWriter(tmp)) {
-			stream.filter(line->!line.trim().contains("public <modo"+nombre+">")).forEach(linea->{
-				try {
-					fr.write(linea+"\n");
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			});
+		String line; 
+		try(FileWriter fr = new FileWriter(tmp); 
+					BufferedReader br = new BufferedReader(new FileReader(fileName))){ 
+			while((line=br.readLine())!=null) { 
+				if(!line.contains("public <modo"+nombre+">")) fr.write(line+"\n"); 
+			} 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -175,12 +176,11 @@ public class Agrupaciones extends AbstractListModel<String> {
 						}));
 					});
 					map.put(key, value);
-					/*for(Dispositivo d:value) {
-					agregarComando(d);
-					}
-					Reconocedor.actualizaReconocedor();
-					 */
-					this.fireContentsChanged(mapa, 0, mapa.size());
+					eliminarComandoAgrupacion(key); 
+					agregarComandoAgrupacion(key); 
+					//Reconocedor.actualizaReconocedor(); 
+					  
+					this.fireContentsChanged(map, 0, map.size()); 
 				}
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -212,14 +212,20 @@ public class Agrupaciones extends AbstractListModel<String> {
 	public Map<String, List<Dispositivo>> getMapaEstados() {
 		return mapaEstados;
 	}
-	public void eleminarDispositivoTodas (Dispositivo dispositivo) {
+	public void eleminarDispositivoTodas (List<Dispositivo> lista) {
 		List<String>asdAS=new ArrayList<>();
 		mapa.entrySet().stream().forEach(entry->{
 			entry.getValue().forEach(Disp->{
-				if(Disp.equals(dispositivo))asdAS.add(entry.getKey());
+				lista.forEach(disp2->{
+					if(Disp.equals(disp2))asdAS.add(entry.getKey());
+				});
 			});
 		});
-		asdAS.forEach(key->mapa.get(key).remove(dispositivo));
+		asdAS.forEach(key->{
+			lista.forEach(disp->mapa.get(key).remove(disp));
+			this.escribirAgrupacion(key, nCasa);
+			soporte.firePropertyChange("envioAgrupacion", "enviar", key);
+		});
 		this.fireContentsChanged(mapa, 0, mapa.size());
 	}
 	public void dispositivoModificado(Dispositivo dispositivo) {

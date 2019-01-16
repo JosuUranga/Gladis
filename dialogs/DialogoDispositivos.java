@@ -21,9 +21,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import exceptions.DialogoNombreRepetidoException;
+import exceptions.NombreRepetidoException;
 import gladis.*;
-import models.Agrupaciones;
 
 
 @SuppressWarnings("serial")
@@ -48,8 +47,8 @@ public class DialogoDispositivos extends JDialog implements ActionListener{
 	String[] dispositivos= {"Luces", "Electrodomesticos", "Aparatos Electricos", "Otros"};
 	
 	String[] luces= {"Luz Normal", "Luz RGB", "Luz Gradual"};
-	String[] electrodomesticos= {"FrigorÃ­fico", "Microondas", "Lavadora", "Lavavajillas", "Horno", "Congelador"};
-	String[] aparatos= {"Equipo de mÃºsica", "Despertador", "TelevisiÃ³n", "Temperatura"};
+	String[] electrodomesticos= {"Frigorífico", "Microondas", "Lavadora", "Lavavajillas", "Horno", "Congelador"};
+	String[] aparatos= {"Equipo de música", "Despertador", "Televisión", "Temperatura"};
 	String[] otros= {"Programable tiempo","No programable"};
 	
 	public DialogoDispositivos (JFrame ventana,String titulo, boolean modo,Map<Habitacion, List<Dispositivo>> map) {
@@ -178,7 +177,7 @@ public class DialogoDispositivos extends JDialog implements ActionListener{
 						 dialogo=new DialogoVar(ventana,dispositivo);
 						break;
 					}
-					case "FrigorÃ­fico":{
+					case "Frigorífico":{
 						dispositivo=new Dispositivo(nombre.getText(),"img/frigorifico.png",null,(String) comboTipo.getSelectedItem());
 						dispositivo.addVariable(new Variable("Temperatura"));
 						 dialogo=new DialogoVar(ventana,dispositivo);
@@ -208,7 +207,7 @@ public class DialogoDispositivos extends JDialog implements ActionListener{
 						 dialogo=new DialogoVar(ventana,dispositivo);
 						break;
 					}
-					case "Equipo de mÃºsica": {
+					case "Equipo de música": {
 						dispositivo=new Dispositivo(nombre.getText(),"img/equipodemusica.png",null,(String) comboTipo.getSelectedItem());
 						dispositivo.addVariable(new Variable("Volumen"));
 						dispositivo.addVariable(new Variable("Cancion"));
@@ -226,7 +225,7 @@ public class DialogoDispositivos extends JDialog implements ActionListener{
 						 dialogo=new DialogoVar(ventana,dispositivo);
 						break;
 					}
-					case "TelevisiÃ³n":{
+					case "Televisión":{
 						dispositivo=new Dispositivo(nombre.getText(),"img/television.png",null,(String) comboTipo.getSelectedItem());
 						dispositivo.addVariable(new Variable("Volumen"));
 						dispositivo.addVariable(new Variable("Canal"));
@@ -266,8 +265,8 @@ public class DialogoDispositivos extends JDialog implements ActionListener{
 						}
 						break;				
 					default: break;
-					}	
-				DialogoDispositivos.this.dispose();
+					}
+					DialogoDispositivos.this.dispose();
 				}
 				else {
 					if(!errorIgual)JOptionPane.showMessageDialog(DialogoDispositivos.this, "Debe rellenar todos los camposxd","Error",JOptionPane.ERROR_MESSAGE);
@@ -301,8 +300,8 @@ public class DialogoDispositivos extends JDialog implements ActionListener{
 			entry.getValue().forEach(disp2->{
 				if(nombreVerificar.equals(disp2.getNombre())) {
 					try {
-						throw new DialogoNombreRepetidoException("msg");
-					} catch (DialogoNombreRepetidoException e) {
+						throw new NombreRepetidoException("msg");
+					} catch (NombreRepetidoException e) {
 						JOptionPane.showMessageDialog(this, "Ya existe un dispositivo con ese mismo nombre","Error",JOptionPane.ERROR_MESSAGE);
 						this.setErrorIgual(true);
 					}
@@ -392,3 +391,4 @@ public class DialogoDispositivos extends JDialog implements ActionListener{
 	}
 
 }
+
