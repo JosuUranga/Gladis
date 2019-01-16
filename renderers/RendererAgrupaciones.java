@@ -16,12 +16,12 @@ public class RendererAgrupaciones extends JLabel implements ListCellRenderer<Str
 			String value, int index, boolean isSelected, boolean cellHasFocus){
 				
 		if (isSelected) {
-			setFont( new Font("Times New Roman",Font.BOLD,30));
+			setFont( new Font("Garamond",Font.BOLD,28));
 			setForeground(Color.BLACK);
-			setBackground(new Color(75,140,255));		
+			setBackground(new Color(230,230,180));	
 		}else {
-			setFont( new Font("Times New Roman",Font.ITALIC,26));
-			setForeground(Color.BLUE);
+			setFont( new Font("Garamond",Font.PLAIN,26));
+			setForeground(new Color(35,35,5));
 			this.setBackground(new Color(230, 230, 230));
 		}	
 		this.setText(value.toString().toUpperCase());
