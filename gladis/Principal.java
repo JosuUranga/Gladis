@@ -190,7 +190,6 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		bquitarAgrupacion = new JButton(new ImageIcon("img/quitar.png"));
 		bquitarAgrupacion.addActionListener(this);
 		bquitarAgrupacion.setActionCommand("quitarAgrupacion");
-		bquitarAgrupacion.setEnabled(false);
 		toolbar.add(bquitarAgrupacion);
 
 		toolbar.add(Box.createHorizontalGlue());
@@ -289,6 +288,8 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			}
 			listaHabitaciones.clearSelection();
 			listaDispositivos.setListData(new Dispositivo[0]);
+			banadirDispositivo.setEnabled(false);
+			bquitarDispositivo.setEnabled(false);
 			break;
 			
 		case "anadirDispositivo":
@@ -309,11 +310,11 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 					controladorAgrupaciones.escribirAgrupacion(dialogoAgrupacion.getNombre(), casa);
 				}
 				listaAgrupaciones.clearSelection();
-				listaHabitaciones.clearSelection();
 				listaDispositivos.setListData(new Dispositivo[0]);
 			}else {
 				JOptionPane.showMessageDialog(this, "No hay habitaciones", "Error", JOptionPane.ERROR_MESSAGE);
 			}
+			bactivarAgrupacion.setEnabled(false);
 		}
 			break;
 		case "activarAgrupacion":
@@ -322,6 +323,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			break;
 		case "noMolestar":
 			propertyChange(new PropertyChangeEvent(this, "noMolestar", true, listaHabitaciones.getSelectedValue().getNombre()));
+			propertyChange(new PropertyChangeEvent(this,"envioHabitacion","noMolestar",listaHabitaciones.getSelectedValue())); 
 			break;
 		case "quitarAgrupacion":{
 			if(listaAgrupaciones.getSelectedValue()!=null) {
@@ -329,8 +331,8 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				controladorAgrupaciones.eliminarString(listaAgrupaciones.getSelectedValue());
 			}
 			listaAgrupaciones.clearSelection();
-			listaHabitaciones.clearSelection();
 			listaDispositivos.setListData(new Dispositivo[0]);
+			bactivarAgrupacion.setEnabled(false);
 		}
 			break;
 		
@@ -354,6 +356,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				bquitarHabitacion.setEnabled(true);
 				banadirHabitacion.setEnabled(true);
 				noMolestar.setEnabled(true);
+				banadirDispositivo.setEnabled(true);
 			}
 		}else if(arg0.getSource()==listaAgrupaciones) {
 			listaHabitaciones.clearSelection();
@@ -461,6 +464,34 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			break;
 		case "habitacion":
 			
+			break;
+		case "noMolestar":
+			List<Habitacion>habi=new ArrayList<>();
+			controlador.getMapa().keySet().forEach(key->{
+				if(key.getNombre().equals((String)evt.getNewValue()))habi.add(key);
+			});
+			Habitacion hab=habi.get(0);
+			if(!hab.isNoMolestar()) { 
+				for(Dispositivo disp: controlador.getMapa().get(hab)) { 
+					disp.setNoMolestar(true); 
+				} 
+				hab.setNoMolestar(true); 
+				listaDispositivos.setListData(controlador.getDispositivosData(hab)); 
+				banadirDispositivo.setEnabled(false); 
+				bquitarDispositivo.setEnabled(false); 
+			} 
+			else { 
+				for(Dispositivo disp: controlador.getMapa().get(hab)) { 
+					disp.setNoMolestar(false); 
+				} 
+				hab.setNoMolestar(false); 
+				listaDispositivos.setListData(controlador.getDispositivosData(hab)); 
+				banadirDispositivo.setEnabled(true); 
+				if(listaDispositivos.getModel().getSize()==0)bquitarDispositivo.setEnabled(false);
+				else bquitarDispositivo.setEnabled(true); 
+				
+			}
+			controlador.noMolestar(); 
 			break;
 		case "comandosDisp": controlador.agregarComandoVar((Dispositivo)evt.getNewValue());
 		System.out.println("ASDALSIHDLASHFOAI�FJAM�SOIFASPODIAOPSDMAOPSD");
