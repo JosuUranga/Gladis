@@ -315,6 +315,10 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			}
 		}
 			break;
+		case "activarAgrupacion":
+			controladorAgrupaciones.encenderAgrupacion(listaAgrupaciones.getSelectedValue());
+			propertyChange(new PropertyChangeEvent(this, "agrupacion", null, null));
+			break;
 		case "noMolestar":
 			propertyChange(new PropertyChangeEvent(this, "noMolestar", true, listaHabitaciones.getSelectedValue().getNombre()));
 			break;
@@ -358,7 +362,9 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				banadirDispositivo.setEnabled(false);
 				noMolestar.setEnabled(false);
 				bquitarDispositivo.setEnabled(true);
+				bactivarAgrupacion.setEnabled(true);
 			}else {
+				bactivarAgrupacion.setEnabled(false);
 				bquitarAgrupacion.setEnabled(false);
 			}
 		}else if (eliminar==true && listaDispositivos.getSelectedIndex()!=-1) {
@@ -376,9 +382,9 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			}
 			listaDispositivos.clearSelection();
 			eliminar=false;
-		}else if(arg0.getSource()==listaDispositivos&& !listaHabitaciones.getSelectedValue().isNoMolestar()) {
+		}else if(arg0.getSource()==listaDispositivos) {
 			if(listaDispositivos.getSelectedIndex()!=-1) {
-				if(listaHabitaciones.getSelectedIndex()!=-1) {
+				if(listaHabitaciones.getSelectedIndex()!=-1&&!listaHabitaciones.getSelectedValue().isNoMolestar()) {
 					listaDispositivos.getSelectedValue().modificar(this);
 					controlador.escribirHabitacion(listaHabitaciones.getSelectedValue(), casa);
 					propertyChange(new PropertyChangeEvent(this,"envioHabitacion", "enviar", listaHabitaciones.getSelectedValue()));
