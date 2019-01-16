@@ -190,6 +190,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		bquitarAgrupacion = new JButton(new ImageIcon("img/quitar.png"));
 		bquitarAgrupacion.addActionListener(this);
 		bquitarAgrupacion.setActionCommand("quitarAgrupacion");
+		bquitarAgrupacion.setEnabled(false);
 		toolbar.add(bquitarAgrupacion);
 
 		toolbar.add(Box.createHorizontalGlue());
