@@ -109,15 +109,15 @@ public class Agrupaciones extends AbstractListModel<String> {
 		//casa.Reconocedor.actualizaReconocedor();
 		
 	}
-	public void escribirAgrupacion(String agrupacion,String casa) {
+	public void escribirAgrupacion(String agrupacion) {
 		Set<Entry<String,List<Dispositivo>>> datos = mapa.entrySet();
 		Set<Entry<String,List<Dispositivo>>> datosEstados = mapaEstados.entrySet();
 		datos.stream().forEach(set->{
-			if(set.getKey().equals(agrupacion))escribirFichero(set,"files/"+casa+"/"+"agrupaciones/originales/");
+			if(set.getKey().equals(agrupacion))escribirFichero(set,"files/"+nCasa+"/"+"agrupaciones/originales/");
 		});
 		datosEstados.stream().forEach(set->{
 			if(set.getKey().equals(agrupacion)) {
-				escribirFichero(set,"files/"+casa+"/"+"agrupaciones/estados/");
+				escribirFichero(set,"files/"+nCasa+"/"+"agrupaciones/estados/");
 			}
 		});
 		soporte.firePropertyChange("envioAgrupacion", "enviar", agrupacion);
@@ -223,7 +223,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 		});
 		asdAS.forEach(key->{
 			lista.forEach(disp->mapa.get(key).remove(disp));
-			this.escribirAgrupacion(key, nCasa);
+			this.escribirAgrupacion(key);
 			soporte.firePropertyChange("envioAgrupacion", "enviar", key);
 		});
 		this.fireContentsChanged(mapa, 0, mapa.size());

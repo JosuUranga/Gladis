@@ -314,7 +314,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				dialogoAgrupacion=new DialogoAgrupaciones(this, controladorAgrupaciones);
 				if(dialogoAgrupacion.isCrear()) {
 					controladorAgrupaciones.anadirDispositivos(dialogoAgrupacion.getNombre(), dialogoAgrupacion.getListaAgrupacion(), this);
-					controladorAgrupaciones.escribirAgrupacion(dialogoAgrupacion.getNombre(), casa);
+					controladorAgrupaciones.escribirAgrupacion(dialogoAgrupacion.getNombre());
 					
 				}
 				listaAgrupaciones.clearSelection();
@@ -400,7 +400,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				}
 				else if(listaAgrupaciones.getSelectedIndex()!=-1) {
 					controladorAgrupaciones.getMapaEstados().get(listaAgrupaciones.getSelectedValue()).get(listaDispositivos.getSelectedIndex()).modificar(this);
-					controladorAgrupaciones.escribirAgrupacion(listaAgrupaciones.getSelectedValue(), casa);
+					controladorAgrupaciones.escribirAgrupacion(listaAgrupaciones.getSelectedValue());
 				}
 				listaDispositivos.clearSelection();	
 				controlador.ordenarListas(); 
@@ -464,7 +464,6 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			}else {
 				controladorAgrupaciones.leerFichero(w.toString(),controladorAgrupaciones.getMapa());
 			}
-			
 			break;
 		case "quitarIp":
 			ips.remove(evt.getNewValue());
