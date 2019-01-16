@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Window;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -12,14 +13,13 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -133,8 +133,14 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		bquitarDispositivo.setEnabled(false);
 		toolbar.add(bquitarDispositivo);
 		
-		toolbar.add(Box.createHorizontalGlue());
+		toolbar.add(Box.createGlue());
 		
+		JLabel lNombre = new JLabel("DISPOSITIVOS");
+		lNombre.setFont(new Font("Garamond",Font.PLAIN,12));
+		lNombre.setForeground(new Color(35,35,5));
+		toolbar.add(lNombre);
+
+		toolbar.add(Box.createHorizontalGlue());
 		noMolestar=new JButton(new ImageIcon("img/noMolestar.png"));
 		noMolestar.addActionListener(this);
 		noMolestar.setActionCommand("noMolestar");
