@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -33,6 +34,8 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import com.sun.animation.transitions.ScreenTransition;
 
 import dialogs.DialogoAgrupaciones;
 import dialogs.DialogoDispositivos;
@@ -77,8 +80,9 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		renderer3= new RendererAgrupaciones();
 		eliminar=false;
 		habitacion="salon";
-		this.setSize (800,600);
-		this.setLocation(200,100);
+		
+		this.setExtendedState(MAXIMIZED_BOTH);
+		this.setLocation(0,0);
 		this.setContentPane(crearPanelVentana());
 		controlador.inicializar(casa);
 		controladorAgrupaciones.inicializar(casa);
@@ -142,7 +146,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 
 	private Component crearPanelCentral() {
 		JSplitPane panel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,true,crearPanelIzquierda(),crearPanelDerecha());
-		
+		panel.setDividerLocation(500);
 		return panel;
 	}
 	
@@ -206,7 +210,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 	}
 	private Component crearPanelIzquierda() {
 		JSplitPane panel = new JSplitPane(JSplitPane.VERTICAL_SPLIT,true,crearPanelIzquierdaArriba(),crearPanelIzquierdaAbajo());
-		panel.setDividerLocation((this.getHeight()-90)/2);
+		panel.setDividerLocation(500);
 		return panel;
 	}
 	
