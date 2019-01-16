@@ -3,6 +3,7 @@ package models;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -64,6 +65,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 			mapa.get(key).forEach(dispo->controladorAgrupaciones.eleminarDispositivoTodas(dispo)); 
 			mapa.remove(key);
 		});
+		
 		this.fireContentsChanged(mapa, 0, mapa.size()); 
 	}
 	public void anadirHabitacion(Habitacion habitacion) {		
@@ -96,20 +98,16 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 	private void eliminarComandoHabitacion(Habitacion habitacion) {
 		String fileName="Comandos.txt";
 		String tmp ="tmp.txt";
-		try (Stream<String> stream = Files.lines(Paths.get(fileName));
-				FileWriter fr = new FileWriter(tmp)) {
-			stream.filter(line->!line.trim().contains("public <noMolestar"+habitacion)).forEach(linea->{
-				try {
-					fr.write(linea+"\n");
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			});
+		String line;
+		try(FileWriter fr = new FileWriter(tmp);
+					BufferedReader br = new BufferedReader(new FileReader(fileName))){
+			while((line=br.readLine())!=null) {
+				if(!line.contains("public <noMolestar"+habitacion)) fr.write(line+"\n");
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		reemplazar(fileName,tmp);
-	//	Reconocedor.actualizaReconocedor();		
 	}
 	public void anadirDispositivo (Habitacion habitacion,Dispositivo dispositivo) {
 		List<Dispositivo>lista = mapa.get(habitacion);
@@ -126,16 +124,8 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 		List<Dispositivo>lista = mapa.get(habitacion);
 		lista.remove(dispositivo);
 		mapa.replace(habitacion, mapa.get(habitacion), lista);
-		if(!dispositivo.getTipo().equals("Programable tiempo") &&!dispositivo.getTipo().equals("No programable") ) {
-			eliminarComando(dispositivo,"public <"+dispositivo.getNombre()+"> = <accion> [<variables>] "+dispositivo.getNombre()+" [<numeros>];");
-		}
-		else {
-			eliminarComando(dispositivo,"public <"+dispositivo.getNombre()+"> = <accion> [<"+dispositivo.getNombre()+"Variables>] "+dispositivo.getNombre()+" [<numeros>];");
-			String lineToRemove=leerLineaVariables(dispositivo);
-			System.out.println("ESTO HA BORRADO: "+lineToRemove);
-			eliminarComando(dispositivo, lineToRemove);
-		}
-		if(dispositivo instanceof DispositivoTmp) eliminarComando(dispositivo, "public <"+dispositivo.getNombre()+"Tiempo> = <tiempo> "+dispositivo.getNombre()+";");
+		eliminarComandoDispositivoCompleto(dispositivo);
+		//	Reconocedor.actualizaReconocedor();
 		soporte.firePropertyChange("dispositivos", true, false);
 		
 	}
@@ -165,23 +155,31 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 			mapa.put(habitacion, l);
 		}
 	}
+	public void eliminarComandoDispositivoCompleto(Dispositivo dispositivo) {
+		if(!dispositivo.getTipo().equals("Programable tiempo") &&!dispositivo.getTipo().equals("No programable") ) {
+			eliminarComando(dispositivo,"public <"+dispositivo.getNombre()+"> = <accion> [<variables>] "+dispositivo.getNombre()+" [<numeros>];");
+		}
+		else {
+			eliminarComando(dispositivo,"public <"+dispositivo.getNombre()+"> = <accion> [<"+dispositivo.getNombre()+"Variables>] "+dispositivo.getNombre()+" [<numeros>];");
+			String lineToRemove=leerLineaVariables(dispositivo);
+			System.out.println("ESTO HA BORRADO: "+lineToRemove);
+			eliminarComando(dispositivo, lineToRemove);
+		}
+		if(dispositivo instanceof DispositivoTmp) eliminarComando(dispositivo, "public <"+dispositivo.getNombre()+"Tiempo> = <tiempo> "+dispositivo.getNombre()+";");
+	}
 	public void eliminarComando(Dispositivo dispositivo, String lineToRemove) {
 		String fileName="Comandos.txt";
 		String tmp ="tmp.txt";
-		try (Stream<String> stream = Files.lines(Paths.get(fileName));
-				FileWriter fr = new FileWriter(tmp)) {
-			stream.filter(line->!line.trim().equals(lineToRemove)).forEach(linea->{
-				try {
-					fr.write(linea+"\n");
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			});
+		String line;
+		try(FileWriter fr = new FileWriter(tmp);
+					BufferedReader br = new BufferedReader(new FileReader(fileName))){
+			while((line=br.readLine())!=null) {
+				if(!line.equals(lineToRemove)) fr.write(line+"\n");
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		reemplazar(fileName,tmp);
-	//	Reconocedor.actualizaReconocedor();
 	}
 	public void reemplazar(String fileName, String tmp) {
 		String s;
@@ -211,7 +209,6 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 			if(dispositivo instanceof DispositivoTmp) fr.write("\n"+"public <"+dispositivo.getNombre()+"Tiempo> = <tiempo> "+dispositivo.getNombre()+";");
 			fr.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -225,10 +222,8 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 			fr.write(");");
 			fr.write("\n"+"public <"+dispositivo.getNombre()+"> = <accion> [<"+dispositivo.getNombre()+"Variables>] "+dispositivo.getNombre()+" [<numeros>];");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	//	Reconocedor.actualizaReconocedor();
 	}
 	
 	public void escribirHabitacion(Habitacion habitacion,String casa) {
@@ -256,12 +251,13 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 				Habitacion key= (Habitacion) in.readObject();
 				@SuppressWarnings("unchecked")
 				List<Dispositivo> value=(List<Dispositivo>) in.readObject();
-				if(mapa.containsKey(key))mapa.remove(key);
 				mapa.put(key, value);
 				for(Dispositivo d:value) {
+					eliminarComandoDispositivoCompleto(d);
 					agregarComando(d);
-					if(d.getTipo().equals("Programable tiempo")||d.getTipo().equals("No Programable")) agregarComandoVar(d);
 				}
+				eliminarComandoHabitacion(key);
+				escribirComandoHabitacion(key);
 		//		Reconocedor.actualizaReconocedor();
 				
 				this.fireContentsChanged(mapa, 0, mapa.size());
