@@ -6,7 +6,6 @@ import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +32,7 @@ import models.ListaDispositivos;
 
 public class DialogoAgrupaciones extends JDialog implements ActionListener{
 	
+	private static final long serialVersionUID = 8045981208595000561L;
 	JButton boton1, botonOK, botonCA;
 	JFrame ventana;
 	JComboBox<Habitacion> combobox;

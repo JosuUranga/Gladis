@@ -23,7 +23,6 @@ import javax.swing.JTextField;
 
 import exceptions.DialogoNombreRepetidoException;
 import gladis.*;
-import models.Agrupaciones;
 
 
 @SuppressWarnings("serial")

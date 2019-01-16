@@ -2,13 +2,11 @@ package models;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
 import javax.swing.AbstractListModel;
 
 import gladis.Dispositivo;
-import gladis.Habitacion;
 
+@SuppressWarnings("serial")
 public class ListaDispositivos extends AbstractListModel<Dispositivo> {
 	
 	List<Dispositivo> lista;

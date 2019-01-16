@@ -2,6 +2,7 @@ package gladis;
 
 import java.io.Serializable;
 
+@SuppressWarnings("serial")
 public class Tiempo  implements Serializable{
 
 	int minutos;

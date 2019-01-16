@@ -7,6 +7,7 @@ import javax.swing.Timer;
 
 import dialogs.DialogoModificar;
 
+@SuppressWarnings("serial")
 public class DispositivoTmp extends Dispositivo {
 	Tiempo tiempo;
 	Timer timer;

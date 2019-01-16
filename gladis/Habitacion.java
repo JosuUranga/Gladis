@@ -2,6 +2,7 @@ package gladis;
 
 import java.io.Serializable;
 
+@SuppressWarnings("serial")
 public class Habitacion implements Serializable{
 	String nombre;
 	boolean activo;
@@ -28,7 +29,7 @@ public class Habitacion implements Serializable{
 	@Override
 	public String toString() {
 		
-		return nombre;
+		return nombre.toUpperCase();
 	}
 
 	

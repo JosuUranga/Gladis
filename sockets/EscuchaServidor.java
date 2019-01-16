@@ -2,7 +2,6 @@ package sockets;
 
 
 import java.net.*;
-import java.util.List;
 import java.beans.PropertyChangeListener;
 import java.io.*;
 

@@ -45,6 +45,7 @@ import renderers.RendererHabitaciones;
 import sockets.EnvioHabitaciones;
 import sockets.EscuchaServidor;
 
+@SuppressWarnings("serial")
 public class Principal extends JFrame implements ActionListener, ListSelectionListener, PropertyChangeListener {
 	JMenuBar barra;	
 	JMenu editar,salir;
@@ -252,6 +253,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				| UnsupportedLookAndFeelException e) {
 			
 		}
+		@SuppressWarnings("unused")
 		Principal programa = new Principal();	
 
 	}

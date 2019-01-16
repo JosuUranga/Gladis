@@ -2,6 +2,7 @@ package gladis;
 
 import java.io.Serializable;
 
+@SuppressWarnings("serial")
 public class Variable implements Serializable{
 	int max;
 	int min;

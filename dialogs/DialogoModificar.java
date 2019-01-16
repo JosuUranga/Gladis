@@ -34,6 +34,8 @@ import gladis.Tiempo;
 import gladis.Variable;
 
 public class DialogoModificar extends JDialog implements ActionListener, Serializable{
+	
+	private static final long serialVersionUID = -4521053150077547473L;
 	JRadioButton on, off;
 	JButton fav;
 	Dispositivo dispositivo;

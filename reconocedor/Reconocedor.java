@@ -3,7 +3,6 @@ import javax.speech.*;
 import javax.speech.recognition.*;
 
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
