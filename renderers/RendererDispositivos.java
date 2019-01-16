@@ -78,7 +78,7 @@ public class RendererDispositivos  implements ListCellRenderer<Dispositivo> {
 		
 		if(isSelected && !dispositivo.isNoMolestar()) {
 			boton.setBorder(BorderFactory.createLoweredBevelBorder());
-			boton.setBackground(new Color(75,140,255));
+			boton.setBackground(new Color(230,230,180));	
 			boton.setOpaque(true);
 		}
 		if(dispositivo.isFavorito()) {
