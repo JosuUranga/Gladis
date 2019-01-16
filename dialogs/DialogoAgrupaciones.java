@@ -24,7 +24,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
-import exceptions.DialogoNombreRepetidoException;
+import exceptions.NombreRepetidoException;
 import gladis.Dispositivo;
 import gladis.Habitacion;
 import models.Agrupaciones;
@@ -235,8 +235,8 @@ public class DialogoAgrupaciones extends JDialog implements ActionListener{
 		mapaAgrupacion.entrySet().forEach(entry->{
 			if(nombreVerificar.equals(entry.getKey())) {
 					try {
-						throw new DialogoNombreRepetidoException("msg");
-					} catch (DialogoNombreRepetidoException e) {
+						throw new NombreRepetidoException("msg");
+					} catch (NombreRepetidoException e) {
 						JOptionPane.showMessageDialog(this, "Ya existe una agrupación con ese mismo nombre","Error",JOptionPane.ERROR_MESSAGE);
 						this.setErrorIgual(true);
 					}

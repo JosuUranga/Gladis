@@ -21,7 +21,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import exceptions.DialogoNombreRepetidoException;
+import exceptions.NombreRepetidoException;
 import gladis.*;
 
 
@@ -300,8 +300,8 @@ public class DialogoDispositivos extends JDialog implements ActionListener{
 			entry.getValue().forEach(disp2->{
 				if(nombreVerificar.equals(disp2.getNombre())) {
 					try {
-						throw new DialogoNombreRepetidoException("msg");
-					} catch (DialogoNombreRepetidoException e) {
+						throw new NombreRepetidoException("msg");
+					} catch (NombreRepetidoException e) {
 						JOptionPane.showMessageDialog(this, "Ya existe un dispositivo con ese mismo nombre","Error",JOptionPane.ERROR_MESSAGE);
 						this.setErrorIgual(true);
 					}

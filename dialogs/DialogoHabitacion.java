@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import exceptions.DialogoNombreRepetidoException;
+import exceptions.NombreRepetidoException;
 import gladis.Dispositivo;
 import gladis.Habitacion;
 
@@ -91,8 +91,8 @@ public class DialogoHabitacion extends JDialog implements ActionListener {
 		mapa.entrySet().forEach(entry->{
 			if(nombreVerificar.equals(entry.getKey().getNombre())) {
 				try {
-					throw new DialogoNombreRepetidoException("msg");
-				} catch (DialogoNombreRepetidoException e) {
+					throw new NombreRepetidoException("msg");
+				} catch (NombreRepetidoException e) {
 					JOptionPane.showMessageDialog(this, "Ya existe una habitacion con ese mismo nombre","Error",JOptionPane.ERROR_MESSAGE);
 					errorIgual=true;
 				}
