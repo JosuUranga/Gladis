@@ -3,7 +3,6 @@ package models;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,9 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,8 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.stream.Stream;
-
 import javax.swing.AbstractListModel;
 
 import gladis.*;
@@ -62,7 +57,11 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 			if(keys.toString().equals(p.getFileName().toString().replaceAll(".dat", "")))asd.add(keys); 
 		});
 		asd.forEach(key->{ 
-			mapa.get(key).forEach(dispo->controladorAgrupaciones.eleminarDispositivoTodas(dispo)); 
+			List<Dispositivo> lista = new ArrayList<>();
+			mapa.get(key).forEach(dispo->{
+				lista.add(dispo);
+			}); 
+			controladorAgrupaciones.eleminarDispositivoTodas(lista);
 			mapa.remove(key);
 			eliminarComandoHabitacion(key);
 		});

@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Window;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +12,8 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -34,8 +35,6 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
-import com.sun.animation.transitions.ScreenTransition;
 
 import dialogs.DialogoAgrupaciones;
 import dialogs.DialogoDispositivos;
@@ -73,7 +72,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		new EnvioHabitaciones(master, null,"").start();
 		controlador= new Habitaciones(this);
 		controlador.addPropertyChangeListener(this);
-		controladorAgrupaciones = new Agrupaciones(controlador);
+		controladorAgrupaciones = new Agrupaciones(controlador, casa);
 		controladorAgrupaciones.addPropertyChangeListener(this);
 		renderer= new RendererHabitaciones();
 		renderer2= new RendererDispositivos();
@@ -275,7 +274,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		case "quitarHabitacion":
 			listaDispositivos.clearSelection();
 			propertyChange(new PropertyChangeEvent(this,"envioHabitacion", "borrar", listaHabitaciones.getSelectedValue()));
-			controlador.getMapa().get(listaHabitaciones.getSelectedValue()).forEach(dispo->controladorAgrupaciones.eleminarDispositivoTodas(dispo));			
+			controladorAgrupaciones.eleminarDispositivoTodas(controlador.getMapa().get(listaHabitaciones.getSelectedValue()));
 			controlador.eliminarDispositivosHabitacion(listaHabitaciones.getSelectedValue());
 			controlador.eliminarHabitacion(listaHabitaciones.getSelectedValue());
 			listaHabitaciones.clearSelection();
@@ -383,8 +382,11 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				bquitarAgrupacion.setEnabled(false);
 			}
 		}else if (eliminar==true && listaDispositivos.getSelectedIndex()!=-1) {
-			if(listaHabitaciones.getSelectedIndex()!=-1) {				
-				controladorAgrupaciones.eleminarDispositivoTodas(listaDispositivos.getSelectedValue());
+			if(listaHabitaciones.getSelectedIndex()!=-1) {		
+				List<Dispositivo> lista = new ArrayList<>();
+				lista.add(listaDispositivos.getSelectedValue());
+				controladorAgrupaciones.eleminarDispositivoTodas(lista);
+				lista=null;
 				controlador.eleminarDispositivo(listaHabitaciones.getSelectedValue(), listaDispositivos.getSelectedValue());
 				controlador.escribirHabitacion(listaHabitaciones.getSelectedValue(), casa);
 				propertyChange(new PropertyChangeEvent(this,"envioHabitacion", "enviar", listaHabitaciones.getSelectedValue()));

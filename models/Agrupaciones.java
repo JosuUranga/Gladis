@@ -12,16 +12,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.stream.Stream;
-
 import javax.swing.AbstractListModel;
 import gladis.*;
 
@@ -38,12 +34,14 @@ public class Agrupaciones extends AbstractListModel<String> {
 
 	PropertyChangeSupport soporte;
 	Habitaciones casa;
-	public Agrupaciones(Habitaciones casa) {
+	String nCasa;
+	public Agrupaciones(Habitaciones casa, String nCasa) {
 		mapa = new HashMap<>();
 		mapaEstados=new HashMap<>();
 		mapaCasa=casa.getMapa();
 		this.casa=casa;
 		soporte=new PropertyChangeSupport(this);
+		this.nCasa=nCasa;
 	}
 	public void anadirString(String nombre) {		
 		mapa.put(nombre, new ArrayList<>());
@@ -153,6 +151,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 							if(disp.getNombre().equals(disp2.getNombre()))value.set(value.indexOf(disp2), disp);
 						}));
 					});
+					mapa.put(key, value);
 					eliminarComandoAgrupacion(key);
 					agregarComandoAgrupacion(key);
 					//Reconocedor.actualizaReconocedor();
@@ -217,14 +216,20 @@ public class Agrupaciones extends AbstractListModel<String> {
 		});  
 		
 	}
-	public void eleminarDispositivoTodas (Dispositivo dispositivo) {
+	public void eleminarDispositivoTodas (List<Dispositivo> lista) {
 		List<String>asdAS=new ArrayList<>();
 		mapa.entrySet().stream().forEach(entry->{
 			entry.getValue().forEach(Disp->{
-				if(Disp.equals(dispositivo))asdAS.add(entry.getKey());
+				lista.forEach(disp2->{
+					if(Disp.equals(disp2))asdAS.add(entry.getKey());
+				});
 			});
 		});
-		asdAS.forEach(key->mapa.get(key).remove(dispositivo));
+		asdAS.forEach(key->{
+			lista.forEach(disp->mapa.get(key).remove(disp));
+			this.escribirAgrupacion(key, nCasa);
+			soporte.firePropertyChange("envioAgrupacion", "enviar", key);
+		});
 		this.fireContentsChanged(mapa, 0, mapa.size());
 	}
 	public void eleminarDispositivo(String nombre, Dispositivo dispositivo) {
