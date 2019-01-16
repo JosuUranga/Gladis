@@ -30,6 +30,7 @@ import gladis.Habitacion;
 import models.Agrupaciones;
 import models.ListaDispositivos;
 
+@SuppressWarnings("serial")
 public class DialogoAgrupaciones extends JDialog implements ActionListener{
 	
 	JButton boton1, botonOK, botonCA;
