@@ -17,11 +17,14 @@ public class RendererAgrupaciones extends JLabel implements ListCellRenderer<Str
 				
 		if (isSelected) {
 			setFont(new Font("Garamond",Font.BOLD,28));
+			setFont( new Font("Times New Roman",Font.BOLD,30));
 			setForeground(Color.BLACK);
-			setBackground(new Color(230,230,180));	
+			setBackground(new Color(75,140,255));		
 		}else {
 			setFont(new Font("Garamond",Font.PLAIN,26));
 			setForeground(new Color(35,35,5));
+			setFont( new Font("Times New Roman",Font.ITALIC,26));
+			setForeground(Color.BLUE);
 			this.setBackground(new Color(230, 230, 230));
 		}	
 		this.setText(value.toString().toUpperCase());

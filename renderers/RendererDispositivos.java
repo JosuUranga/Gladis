@@ -48,10 +48,8 @@ public class RendererDispositivos  implements ListCellRenderer<Dispositivo> {
 		lImagen= new JLabel();
 		fav= new JLabel();
 		lNombre= new JLabel(dispositivo.toString().toUpperCase());//dispositivo.getNombre
-		lNombre.setFont( new Font("Garamond",Font.PLAIN,26));
-
-		lNombre.setForeground(new Color(35,35,5));
-
+		lNombre.setFont( new Font("Times New Roman",Font.ITALIC,30));
+		lNombre.setForeground(Color.BLUE);
 		lNombre.setHorizontalAlignment(JLabel.CENTER);
 		
 		Image img = (new ImageIcon(dispositivo.getImagen())).getImage();		
@@ -71,6 +69,7 @@ public class RendererDispositivos  implements ListCellRenderer<Dispositivo> {
 		
 		if(dispositivo.isNoMolestar()) {
 			boton.setEnabled(false);
+			
 		}
 		else {
 			boton.setEnabled(true);
@@ -88,8 +87,9 @@ public class RendererDispositivos  implements ListCellRenderer<Dispositivo> {
 		if(dispositivo.isEstado()) {
 			panel.setBorder(BorderFactory.createLineBorder(Color.green));
 		}
-			return panel;
-	    }
+		
+		return panel;
+	     }
 
 	
 
