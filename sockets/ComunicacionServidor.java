@@ -41,6 +41,11 @@ public class ComunicacionServidor extends Thread {
 							 file.delete();
 							 break;
 						 }
+						 if(object.equals("noMolestar")) {
+							 File file= new File(nombreArchivo);
+							 soporte.firePropertyChange("noMolestar", true, file.getName().replaceAll(".dat", ""));
+							 break;
+						 }
 						 if(object.equals("Finalizado")) {
 							 try (ObjectOutputStream outf = new ObjectOutputStream(
 										new FileOutputStream(nombreArchivo))) {

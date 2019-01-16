@@ -39,8 +39,9 @@ public class DialogoVar extends JDialog implements ActionListener{
 	List <JTextField> variables;
 	Dispositivo dispositivo;
 	PropertyChangeSupport soporte;
+	JDialog ventana;
 	public DialogoVar(JFrame ventana, Dispositivo dispositivo){
-		super(ventana);
+		super(ventana,"Variables", true);
 		this.dispositivo=dispositivo;
 		variables=new ArrayList<>();
 		crearTamano();

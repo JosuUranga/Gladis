@@ -265,8 +265,8 @@ public class DialogoDispositivos extends JDialog implements ActionListener{
 						}
 						break;				
 					default: break;
-					}	
-				DialogoDispositivos.this.dispose();
+					}
+					DialogoDispositivos.this.dispose();
 				}
 				else {
 					if(!errorIgual)JOptionPane.showMessageDialog(DialogoDispositivos.this, "Debe rellenar todos los camposxd","Error",JOptionPane.ERROR_MESSAGE);

@@ -29,6 +29,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 	Map<String,List<Dispositivo>>mapa;
 	Map<String,List<Dispositivo>>mapaEstados;
 	Map<Habitacion,List<Dispositivo>>mapaCasa;
+	
 	public Map<Habitacion, List<Dispositivo>> getMapaCasa() {
 		return mapaCasa;
 	}
@@ -112,12 +113,13 @@ public class Agrupaciones extends AbstractListModel<String> {
 			e.printStackTrace();
 		}
 	}
-	public void descargarAgrupacion(Path p) {
+	public void descargarAgrupacion(File p) {
 		List<String>asd=new ArrayList<>(); 
 		mapa.keySet().stream().forEach(keys->{ 
-			if(keys.toString().equals(p.getFileName().toString().replaceAll(".dat", "")))asd.add(keys);
+			if(keys.toString().equals(p.getName().toString().replaceAll(".dat", "")))asd.add(keys);
 		});
 		asd.forEach(key->{
+			System.out.println(p.toString());
 			if(p.toString().contains("/estados")) {
 				mapaEstados.remove(key);
 			}else {
@@ -145,23 +147,21 @@ public class Agrupaciones extends AbstractListModel<String> {
 				String key= (String) in.readObject();
 				@SuppressWarnings("unchecked")
 				List<Dispositivo> value=(List<Dispositivo>) in.readObject();
-			
-				map.put(key, value);
-				if(filename.toString().contains("/agrupaciones/estados/")) {
-					mapaEstados.put(key, value);
+				if(filename.toString().contains("estados")) {
+					map.put(key, value);
 				}else {
 					mapaCasa.entrySet().forEach(entry->{
 						entry.getValue().forEach(disp->value.forEach(disp2->{
 							if(disp.getNombre().equals(disp2.getNombre()))value.set(value.indexOf(disp2), disp);
 						}));
 					});
-					if(map.containsKey(key))map.remove(key);
+					map.put(key, value);
 					/*for(Dispositivo d:value) {
 					agregarComando(d);
 					}
 					Reconocedor.actualizaReconocedor();
 					 */
-					this.fireContentsChanged(map, 0, map.size());
+					this.fireContentsChanged(mapa, 0, mapa.size());
 				}
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -192,6 +192,15 @@ public class Agrupaciones extends AbstractListModel<String> {
 	}
 	public Map<String, List<Dispositivo>> getMapaEstados() {
 		return mapaEstados;
+	}
+	public void dispositivoModificado(Dispositivo dispositivo) {
+		List<String>asdAS=new ArrayList<>();
+		mapa.entrySet().stream().forEach(entry->{
+			entry.getValue().forEach(Disp->{
+				if(Disp.equals(dispositivo))asdAS.add(entry.getKey());
+			});
+		});
+		asdAS.forEach(key->soporte.firePropertyChange("envioAgrupacion", "enviar", key));
 	}
 	public void encenderAgrupacion(String keyAgrup) {
 		

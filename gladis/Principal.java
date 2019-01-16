@@ -47,6 +47,7 @@ import sockets.EscuchaServidor;
 
 @SuppressWarnings("serial")
 public class Principal extends JFrame implements ActionListener, ListSelectionListener, PropertyChangeListener {
+	final String master="172.17.21.64";
 	JMenuBar barra;	
 	JMenu editar,salir;
 	JMenuItem anadirHabitacion,quitarHabitacion,anadirDispositivo,quitarDispositivo,cerrar;
@@ -66,7 +67,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		super ("Gladis");
 		casa="test";	
 		new EscuchaServidor(this).start();
-		new EnvioHabitaciones("192.168.0.11", null,"").start();
+		new EnvioHabitaciones(master, null,"").start();
 		controlador= new Habitaciones(this);
 		controlador.addPropertyChangeListener(this);
 		controladorAgrupaciones = new Agrupaciones(controlador);
@@ -264,7 +265,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		case "quitarHabitacion":
 			listaDispositivos.clearSelection();
 			propertyChange(new PropertyChangeEvent(this,"envioHabitacion", "borrar", listaHabitaciones.getSelectedValue()));
-			
+			controlador.getMapa().get(listaHabitaciones.getSelectedValue()).forEach(dispo->controladorAgrupaciones.eleminarDispositivoTodas(dispo));			
 			controlador.eliminarDispositivosHabitacion(listaHabitaciones.getSelectedValue());
 			controlador.eliminarHabitacion(listaHabitaciones.getSelectedValue());
 			listaHabitaciones.clearSelection();
@@ -333,6 +334,9 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		}
 			break;
 		
+		case "activarAgrupacion":{
+			break;
+		}
 		case "quitarDispositivo":
 			eliminar=true;
 			listaDispositivos.clearSelection();
@@ -388,11 +392,11 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 					listaDispositivos.getSelectedValue().modificar(this);
 					controlador.escribirHabitacion(listaHabitaciones.getSelectedValue(), casa);
 					propertyChange(new PropertyChangeEvent(this,"envioHabitacion", "enviar", listaHabitaciones.getSelectedValue()));
+					controladorAgrupaciones.dispositivoModificado(listaDispositivos.getSelectedValue());
 				}
 				else if(listaAgrupaciones.getSelectedIndex()!=-1) {
 					controladorAgrupaciones.getMapaEstados().get(listaAgrupaciones.getSelectedValue()).get(listaDispositivos.getSelectedIndex()).modificar(this);
 					controladorAgrupaciones.escribirAgrupacion(listaAgrupaciones.getSelectedValue(), casa);
-					propertyChange(new PropertyChangeEvent(this,"envioAgrupacion", "enviar", listaAgrupaciones.getSelectedValue()));
 				}
 				listaDispositivos.clearSelection();	
 				controlador.ordenarListas();
@@ -419,15 +423,15 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			}
 			break;
 		case "envioHabitacion":
-			new EnvioHabitaciones("192.168.0.11","files/"+casa+"/habitaciones/"+((Habitacion) evt.getNewValue()).getNombre()+".dat",(String) evt.getOldValue()).start();
+			new EnvioHabitaciones(master,"files/"+casa+"/habitaciones/"+((Habitacion) evt.getNewValue()).getNombre()+".dat",(String) evt.getOldValue()).start();
 			if(((String)evt.getOldValue()).equals("borrar")) {
 				File file = new File("files/"+casa+"/habitaciones/"+evt.getNewValue()+".dat");
 				file.delete();
 			}
 			break;
 		case "envioAgrupacion":
-			new EnvioHabitaciones("192.168.0.11","files/"+casa+"/agrupaciones/originales/"+evt.getNewValue()+".dat",(String) evt.getOldValue()).start();
-			new EnvioHabitaciones("192.168.0.11","files/"+casa+"/agrupaciones/estados/"+evt.getNewValue()+".dat",(String) evt.getOldValue()).start();
+			new EnvioHabitaciones(master,"files/"+casa+"/agrupaciones/originales/"+evt.getNewValue()+".dat",(String) evt.getOldValue()).start();
+			new EnvioHabitaciones(master,"files/"+casa+"/agrupaciones/estados/"+evt.getNewValue()+".dat",(String) evt.getOldValue()).start();
 			if(((String)evt.getOldValue()).equals("borrar")) {
 				File file = new File("files/"+casa+"/agrupaciones/originales/"+evt.getNewValue()+".dat");
 				file.delete();
@@ -441,10 +445,10 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			controlador.leerFichero(p.toString());
 			break;
 		case "agrupacionRecibida":
-			Path w= Paths.get((String)evt.getNewValue());
+			File w= new File((String)evt.getNewValue());
 			controladorAgrupaciones.descargarAgrupacion(w);
 			System.out.println("W--> "+w.toString());
-			if(w.toString().contains("/estados")) {
+			if(w.toString().contains("estados")) {
 				controladorAgrupaciones.leerFichero(w.toString(),controladorAgrupaciones.getMapaEstados());
 			}else {
 				controladorAgrupaciones.leerFichero(w.toString(),controladorAgrupaciones.getMapa());
@@ -455,7 +459,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			controlador.descargarHabitacion(p2, controladorAgrupaciones);
 			break;
 		case "borrarAgrupacion":
-			Path p3= Paths.get((String)evt.getNewValue());
+			File p3= new File((String)evt.getNewValue());
 			controladorAgrupaciones.descargarAgrupacion(p3);
 			break;
 		case "habitacion":
@@ -464,34 +468,6 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		case "comandosDisp": controlador.agregarComandoVar((Dispositivo)evt.getNewValue());
 		System.out.println("ASDALSIHDLASHFOAI�FJAM�SOIFASPODIAOPSDMAOPSD");
 		break;
-		case "noMolestar": 
-			List<Habitacion>habi=new ArrayList<>(); 
-			controlador.getMapa().keySet().forEach(key->{ 
-				if(key.getNombre().equals((String)evt.getNewValue()))habi.add(key); 
-			}); 
-			Habitacion hab=habi.get(0); 
-			if(!hab.isNoMolestar()) {  
-				for(Dispositivo disp: controlador.getMapa().get(hab)) {  
-					disp.setNoMolestar(true);  
-				}  
-				hab.setNoMolestar(true);  
-				listaDispositivos.setListData(controlador.getDispositivosData(hab));  
-				banadirDispositivo.setEnabled(false);  
-				bquitarDispositivo.setEnabled(false);  
-			}  
-			else {  
-				for(Dispositivo disp: controlador.getMapa().get(hab)) {  
-					disp.setNoMolestar(false);  
-				}  
-				hab.setNoMolestar(false);  
-				listaDispositivos.setListData(controlador.getDispositivosData(hab));  
-				banadirDispositivo.setEnabled(true);  
-				if(listaDispositivos.getModel().getSize()==0)bquitarDispositivo.setEnabled(false); 
-				else bquitarDispositivo.setEnabled(true);  
-				 
-			} 
-			controlador.noMolestar();  
-			break; 
 		}
 		
 	}
