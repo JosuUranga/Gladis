@@ -54,6 +54,7 @@ public class DialogoModificar extends JDialog implements ActionListener, Seriali
 		super(p, "Modificar", true);
 		variables=dispositivo.getVariablesCopia();
 		tipo="";
+		estado=dispositivo.isEstado(); 
 		if(dispositivo instanceof DispositivoTmp) { 
 			this.tiempo=((DispositivoTmp) dispositivo).getTiempo(); 
 			System.out.println(this.tiempo.getSegundos()); 

@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import javax.swing.AbstractListModel;
@@ -192,6 +192,25 @@ public class Agrupaciones extends AbstractListModel<String> {
 	}
 	public Map<String, List<Dispositivo>> getMapaEstados() {
 		return mapaEstados;
+	}
+	public void encenderAgrupacion(String keyAgrup) {
+		
+		List<Dispositivo>disps=mapa.get(keyAgrup); 
+		for(Dispositivo disp:disps) { 
+			int a=disps.indexOf(disp); 
+			Dispositivo disp2=mapaEstados.get(keyAgrup).get(a); 
+			disp=disp2; 
+			disps.set(a, disp); 
+			disp2=disp.clone(); 
+			mapaEstados.get(keyAgrup).set(a, disp2); 
+		} 
+		mapa.put(keyAgrup, disps); 
+		mapaCasa.entrySet().forEach(entry->{ 
+			entry.getValue().forEach(disp3->disps.forEach(disp4->{ 
+				if(disp4.getNombre().equals(disp3.getNombre()))entry.getValue().set(entry.getValue().indexOf(disp3), disp4); 
+			})); 
+		});  
+		
 	}
 	public void eleminarDispositivoTodas (Dispositivo dispositivo) {
 		List<String>asdAS=new ArrayList<>();
