@@ -29,9 +29,9 @@ public class RendererHabitaciones extends JLabel implements ListCellRenderer<Hab
 			if(value.isNoMolestar()) this.setForeground(Color.RED);
 			else setForeground(new Color(35,35,5)); 
 			
-			this.setBackground(new Color(230, 230, 230));//gris
+			this.setBackground(new Color(230, 230, 230));
 		}	
-		this.setText(value.toString());
+		this.setText(value.toString().toUpperCase());
 		this.setOpaque(true);
 		return this;
 	}

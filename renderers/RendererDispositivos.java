@@ -47,7 +47,7 @@ public class RendererDispositivos  implements ListCellRenderer<Dispositivo> {
 		boton.setPreferredSize(new Dimension(100,20));
 		lImagen= new JLabel();
 		fav= new JLabel();
-		lNombre= new JLabel(dispositivo.toString());//dispositivo.getNombre
+		lNombre= new JLabel(dispositivo.toString().toUpperCase());//dispositivo.getNombre
 		lNombre.setFont( new Font("Times New Roman",Font.ITALIC,30));
 		lNombre.setForeground(Color.BLUE);
 		lNombre.setHorizontalAlignment(JLabel.CENTER);
@@ -87,6 +87,7 @@ public class RendererDispositivos  implements ListCellRenderer<Dispositivo> {
 		if(dispositivo.isEstado()) {
 			panel.setBorder(BorderFactory.createLineBorder(Color.green));
 		}
+		
 		return panel;
 	     }
 

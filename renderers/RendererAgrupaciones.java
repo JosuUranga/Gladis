@@ -24,7 +24,7 @@ public class RendererAgrupaciones extends JLabel implements ListCellRenderer<Str
 			setForeground(Color.BLUE);
 			this.setBackground(new Color(230, 230, 230));
 		}	
-		this.setText(value.toString());
+		this.setText(value.toString().toUpperCase());
 		this.setOpaque(true);
 		return this;
 	}

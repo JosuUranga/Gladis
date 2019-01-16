@@ -32,7 +32,6 @@ import models.ListaDispositivos;
 
 public class DialogoAgrupaciones extends JDialog implements ActionListener{
 	
-	private static final long serialVersionUID = 8045981208595000561L;
 	JButton boton1, botonOK, botonCA;
 	JFrame ventana;
 	JComboBox<Habitacion> combobox;
