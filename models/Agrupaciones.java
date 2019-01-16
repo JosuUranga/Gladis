@@ -47,6 +47,23 @@ public class Agrupaciones extends AbstractListModel<String> {
 		this.casa=casa;
 		soporte=new PropertyChangeSupport(this);
 	}
+	public void encenderAgrupacion(String keyAgrup) {
+		List<Dispositivo>disps=mapa.get(keyAgrup);
+		for(Dispositivo disp:disps) {
+			int a=disps.indexOf(disp);
+			Dispositivo disp2=mapaEstados.get(keyAgrup).get(a);
+			disp=disp2;
+			disps.set(a, disp);
+			disp2=disp.clone();
+			mapaEstados.get(keyAgrup).set(a, disp2);
+		}
+		mapa.put(keyAgrup, disps);
+		mapaCasa.entrySet().forEach(entry->{
+			entry.getValue().forEach(disp3->disps.forEach(disp4->{
+				if(disp4.getNombre().equals(disp3.getNombre()))entry.getValue().set(entry.getValue().indexOf(disp3), disp4);
+			}));
+		}); 
+	}
 	public void anadirString(String nombre) {		
 		mapa.put(nombre, new ArrayList<>());
 		this.fireContentsChanged(mapa, 0, mapa.size());

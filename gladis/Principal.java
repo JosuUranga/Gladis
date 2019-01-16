@@ -197,7 +197,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		bactivarAgrupacion = new JButton(new ImageIcon("img/salir.png"));
 		bactivarAgrupacion.addActionListener(this);
 		bactivarAgrupacion.setActionCommand("activarAgrupacion");
-		bactivarAgrupacion.setEnabled(false);
+		bactivarAgrupacion.setEnabled(true);
 		toolbar.add(bactivarAgrupacion);
 		
 		
@@ -288,7 +288,9 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			listaHabitaciones.clearSelection();
 			listaDispositivos.setListData(new Dispositivo[0]);
 			break;
-			
+		case "activarAgrupacion":
+			controladorAgrupaciones.encenderAgrupacion(listaAgrupaciones.getSelectedValue());
+			break;
 		case "anadirDispositivo":
 			DialogoDispositivos dialogoDispositivo = new DialogoDispositivos(this,"Anadir dispositivo",true,controlador.getMapa());
 			if(dialogoDispositivo.getDispositivo()!=null) {
@@ -376,7 +378,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			}
 			listaDispositivos.clearSelection();
 			eliminar=false;
-		}else if(arg0.getSource()==listaDispositivos&& !listaHabitaciones.getSelectedValue().isNoMolestar()) {
+		}else if(arg0.getSource()==listaDispositivos) {
 			if(listaDispositivos.getSelectedIndex()!=-1) {
 				if(listaHabitaciones.getSelectedIndex()!=-1) {
 					listaDispositivos.getSelectedValue().modificar(this);
