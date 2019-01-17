@@ -7,6 +7,9 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPSClient;
 
@@ -112,10 +115,30 @@ public class controladorVersion extends Thread{
 		}
 	}
 	public void guardarArchivo(FTPSClient ftpClient,FTPFile file) {
-		try(FileOutputStream OutStream=new FileOutputStream("files"+ftpClient.printWorkingDirectory()+"/"+file.getName())) {
-			ftpClient.retrieveFile(file.getName(), OutStream);
-		} catch (IOException e) {
-			e.printStackTrace();
+		int num=0;
+		if(file.getName().equals("version.txt")){
+			try(FileOutputStream OutStream=new FileOutputStream("files"+ftpClient.printWorkingDirectory()+"/"+file.getName())) {
+				ftpClient.retrieveFile(file.getName(), OutStream);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}else {
+			try(ObjectInputStream InputStream=new ObjectInputStream(ftpClient.retrieveFileStream(file.getName()))){
+				try(ObjectOutputStream OutStream= new ObjectOutputStream(new FileOutputStream("files"+ftpClient.printWorkingDirectory()+"/"+file.getName()))) {
+					try {
+						while(num>1) {
+							OutStream.writeObject(InputStream.readObject());
+							num++;
+						}
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	public void subirVersion() {
