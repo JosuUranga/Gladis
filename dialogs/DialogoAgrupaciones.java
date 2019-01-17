@@ -6,7 +6,6 @@ import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,12 +24,15 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
-import exceptions.DialogoNombreRepetidoException;
+import exceptions.ListaVaciaException;
+import exceptions.NombreRepetidoException;
+import exceptions.VacioException;
 import gladis.Dispositivo;
 import gladis.Habitacion;
 import models.Agrupaciones;
 import models.ListaDispositivos;
 
+@SuppressWarnings("serial")
 public class DialogoAgrupaciones extends JDialog implements ActionListener{
 	
 	JButton boton1, botonOK, botonCA;
@@ -44,9 +46,7 @@ public class DialogoAgrupaciones extends JDialog implements ActionListener{
 	ListaDispositivos modeloAgrupacion;
 	JTextField tnombre;
 	boolean crear=false;
-	public void setErrorIgual(boolean errorIgual) {
-		this.errorIgual = errorIgual;
-	}
+	
 
 
 	boolean	errorIgual=false;
@@ -208,37 +208,44 @@ public class DialogoAgrupaciones extends JDialog implements ActionListener{
 			mapa.get(combobox.getSelectedItem()).forEach(disp->modeloHabitacion.add(disp));
 			
 		}
+		
 		if(e.getActionCommand().equals("ok")) {
-			
-			if(this.getListaAgrupacion().isEmpty()) {
-				JOptionPane.showMessageDialog(this, "La lista de la agrupación está vacía","Error",JOptionPane.ERROR_MESSAGE);
-			}
-			else if(tnombre.getText().length()==0) {
-				JOptionPane.showMessageDialog(this, "Debe de introducir un nombre","Error",JOptionPane.ERROR_MESSAGE);
-			}
-			else{
-			hayRepetidoNombreAgrupacion(tnombre.getText());
+			try {
+				verificarLista();
+				verificarVacio();
+				hayRepetidoNombreAgrupacion(tnombre.getText());
 				if(!errorIgual) {
 				crear=true;
 				this.dispose();
 				}
+			} 
+			catch (ListaVaciaException e1) {
+			JOptionPane.showMessageDialog(this, "La lista de la agrupaciï¿½n estï¿½ vacï¿½a","Error",JOptionPane.ERROR_MESSAGE);
+			}catch (VacioException e1) {
+			JOptionPane.showMessageDialog(this, "Debe de introducir un nombre","Error",JOptionPane.ERROR_MESSAGE);
 			}
 		}
+		
 		if(e.getActionCommand().equals("cancel")) {
 			this.dispose();
 		}
+	}
 		
-		
-		
+	private void verificarLista() throws ListaVaciaException{
+		if(this.getListaAgrupacion().isEmpty()) throw new ListaVaciaException("La lista de la agrupaciï¿½n estï¿½ vacï¿½a");
+	}
+
+	private void verificarVacio() throws VacioException{
+		if(tnombre.getText().length()==0) throw new VacioException("Debe rellenar todos los campos");
 	}
 	public void hayRepetidoNombreAgrupacion(String nombreVerificar) {
 		mapaAgrupacion.entrySet().forEach(entry->{
-			if(nombreVerificar.equals(entry.getKey())) {
+			if(nombreVerificar.toLowerCase().equals(entry.getKey().toLowerCase())) {
 					try {
-						throw new DialogoNombreRepetidoException("msg");
-					} catch (DialogoNombreRepetidoException e) {
-						JOptionPane.showMessageDialog(this, "Ya existe una agrupación con ese mismo nombre","Error",JOptionPane.ERROR_MESSAGE);
-						this.setErrorIgual(true);
+						throw new NombreRepetidoException("msg");
+					} catch (NombreRepetidoException e) {
+						JOptionPane.showMessageDialog(this, "Ya existe una agrupaciï¿½n con ese mismo nombre","Error",JOptionPane.ERROR_MESSAGE);
+						errorIgual=true;
 					}
 				} 
 		});

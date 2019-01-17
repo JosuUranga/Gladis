@@ -7,12 +7,12 @@ import java.util.List;
 import dialogs.DialogoModificar;
 
 @SuppressWarnings("serial")
-public class Dispositivo implements Serializable, Cloneable{
-
+public class Dispositivo implements Serializable, Cloneable,Comparable<Dispositivo>{
 	String nombre;
 	String imagen;
 	String ip;
 	String tipo;
+	boolean noMolestar; 
 	boolean estado;
 	boolean favorito;
 	int usos;
@@ -24,6 +24,7 @@ public class Dispositivo implements Serializable, Cloneable{
 		this.imagen=imagen;
 		this.tipo=tipo;
 		this.ip=ip;
+		this.noMolestar=false; 
 		this.variables= new ArrayList<>();
 		this.estado=false;
 		this.favorito=false;
@@ -39,6 +40,12 @@ public class Dispositivo implements Serializable, Cloneable{
 	public void setDialogo(DialogoModificar dialogo) {
 		this.dialogo = dialogo;
 	}
+	public boolean isNoMolestar() { 
+		return noMolestar; 
+	} 
+	public void setNoMolestar(boolean noMolestar) { 
+		this.noMolestar = noMolestar; 
+	} 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
@@ -124,6 +131,7 @@ public class Dispositivo implements Serializable, Cloneable{
 			this.variables=dialogo.getVariables();	
 			this.estado=dialogo.isEstado();
 		 }
+		 this.dialogo=null;
 		aumentarUso();
 	}
 	@Override
@@ -138,4 +146,25 @@ public class Dispositivo implements Serializable, Cloneable{
 			return null;
 		}
     }
+	@Override 
+	public int compareTo(Dispositivo b) { 
+		int ret=0; 
+		Dispositivo a=this; 
+		if (a.isFavorito()&&!b.isFavorito())ret=-1; 
+		else if (a.isFavorito()&&!b.isFavorito())ret=-1; 
+		else if (!a.isFavorito()&&b.isFavorito())ret=1; 
+		else if (a.isFavorito()&&b.isFavorito()) { 
+			if(a.getUsos()>b.getUsos())ret=-1; 
+			else if(a.getUsos()<b.getUsos())ret=1; 
+			else ret=0; 
+		} 
+		else if (!a.isFavorito()&&!b.isFavorito()) { 
+			if(a.getUsos()>b.getUsos())ret=-1; 
+			else if(a.getUsos()<b.getUsos())ret=1; 
+			else ret=0; 
+		} 
+		else ret=0; 
+		 
+		return ret ; 
+	} 
 }

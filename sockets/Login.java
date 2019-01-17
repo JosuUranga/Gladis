@@ -1,14 +1,15 @@
 package sockets;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Hashtable;
-import javax.naming.Context;  
+
+import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
@@ -21,6 +22,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
+import otros.TextPrompt;
 
 
 
@@ -35,10 +38,10 @@ public class Login extends JDialog implements ActionListener{
 		super(ventana,"Login",true);
 		this.setSize(600,600);
 		this.setLocation (600,200);
+		loginCorrecto=false;
 		this.setContentPane(crearPanelGeneral());
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);		
 		this.setVisible(true);
-		loginCorrecto=false;
 	}
 	private Container crearPanelGeneral() {
 		JPanel panel = new JPanel(new GridLayout(2,1));
@@ -82,7 +85,11 @@ public class Login extends JDialog implements ActionListener{
 		label2=new JLabel("Contraseña:");
 		label2.setHorizontalAlignment(JLabel.CENTER);
 		panel.add(label);
-		panel.add(usuario=new JTextField());
+		usuario=new JTextField();
+		TextPrompt placeholder=new TextPrompt("Usuario@domoticaf2.eus",usuario);
+		placeholder.changeAlpha(0.75f);
+		placeholder.changeStyle(Font.ITALIC);
+		panel.add(usuario);
 		panel.add(label2);
 		panel.add(password=new JPasswordField());
 		return panel;
@@ -114,12 +121,17 @@ public class Login extends JDialog implements ActionListener{
 			return true;
 		} catch (NamingException er) {
 			System.out.println("No se ha podido establecer conexion con el servidor");
+			er.printStackTrace();
 			return false;
 		}
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		loginCorrecto=checkLogin();
+		if(loginCorrecto) {
+			System.out.println(loginCorrecto);
+			this.dispose();
+		}
 	}
 	public Boolean esCorrecto() {
 		return loginCorrecto;
