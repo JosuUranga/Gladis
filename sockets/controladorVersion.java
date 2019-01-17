@@ -7,10 +7,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.List;
 import java.util.concurrent.SynchronousQueue;
 
+import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPSClient;
+
+import gladis.Dispositivo;
+import gladis.Habitacion;
 
 public class controladorVersion extends Thread{
 	String hostname,name,password,casa;
@@ -34,6 +39,8 @@ public class controladorVersion extends Thread{
 				ftpClient.connect(hostname);
 				ftpClient.execPBSZ(0);
 				ftpClient.execPROT("P");
+				ftpClient.setFileTransferMode(FTP.BINARY_FILE_TYPE);
+				ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 				ftpClient.enterLocalPassiveMode();
 				ftpClient.login(name, password);
 				ftpClient.changeWorkingDirectory("/"+casa);
@@ -93,15 +100,12 @@ public class controladorVersion extends Thread{
 			}
 		}
 	}
+	@SuppressWarnings("unchecked")
 	public void guardarArchivo(FTPSClient ftpClient,FTPFile file) {
 		int num=0;
-		String path="";
-		try {
-			path="files"+ftpClient.printWorkingDirectory()+"/"+file.getName();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		Object obj1=null;
+		Object obj2=null;
+		System.out.println(file.getName());
 		if(file.getName().equals("version.txt")){
 			try(FileOutputStream OutStream=new FileOutputStream("files"+ftpClient.printWorkingDirectory()+"/"+file.getName())) {
 				ftpClient.retrieveFile(file.getName(), OutStream);
@@ -110,29 +114,17 @@ public class controladorVersion extends Thread{
 			}
 		}else {
 			try(ObjectInputStream InputStream=new ObjectInputStream(ftpClient.retrieveFileStream(file.getName()))){
-
-				try {
-					Object object1=InputStream.readObject();
-					Object object2=InputStream.readObject();
-					ftpClient.completePendingCommand();
-					System.out.println("a");
-				} catch (ClassNotFoundException e1) {
-					e1.printStackTrace();
-				}
-				try(ObjectOutputStream OutStream= new ObjectOutputStream(new FileOutputStream(path))) {
-					/*try {
-					 	while(num>1) {
-							System.out.println(num);
-							OutStream.writeObject(InputStream.readObject());
-							num++;
-						}
-					} catch (ClassNotFoundException e) {
-						e.printStackTrace();
-					}*/
-				} catch (IOException e) {
+						obj1=(Habitacion)InputStream.readObject();
+						obj2=(List<Dispositivo>)InputStream.readObject();
+						InputStream.close();
+						ftpClient.completePendingCommand();
+				try(ObjectOutputStream OutStream= new ObjectOutputStream(new FileOutputStream("files"+ftpClient.printWorkingDirectory()+"/"+file.getName()))) {
+						OutStream.writeObject(obj1);
+						OutStream.writeObject(obj2);
+				}catch(IOException e) {
 					e.printStackTrace();
 				}
-			}catch (IOException e) {
+			}catch (IOException | ClassNotFoundException e) {
 				e.printStackTrace();
 			}
 		}
