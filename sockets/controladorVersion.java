@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.concurrent.SynchronousQueue;
 
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPSClient;
@@ -42,7 +43,7 @@ public class controladorVersion extends Thread{
 						if(fileV.getName().contains("version")) {
 							try(DataInputStream version=new DataInputStream(ftpClient.retrieveFileStream(fileV.getName()))){
 								versionTMP=version.readLong();
-								ftpClient.completePendingCommand();
+								version.close();
 							if(versionProg<versionTMP && !inicializar) {
 								versionProg=versionTMP;
 								File file=new File("files/"+casa+"/");
@@ -94,6 +95,13 @@ public class controladorVersion extends Thread{
 	}
 	public void guardarArchivo(FTPSClient ftpClient,FTPFile file) {
 		int num=0;
+		String path="";
+		try {
+			path="files"+ftpClient.printWorkingDirectory()+"/"+file.getName();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		if(file.getName().equals("version.txt")){
 			try(FileOutputStream OutStream=new FileOutputStream("files"+ftpClient.printWorkingDirectory()+"/"+file.getName())) {
 				ftpClient.retrieveFile(file.getName(), OutStream);
@@ -102,15 +110,25 @@ public class controladorVersion extends Thread{
 			}
 		}else {
 			try(ObjectInputStream InputStream=new ObjectInputStream(ftpClient.retrieveFileStream(file.getName()))){
-				try(ObjectOutputStream OutStream= new ObjectOutputStream(new FileOutputStream("files"+ftpClient.printWorkingDirectory()+"/"+file.getName()))) {
-					try {
-						while(num>1) {
+
+				try {
+					Object object1=InputStream.readObject();
+					Object object2=InputStream.readObject();
+					ftpClient.completePendingCommand();
+					System.out.println("a");
+				} catch (ClassNotFoundException e1) {
+					e1.printStackTrace();
+				}
+				try(ObjectOutputStream OutStream= new ObjectOutputStream(new FileOutputStream(path))) {
+					/*try {
+					 	while(num>1) {
+							System.out.println(num);
 							OutStream.writeObject(InputStream.readObject());
 							num++;
 						}
 					} catch (ClassNotFoundException e) {
 						e.printStackTrace();
-					}
+					}*/
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

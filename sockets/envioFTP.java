@@ -59,25 +59,28 @@ public class envioFTP extends Thread{
 	}
 	public void subirArchivo(FTPSClient ftpClient, File file) {
 		int num=0;
+		System.out.println(file.getName());
 		if(file.getName().equals("version.txt")) {
 			try(FileInputStream InputStream =new FileInputStream(file)) {
-				ftpClient.storeFile(file.getName(),InputStream);
+				System.out.println(ftpClient.printWorkingDirectory());
+				System.out.println(ftpClient.storeFile(file.getName(),InputStream));
 			} catch (IOException e) {
 				System.err.println("No se ha podido enviar al servidor FTP");
 			}
 		}else {
-			try(ObjectInputStream InputStream =new ObjectInputStream(new FileInputStream(file))) {
+			try(ObjectInputStream InputStream = new ObjectInputStream(new FileInputStream(file))) {
 				try(ObjectOutputStream OutputStream=new ObjectOutputStream(ftpClient.storeFileStream(file.getName()))){
-					try {
-						while(num>1) {
-							OutputStream.writeObject(InputStream.readObject());
-							num++;
-						}
-					} catch (ClassNotFoundException e) {
-						e.printStackTrace();
-					}
-				}
-				ftpClient.storeFileStream(file.getName());
+					Object oj=InputStream.readObject();
+					OutputStream.writeObject(oj);
+					oj=InputStream.readObject();
+					System.out.println(oj);
+					OutputStream.writeObject(oj);
+					System.out.println("a");
+					OutputStream.close();
+					ftpClient.completePendingCommand();
+			} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+			}
 			} catch (IOException e) {
 				System.err.println("No se ha podido enviar al servidor FTP");
 			}
