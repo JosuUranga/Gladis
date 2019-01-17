@@ -9,9 +9,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.List;
 
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPSClient;
+
+import gladis.Dispositivo;
+import gladis.Habitacion;
 
 public class controladorVersion extends Thread{
 	String hostname,name,password,casa;
@@ -114,8 +118,12 @@ public class controladorVersion extends Thread{
 			}
 		}
 	}
+	@SuppressWarnings("unchecked")
 	public void guardarArchivo(FTPSClient ftpClient,FTPFile file) {
 		int num=0;
+		Object obj1=null;
+		Object obj2=null;
+		System.out.println(file.getName());
 		if(file.getName().equals("version.txt")){
 			try(FileOutputStream OutStream=new FileOutputStream("files"+ftpClient.printWorkingDirectory()+"/"+file.getName())) {
 				ftpClient.retrieveFile(file.getName(), OutStream);
@@ -124,19 +132,17 @@ public class controladorVersion extends Thread{
 			}
 		}else {
 			try(ObjectInputStream InputStream=new ObjectInputStream(ftpClient.retrieveFileStream(file.getName()))){
+						obj1=(Habitacion)InputStream.readObject();
+						obj2=(List<Dispositivo>)InputStream.readObject();
+						InputStream.close();
+						ftpClient.completePendingCommand();
 				try(ObjectOutputStream OutStream= new ObjectOutputStream(new FileOutputStream("files"+ftpClient.printWorkingDirectory()+"/"+file.getName()))) {
-					try {
-						while(num>1) {
-							OutStream.writeObject(InputStream.readObject());
-							num++;
-						}
-					} catch (ClassNotFoundException e) {
-						e.printStackTrace();
-					}
-				} catch (IOException e) {
+						OutStream.writeObject(obj1);
+						OutStream.writeObject(obj2);
+				}catch(IOException e) {
 					e.printStackTrace();
 				}
-			}catch (IOException e) {
+			}catch (IOException | ClassNotFoundException e) {
 				e.printStackTrace();
 			}
 		}

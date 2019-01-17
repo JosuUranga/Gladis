@@ -3,6 +3,7 @@ package sockets;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
@@ -58,30 +59,31 @@ public class envioFTP extends Thread{
 	}
 	public void subirArchivo(FTPSClient ftpClient, File file) {
 		int num=0;
+		System.out.println(file.getName());
 		if(file.getName().equals("version.txt")) {
 			try(FileInputStream InputStream =new FileInputStream(file)) {
-				ftpClient.storeFile(file.getName(),InputStream);
+				System.out.println(ftpClient.printWorkingDirectory());
+				System.out.println(ftpClient.storeFile(file.getName(),InputStream));
 			} catch (IOException e) {
 				System.err.println("No se ha podido enviar al servidor FTP");
 			}
 		}else {
-			try(ObjectInputStream InputStream =new ObjectInputStream(new FileInputStream(file))) {
+			try(ObjectInputStream InputStream = new ObjectInputStream(new FileInputStream(file))) {
 				try(ObjectOutputStream OutputStream=new ObjectOutputStream(ftpClient.storeFileStream(file.getName()))){
-					try {
-						while(num>1) {
-							OutputStream.writeObject(InputStream.readObject());
-							num++;
-						}
-					} catch (ClassNotFoundException e) {
-						e.printStackTrace();
-					}
-				}
-				ftpClient.storeFileStream(file.getName());
+					Object oj=InputStream.readObject();
+					OutputStream.writeObject(oj);
+					oj=InputStream.readObject();
+					OutputStream.writeObject(oj);
+					OutputStream.close();
+					ftpClient.completePendingCommand();
+			} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+			}
 			} catch (IOException e) {
 				System.err.println("No se ha podido enviar al servidor FTP");
 			}
 		}
-	}
+	}	
 	public void borrarTodoFTP(FTPSClient ftpClient,FTPFile[]files) {
 		try {
 			for(FTPFile file:files) {
