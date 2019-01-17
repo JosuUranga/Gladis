@@ -43,6 +43,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 	PropertyChangeSupport soporte;
 	Habitaciones casa;
 	String nCasa;
+	List<String>oldVal;
 	public Agrupaciones(Habitaciones casa,String nCasa) {
 		mapa = new HashMap<>();
 		mapaEstados=new HashMap<>();
@@ -120,7 +121,11 @@ public class Agrupaciones extends AbstractListModel<String> {
 				escribirFichero(set,"files/"+nCasa+"/"+"agrupaciones/estados/");
 			}
 		});
-		soporte.firePropertyChange("envioAgrupacion", "enviar", agrupacion);
+		oldVal=new ArrayList<>();
+		oldVal.add("enviar");
+		oldVal.add("nada");
+		soporte.firePropertyChange("envioAgrupacion", oldVal, agrupacion);
+		oldVal=null;
 	}
 	public void escribirFichero(Entry<String,List<Dispositivo>> habitacion, String casa) {
 		try (ObjectOutputStream out = new ObjectOutputStream(
@@ -224,7 +229,11 @@ public class Agrupaciones extends AbstractListModel<String> {
 		asdAS.forEach(key->{
 			lista.forEach(disp->mapa.get(key).remove(disp));
 			this.escribirAgrupacion(key);
-			soporte.firePropertyChange("envioAgrupacion", "enviar", key);
+			oldVal=new ArrayList<>();
+			oldVal.add("enviar");
+			oldVal.add("nada");
+			soporte.firePropertyChange("envioAgrupacion", oldVal, key);
+			oldVal=null;
 		});
 		this.fireContentsChanged(mapa, 0, mapa.size());
 	}
@@ -235,7 +244,11 @@ public class Agrupaciones extends AbstractListModel<String> {
 				if(Disp.equals(dispositivo))asdAS.add(entry.getKey());
 			});
 		});
-		asdAS.forEach(key->soporte.firePropertyChange("envioAgrupacion", "enviar", key));
+		oldVal=new ArrayList<>();
+		oldVal.add("enviar");
+		oldVal.add("nada");
+		asdAS.forEach(key->soporte.firePropertyChange("envioAgrupacion", oldVal, key));
+		oldVal=null;
 	}
 	public void eleminarDispositivo(String nombre, Dispositivo dispositivo) {
 		mapa.get(nombre).remove(dispositivo);

@@ -44,14 +44,29 @@ public class ComunicacionServidor extends Thread {
 						 }
 						 if(((String)object).equals("borrar")) {
 							 File file = new File(nombreArchivo);
-							 if(esAgrupacion)soporte.firePropertyChange("borrarAgrupacion", true, nombreArchivo);
-							 else soporte.firePropertyChange("borrarHabitacion", true, nombreArchivo);
+							 List<String>oldValue=new ArrayList<>();
+							 oldValue.add("borrar");
+							 oldValue.add(socket.getRemoteSocketAddress().toString().substring(1, socket.getRemoteSocketAddress().toString().lastIndexOf(":")));
+							 if(esAgrupacion) {
+								 soporte.firePropertyChange("envioAgrupacion", oldValue, file.getName().replaceAll(".dat", ""));
+								 soporte.firePropertyChange("borrarAgrupacion", true, nombreArchivo);
+							 }
+							 else {
+								 soporte.firePropertyChange("envioHabitacion", oldValue, file.getName().replaceAll(".dat", ""));
+								 soporte.firePropertyChange("borrarHabitacion", true, nombreArchivo);
+							 }
+							 oldValue=null;
 							 file.delete();
 							 break;
 						 }
 						 if(((String)object).equals("noMolestar")) {
 							 File file = new File(nombreArchivo);
+							 List<String>oldValue=new ArrayList<>();
+							 oldValue.add("noMolestar");
+							 oldValue.add(socket.getRemoteSocketAddress().toString().substring(1, socket.getRemoteSocketAddress().toString().lastIndexOf(":")));
+							 soporte.firePropertyChange("envioHabitacion", oldValue, file.getName().replaceAll(".dat", ""));
 							 soporte.firePropertyChange("noMolestar", true,file.getName().replaceAll(".dat", ""));
+							 oldValue=null;
 							 break;
 						 }
 						 if(object.equals("Finalizado")) {
@@ -61,8 +76,19 @@ public class ComunicacionServidor extends Thread {
 		
 												outf.writeObject(a);
 											}
-											if(esAgrupacion)soporte.firePropertyChange("agrupacionRecibida", true, nombreArchivo);
-											else soporte.firePropertyChange("habitacionRecibida", true, nombreArchivo);
+											File file = new File(nombreArchivo);
+											List<String>oldValue=new ArrayList<>();
+											 oldValue.add("enviar");
+											 oldValue.add(socket.getRemoteSocketAddress().toString().substring(1, socket.getRemoteSocketAddress().toString().lastIndexOf(":")));
+											if(esAgrupacion) {
+												soporte.firePropertyChange("envioAgrupacion", oldValue, file.getName().replaceAll(".dat", ""));
+												soporte.firePropertyChange("agrupacionRecibida", true, nombreArchivo);
+											}
+											else {
+												soporte.firePropertyChange("envioHabitacion", oldValue, file.getName().replaceAll(".dat", ""));
+												soporte.firePropertyChange("habitacionRecibida", true, nombreArchivo);
+											}
+											oldValue=null;
 											break;
 								} catch (FileNotFoundException e) {
 										e.printStackTrace();
