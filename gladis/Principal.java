@@ -71,18 +71,15 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 	public Principal(){		
 		super ("Gladis");	
 		casa="test";
-		/*Login login = new Login(this);
+		Login login = new Login(this);
 		System.out.println(login.esCorrecto());
 		if(login.esCorrecto()) {
 			username=login.getUsername();
 			password=login.getPassword();
 		}else {
-			System.out.println(1);
 			this.dispose();
 			System.exit(1);
-		}*/
-		username="Administrador";
-		password="123456789aA@";
+		}
 		this.ips=new ArrayList<>();
 		cVersion=new controladorVersion("192.168.0.172",casa,username,password,this);
 		cVersion.start();
@@ -95,8 +92,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		renderer3= new RendererAgrupaciones(); 
 		eliminar=false;
 		habitacion="salon";
-		this.setSize(800,600);
-		//this.setExtendedState(MAXIMIZED_BOTH); 
+		this.setExtendedState(MAXIMIZED_BOTH); 
 		this.setLocation(0,0); 
 		this.setContentPane(crearPanelVentana());
 		controlador.inicializar(casa);
