@@ -59,21 +59,26 @@ public class envioFTP extends Thread{
 	}
 	public void subirArchivo(FTPSClient ftpClient, File file) {
 		int num=0;
+		Object oj=null;
 		System.out.println(file.getName());
 		if(file.getName().equals("version.txt")) {
 			try(FileInputStream InputStream =new FileInputStream(file)) {
 				System.out.println(ftpClient.printWorkingDirectory());
 				System.out.println(ftpClient.storeFile(file.getName(),InputStream));
+				InputStream.close();
 			} catch (IOException e) {
 				System.err.println("No se ha podido enviar al servidor FTP");
 			}
 		}else {
 			try(ObjectInputStream InputStream = new ObjectInputStream(new FileInputStream(file))) {
 				try(ObjectOutputStream OutputStream=new ObjectOutputStream(ftpClient.storeFileStream(file.getName()))){
-					Object oj=InputStream.readObject();
+					oj=InputStream.readObject();
+					System.out.println(oj);
 					OutputStream.writeObject(oj);
 					oj=InputStream.readObject();
+					System.out.println(oj);
 					OutputStream.writeObject(oj);
+					OutputStream.flush();
 					OutputStream.close();
 					ftpClient.completePendingCommand();
 			} catch (ClassNotFoundException e) {

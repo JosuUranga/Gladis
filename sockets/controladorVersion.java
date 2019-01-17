@@ -84,7 +84,7 @@ public class controladorVersion extends Thread{
 					ftpClient.logout();
 					ftpClient.disconnect();
 					try {
-						Thread.sleep(1000);
+						Thread.sleep(2000);
 					} catch (InterruptedException e) {
 					}
 				}
