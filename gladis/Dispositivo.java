@@ -33,7 +33,7 @@ public class Dispositivo implements Serializable, Cloneable, Comparable<Disposit
 	}
 	public void aumentarUso() {
 		usos++;
-		System.out.println("Usos del idspositivo "+this.getNombre()+": "+usos);
+		System.out.println("Usos del dispositivo "+this.getNombre()+": "+usos);
 	}
 	public DialogoModificar getDialogo() {
 		return dialogo;

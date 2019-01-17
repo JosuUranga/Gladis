@@ -48,8 +48,8 @@ public class RendererDispositivos  implements ListCellRenderer<Dispositivo> {
 		lImagen= new JLabel();
 		fav= new JLabel();
 		lNombre= new JLabel(dispositivo.toString().toUpperCase());//dispositivo.getNombre
-		lNombre.setFont( new Font("Times New Roman",Font.ITALIC,30));
-		lNombre.setForeground(Color.BLUE);
+		lNombre.setFont( new Font("Garamond",Font.PLAIN,26));
+		lNombre.setForeground(new Color(35,35,5));
 		lNombre.setHorizontalAlignment(JLabel.CENTER);
 		
 		Image img = (new ImageIcon(dispositivo.getImagen())).getImage();		

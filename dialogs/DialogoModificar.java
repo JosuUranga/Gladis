@@ -274,7 +274,7 @@ public class DialogoModificar extends JDialog implements ActionListener, Seriali
 			} catch (VacioException e1) {
 				JOptionPane.showMessageDialog(this, "Debe rellenar todos los campos", "Aviso" , JOptionPane.WARNING_MESSAGE);
 			} catch (TiempoFormatException e1) {
-				JOptionPane.showMessageDialog(this, "Debe introducir un tiempo vï¿½lido", "Aviso" , JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(this, "Debe introducir un tiempo válido", "Aviso" , JOptionPane.WARNING_MESSAGE);
 
 			}
 			break;

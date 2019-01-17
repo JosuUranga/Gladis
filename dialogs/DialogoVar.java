@@ -201,7 +201,7 @@ public class DialogoVar extends JDialog implements ActionListener{
 	private void verificarMaxMin() throws MaxMinException{
 		
 		for (int i=0; i<textMax.size(); i++) {
-			if (Integer.valueOf(textMax.get(i).getText())<Integer.valueOf(textMin.get(i).getText()))throw new MaxMinException("El valor maximo debe de ser mayor al del minimo");
+			if (Integer.valueOf(textMax.get(i).getText())<Integer.valueOf(textMin.get(i).getText()))throw new MaxMinException("El valor máximo debe de ser mayor al del mínimo");
 		}
 				
 	}
@@ -209,13 +209,13 @@ public class DialogoVar extends JDialog implements ActionListener{
 		for (int i=0; i<textVal.size(); i++) {
 			if (Integer.valueOf(textVal.get(i).getText())<Integer.valueOf(textMin.get(i).getText())
 					||
-					Integer.valueOf(textVal.get(i).getText())>Integer.valueOf(textMax.get(i).getText()))throw new ValorInicialException("El valor inicial tiene que estar entre los valores Maximos y Minimos");;
+					Integer.valueOf(textVal.get(i).getText())>Integer.valueOf(textMax.get(i).getText()))throw new ValorInicialException("El valor inicial tiene que estar entre los valores Máximos y Mánimos");;
 		}
 	}
 	private void verificarNombre() throws NombreVariableException{
 		
 		   for (int i=0; i<variables.size(); i++) {
-			   if(!variables.get(i).getText().matches("[a-zA-Z]+"))throw new NombreVariableException("Introduzca un nombre vÃ¡lido");
+			   if(!variables.get(i).getText().matches("[a-zA-Z]+"))throw new NombreVariableException("Introduzca un nombre válido");
 			}
 	}
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -245,13 +245,13 @@ public class DialogoVar extends JDialog implements ActionListener{
 				JOptionPane.showMessageDialog(this, "Debe rellenar todos los campos", "Aviso" , JOptionPane.WARNING_MESSAGE);
 			}
 			catch (NumberFormatException c) {
-				JOptionPane.showMessageDialog(this, "Debe de introducir solo numeros", "Aviso" , JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(this, "Debe de introducir solo números", "Aviso" , JOptionPane.WARNING_MESSAGE);
 			} catch (MaxMinException c) {
-				JOptionPane.showMessageDialog(this, "El valor maximo debe de ser mayor al del minimo", "Aviso" , JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(this, "El valor máximo debe de ser mayor al del mínimo", "Aviso" , JOptionPane.WARNING_MESSAGE);
 			} catch (ValorInicialException c) {
-				JOptionPane.showMessageDialog(this, "El valor inicial tiene que estar entre los valores Maximos y Minimos", "Aviso" , JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(this, "El valor inicial tiene que estar entre los valores Máximos y Mínimos", "Aviso" , JOptionPane.WARNING_MESSAGE);
 			} catch (NombreVariableException c) {
-				JOptionPane.showMessageDialog(this, "Introduce un nombre de variable valido", "Aviso" , JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(this, "Introduce un nombre de variable válido", "Aviso" , JOptionPane.WARNING_MESSAGE);
 			}
 		}
 	}

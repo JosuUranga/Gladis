@@ -47,8 +47,8 @@ public class DialogoDispositivos extends JDialog implements ActionListener{
 	String[] dispositivos= {"Luces", "Electrodomesticos", "Aparatos Electricos", "Otros"};
 	
 	String[] luces= {"Luz Normal", "Luz RGB", "Luz Gradual"};
-	String[] electrodomesticos= {"FrigorÃ­fico", "Microondas", "Lavadora", "Lavavajillas", "Horno", "Congelador"};
-	String[] aparatos= {"Equipo de mÃºsica", "Despertador", "TelevisiÃ³n", "Temperatura"};
+	String[] electrodomesticos= {"Frigorífico", "Microondas", "Lavadora", "Lavavajillas", "Horno", "Congelador"};
+	String[] aparatos= {"Equipo de música", "Despertador", "Televisión", "Temperatura"};
 	String[] otros= {"Programable tiempo","No programable"};
 	
 	public DialogoDispositivos (JFrame ventana,String titulo, boolean modo,Map<Habitacion, List<Dispositivo>> map) {
@@ -159,7 +159,6 @@ public class DialogoDispositivos extends JDialog implements ActionListener{
 				
 				check(nombre.getText());	
 				if(!errorRellenar && !errorIgual) {
-				System.out.println("entro");
 					switch((String) comboTipo.getSelectedItem()) {
 					case "Luz Normal":{
 						dispositivo=new Dispositivo(nombre.getText(),"img/luz.png",null,(String) comboTipo.getSelectedItem());
@@ -177,7 +176,7 @@ public class DialogoDispositivos extends JDialog implements ActionListener{
 						 dialogo=new DialogoVar(ventana,dispositivo);
 						break;
 					}
-					case "FrigorÃ­fico":{
+					case "Frigorífico":{
 						dispositivo=new Dispositivo(nombre.getText(),"img/frigorifico.png",null,(String) comboTipo.getSelectedItem());
 						dispositivo.addVariable(new Variable("Temperatura"));
 						 dialogo=new DialogoVar(ventana,dispositivo);
@@ -207,7 +206,7 @@ public class DialogoDispositivos extends JDialog implements ActionListener{
 						 dialogo=new DialogoVar(ventana,dispositivo);
 						break;
 					}
-					case "Equipo de mÃºsica": {
+					case "Equipo de música": {
 						dispositivo=new Dispositivo(nombre.getText(),"img/equipodemusica.png",null,(String) comboTipo.getSelectedItem());
 						dispositivo.addVariable(new Variable("Volumen"));
 						dispositivo.addVariable(new Variable("Cancion"));
@@ -225,7 +224,7 @@ public class DialogoDispositivos extends JDialog implements ActionListener{
 						 dialogo=new DialogoVar(ventana,dispositivo);
 						break;
 					}
-					case "TelevisiÃ³n":{
+					case "Televisión":{
 						dispositivo=new Dispositivo(nombre.getText(),"img/television.png",null,(String) comboTipo.getSelectedItem());
 						dispositivo.addVariable(new Variable("Volumen"));
 						dispositivo.addVariable(new Variable("Canal"));
@@ -269,7 +268,7 @@ public class DialogoDispositivos extends JDialog implements ActionListener{
 					DialogoDispositivos.this.dispose();
 				}
 				else {
-					if(!errorIgual)JOptionPane.showMessageDialog(DialogoDispositivos.this, "Debe rellenar todos los camposxd","Error",JOptionPane.ERROR_MESSAGE);
+					if(!errorIgual)JOptionPane.showMessageDialog(DialogoDispositivos.this, "Debe rellenar todos los campos","Error",JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});

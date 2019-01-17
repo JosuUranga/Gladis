@@ -31,7 +31,7 @@ public class DialogoHabitacion extends JDialog implements ActionListener {
 	boolean errorIgual=false;
 	Map<Habitacion,List<Dispositivo>> mapa;
 	public DialogoHabitacion(JFrame ventana,Map<Habitacion,List<Dispositivo>> mapa) {
-		super (ventana, "Añadir Habitacion",true);	
+		super (ventana, "Añadir Habitación",true);	
 		this.mapa=mapa;
 		this.setSize(550,250);
 		this.setLocation(260,180);
@@ -76,7 +76,7 @@ public class DialogoHabitacion extends JDialog implements ActionListener {
 		JPanel panel = new JPanel(new GridLayout(1,2));
 		panel.setBorder(BorderFactory.createEmptyBorder(60,60,60,60));
 		nombre = new JTextField(20);
-		JLabel label = new JLabel ("Introduce nombre de la habitacion:");
+		JLabel label = new JLabel ("Introduce nombre de la habitación:");
 		
 		panel.add(label);
 		panel.add(nombre);
@@ -95,7 +95,7 @@ public class DialogoHabitacion extends JDialog implements ActionListener {
 				try {
 					throw new NombreRepetidoException("msg");
 				} catch (NombreRepetidoException e) {
-					JOptionPane.showMessageDialog(this, "Ya existe una habitacion con ese mismo nombre","Error",JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(this, "Ya existe una habitación con ese mismo nombre","Error",JOptionPane.ERROR_MESSAGE);
 					errorIgual=true;
 				}
 			} 	

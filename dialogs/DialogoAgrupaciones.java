@@ -46,12 +46,9 @@ public class DialogoAgrupaciones extends JDialog implements ActionListener{
 	ListaDispositivos modeloAgrupacion;
 	JTextField tnombre;
 	boolean crear=false;
-	
-
-
 	boolean	errorIgual=false;
 	public DialogoAgrupaciones(JFrame ventana, Agrupaciones controladorAgrupaciones) {
-		super(ventana,"Nueva Agrupacion", true);
+		super(ventana,"Nueva Agrupación", true);
 		
 		habitaciones=controladorAgrupaciones.getMapaCasa().keySet().toArray(new Habitacion[0]);
 		this.mapa=controladorAgrupaciones.getMapaCasa();
@@ -86,7 +83,7 @@ public class DialogoAgrupaciones extends JDialog implements ActionListener{
 		JPanel panel = new JPanel(new GridLayout(1,2,20,20));
 
 		tnombre = new JTextField();
-		panel.add(new JLabel("Nombre de la agrupacion: "));
+		panel.add(new JLabel("Nombre de la agrupación: "));
 		panel.add(tnombre);
 		
 		return panel;
@@ -183,7 +180,7 @@ public class DialogoAgrupaciones extends JDialog implements ActionListener{
 			if(!modeloAgrupacion.contains((Dispositivo)modeloHabitacion.getElementAt(indice)))modeloAgrupacion.add((Dispositivo)modeloHabitacion.getElementAt(indice));
 			else repetido = true;
 		}
-		if(repetido)JOptionPane.showMessageDialog(this, "Hay uno o mÃ¡s dispositivos repetidos","Error",JOptionPane.ERROR_MESSAGE);
+		if(repetido)JOptionPane.showMessageDialog(this, "Hay uno o más dispositivos repetidos","Error",JOptionPane.ERROR_MESSAGE);
 	}
 	
 	@Override
