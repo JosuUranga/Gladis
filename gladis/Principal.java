@@ -77,7 +77,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		username="Administrador";
 		password="123456789aA@";
 		this.ips=new ArrayList<>();
-		cVersion=new controladorVersion("192.168.0.172",casa,username,password);
+		cVersion=new controladorVersion("192.168.0.172",casa,username,password,this);
 		cVersion.start();
 		new EscuchaServidor(this,ips).start();
 		controlador= new Habitaciones(casa,this);
@@ -535,6 +535,10 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				
 			}
 			controlador.noMolestar(); 
+			break;
+		case "inicializar":
+			controlador.inicializar(casa);
+			controladorAgrupaciones.inicializar(casa);
 			break;
 		case "comandosDisp": controlador.agregarComandoVar((Dispositivo)evt.getNewValue());
 		System.out.println("ASDALSIHDLASHFOAI�FJAM�SOIFASPODIAOPSDMAOPSD");

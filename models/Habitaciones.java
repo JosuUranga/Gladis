@@ -39,7 +39,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 	Map<Habitacion,List<Dispositivo>>mapa;
 	PropertyChangeSupport soporte;
 	String casa;
-	
+	List<String>oldValue;
 	public Habitaciones(String casa,PropertyChangeListener principal) {
 		mapa = new HashMap<>();
 		this.casa=casa;
@@ -263,6 +263,11 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 				@SuppressWarnings("unchecked")
 				List<Dispositivo> value=(List<Dispositivo>) in.readObject();
 				mapa.put(key, value);
+				oldValue=new ArrayList<>();
+				oldValue.add("enviar");
+				oldValue.add("nada");
+				soporte.firePropertyChange("envioHabitacion", oldValue, key.getNombre());
+				oldValue=null;
 				for(Dispositivo d:value) {
 					eliminarComandoDispositivoCompleto(d); 
 					agregarComando(d);

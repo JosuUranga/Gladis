@@ -2,13 +2,7 @@ package sockets;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPSClient;
@@ -63,27 +57,12 @@ public class envioFTP extends Thread{
 		}
 	}
 	public void subirArchivo(FTPSClient ftpClient, File file) {
-		int num=0;
-		Object oj=null;
-		System.out.println(file.getName());
-		if(file.getName().equals("version.txt")) {
-			try(FileInputStream InputStream =new FileInputStream(file)) {
-				System.out.println(ftpClient.printWorkingDirectory());
-				System.out.println(ftpClient.storeFile(file.getName(),InputStream));
-				InputStream.close();
-			} catch (IOException e) {
-				System.err.println("No se ha podido enviar al servidor FTP");
-			}
-		}else {
-			try(InputStream  InputStream = new FileInputStream(file);
-					) {
-					ftpClient.storeFile(file.getName(), InputStream);
-					InputStream.close();
-			} catch (IOException e) {
-				System.err.println("No se ha podido enviar al servidor FTP");
-			}
+		try(FileInputStream InputStream =new FileInputStream(file)) {
+			ftpClient.storeFile(file.getName(),InputStream);
+		} catch (IOException e) {
+			System.err.println("No se ha podido enviar al servidor FTP");
 		}
-	}	
+	}
 	public void borrarTodoFTP(FTPSClient ftpClient,FTPFile[]files) {
 		try {
 			for(FTPFile file:files) {

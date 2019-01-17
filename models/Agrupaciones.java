@@ -187,6 +187,11 @@ public class Agrupaciones extends AbstractListModel<String> {
 					  
 					this.fireContentsChanged(map, 0, map.size()); 
 				}
+				oldVal=new ArrayList<>();
+				oldVal.add("enviar");
+				oldVal.add("nada");
+				soporte.firePropertyChange("envioAgrupacion", oldVal, key);
+				oldVal=null;
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {

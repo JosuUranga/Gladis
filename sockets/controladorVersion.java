@@ -1,36 +1,41 @@
 package sockets;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.List;
-import java.util.concurrent.SynchronousQueue;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPSClient;
 
-import gladis.Dispositivo;
-import gladis.Habitacion;
-
 public class controladorVersion extends Thread{
 	String hostname,name,password,casa;
 	Long versionProg,versionTMP;
 	Boolean inicializar;
-	
-	public controladorVersion(String hostname,String casa,String name,String password) {
+	PropertyChangeSupport soporte;
+	public controladorVersion(String hostname,String casa,String name,String password,PropertyChangeListener principal) {
 		this.hostname=hostname;
 		this.casa=casa;
 		this.name=name;
 		versionProg=0L;
 		inicializar=true;
 		this.password=password;
+		soporte=new PropertyChangeSupport(this);
+		this.addPropertyChangeListener(principal);
 		this.subirVersion();
 		
+	}
+
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		soporte.addPropertyChangeListener(listener);
+	}
+
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		soporte.removePropertyChangeListener(listener);
 	}
 	public void run() {
 		FTPSClient ftpClient=new FTPSClient(false);
@@ -39,7 +44,7 @@ public class controladorVersion extends Thread{
 				ftpClient.connect(hostname);
 				ftpClient.execPBSZ(0);
 				ftpClient.execPROT("P");
-				ftpClient.setFileTransferMode(FTP.BINARY_FILE_TYPE);
+				ftpClient.setFileTransferMode(FTP.STREAM_TRANSFER_MODE);
 				ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 				ftpClient.enterLocalPassiveMode();
 				ftpClient.login(name, password);
@@ -56,10 +61,12 @@ public class controladorVersion extends Thread{
 								File file=new File("files/"+casa+"/");
 								borrarTodoLocal(file.listFiles());
 								recibirFTP(ftpClient,files);
+								soporte.firePropertyChange("inicializar", false, true);
+								soporte.firePropertyChange("dispositivos", false, true);
+								soporte.firePropertyChange("agrupaciones", true, false);
 							}
 							System.out.println(versionProg);
 							inicializar=false;
-							if(versionProg<versionTMP)versionProg=versionTMP;
 							}
 						}				
 					}
@@ -100,33 +107,11 @@ public class controladorVersion extends Thread{
 			}
 		}
 	}
-	@SuppressWarnings("unchecked")
 	public void guardarArchivo(FTPSClient ftpClient,FTPFile file) {
-		int num=0;
-		Object obj1=null;
-		Object obj2=null;
-		System.out.println(file.getName());
-		if(file.getName().equals("version.txt")){
-			try(FileOutputStream OutStream=new FileOutputStream("files"+ftpClient.printWorkingDirectory()+"/"+file.getName())) {
-				ftpClient.retrieveFile(file.getName(), OutStream);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}else {
-			try(ObjectInputStream InputStream=new ObjectInputStream(ftpClient.retrieveFileStream(file.getName()))){
-						obj1=(Habitacion)InputStream.readObject();
-						obj2=(List<Dispositivo>)InputStream.readObject();
-						InputStream.close();
-						ftpClient.completePendingCommand();
-				try(ObjectOutputStream OutStream= new ObjectOutputStream(new FileOutputStream("files"+ftpClient.printWorkingDirectory()+"/"+file.getName()))) {
-						OutStream.writeObject(obj1);
-						OutStream.writeObject(obj2);
-				}catch(IOException e) {
-					e.printStackTrace();
-				}
-			}catch (IOException | ClassNotFoundException e) {
-				e.printStackTrace();
-			}
+		try(FileOutputStream OutStream=new FileOutputStream("files"+ftpClient.printWorkingDirectory()+"/"+file.getName())) {
+			ftpClient.retrieveFile(file.getName(), OutStream);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 	public void subirVersion() {
