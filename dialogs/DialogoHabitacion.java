@@ -91,7 +91,7 @@ public class DialogoHabitacion extends JDialog implements ActionListener {
 	public void hayRepetidoNombreHabitacion(String nombreVerificar) {
 		errorIgual=false;
 		mapa.entrySet().forEach(entry->{
-			if(nombreVerificar.equals(entry.getKey().getNombre())) {
+			if(nombreVerificar.toLowerCase().equals(entry.getKey().getNombre().toLowerCase())) {
 				try {
 					throw new NombreRepetidoException("msg");
 				} catch (NombreRepetidoException e) {

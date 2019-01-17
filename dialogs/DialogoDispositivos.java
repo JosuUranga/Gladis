@@ -298,7 +298,7 @@ public class DialogoDispositivos extends JDialog implements ActionListener{
 	public void hayRepetidoNombreDispositivo(String nombreVerificar){
 		map.entrySet().forEach(entry->{
 			entry.getValue().forEach(disp2->{
-				if(nombreVerificar.equals(disp2.getNombre())) {
+				if(nombreVerificar.toLowerCase().equals(disp2.getNombre().toLowerCase())) {
 					try {
 						throw new NombreRepetidoException("msg");
 					} catch (NombreRepetidoException e) {

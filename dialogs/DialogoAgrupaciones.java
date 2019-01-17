@@ -24,7 +24,9 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
+import exceptions.ListaVaciaException;
 import exceptions.NombreRepetidoException;
+import exceptions.VacioException;
 import gladis.Dispositivo;
 import gladis.Habitacion;
 import models.Agrupaciones;
@@ -44,9 +46,7 @@ public class DialogoAgrupaciones extends JDialog implements ActionListener{
 	ListaDispositivos modeloAgrupacion;
 	JTextField tnombre;
 	boolean crear=false;
-	public void setErrorIgual(boolean errorIgual) {
-		this.errorIgual = errorIgual;
-	}
+	
 
 
 	boolean	errorIgual=false;
@@ -208,37 +208,44 @@ public class DialogoAgrupaciones extends JDialog implements ActionListener{
 			mapa.get(combobox.getSelectedItem()).forEach(disp->modeloHabitacion.add(disp));
 			
 		}
+		
 		if(e.getActionCommand().equals("ok")) {
-			
-			if(this.getListaAgrupacion().isEmpty()) {
-				JOptionPane.showMessageDialog(this, "La lista de la agrupación está vacía","Error",JOptionPane.ERROR_MESSAGE);
-			}
-			else if(tnombre.getText().length()==0) {
-				JOptionPane.showMessageDialog(this, "Debe de introducir un nombre","Error",JOptionPane.ERROR_MESSAGE);
-			}
-			else{
-			hayRepetidoNombreAgrupacion(tnombre.getText());
+			try {
+				verificarLista();
+				verificarVacio();
+				hayRepetidoNombreAgrupacion(tnombre.getText());
 				if(!errorIgual) {
 				crear=true;
 				this.dispose();
 				}
+			} 
+			catch (ListaVaciaException e1) {
+			JOptionPane.showMessageDialog(this, "La lista de la agrupación está vacía","Error",JOptionPane.ERROR_MESSAGE);
+			}catch (VacioException e1) {
+			JOptionPane.showMessageDialog(this, "Debe de introducir un nombre","Error",JOptionPane.ERROR_MESSAGE);
 			}
 		}
+		
 		if(e.getActionCommand().equals("cancel")) {
 			this.dispose();
 		}
+	}
 		
-		
-		
+	private void verificarLista() throws ListaVaciaException{
+		if(this.getListaAgrupacion().isEmpty()) throw new ListaVaciaException("La lista de la agrupación está vacía");
+	}
+
+	private void verificarVacio() throws VacioException{
+		if(tnombre.getText().length()==0) throw new VacioException("Debe rellenar todos los campos");
 	}
 	public void hayRepetidoNombreAgrupacion(String nombreVerificar) {
 		mapaAgrupacion.entrySet().forEach(entry->{
-			if(nombreVerificar.equals(entry.getKey())) {
+			if(nombreVerificar.toLowerCase().equals(entry.getKey().toLowerCase())) {
 					try {
 						throw new NombreRepetidoException("msg");
 					} catch (NombreRepetidoException e) {
 						JOptionPane.showMessageDialog(this, "Ya existe una agrupación con ese mismo nombre","Error",JOptionPane.ERROR_MESSAGE);
-						this.setErrorIgual(true);
+						errorIgual=true;
 					}
 				} 
 		});
