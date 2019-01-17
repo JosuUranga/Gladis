@@ -70,11 +70,14 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 	controladorVersion cVersion;
 	Alarma alarma;
 	List<String>oldVal;
+	String username,password;
 	public Principal(){		
 		super ("Gladis");	
 		casa="test";
+		username="Administrador";
+		password="123456789aA@";
 		this.ips=new ArrayList<>();
-		cVersion=new controladorVersion("172.17.23.143",casa,"Administrador","123456789aA@");
+		cVersion=new controladorVersion("172.17.23.143",casa,username,password);
 		cVersion.start();
 		new EscuchaServidor(this,ips).start();
 		controlador= new Habitaciones(casa,this);
@@ -86,7 +89,8 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		renderer3= new RendererAgrupaciones(); 
 		eliminar=false;
 		habitacion="salon";
-		this.setExtendedState(MAXIMIZED_BOTH); 
+		this.setSize(800,600);
+		//this.setExtendedState(MAXIMIZED_BOTH); 
 		this.setLocation(0,0); 
 		this.setContentPane(crearPanelVentana());
 		controlador.inicializar(casa);
@@ -461,7 +465,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				file.delete();
 			}
 			cVersion.subirVersion();
-			new envioFTP("172.17.23.143",casa,"Administrador","123456789aA@").start();
+			new envioFTP("172.17.23.143",casa,username,password).start();
 			break;
 		case "envioAgrupacion":
 			@SuppressWarnings("unchecked") List<String>oldV2=(List<String>) evt.getOldValue();
@@ -476,7 +480,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				file.delete();
 			}
 			cVersion.subirVersion();
-			new envioFTP("172.17.23.143",casa,"Administrador","123456789aA@").start();
+			new envioFTP("172.17.23.143",casa,username,password).start();
 			break;
 		case "habitacionRecibida":
 			Path p= Paths.get((String)evt.getNewValue());

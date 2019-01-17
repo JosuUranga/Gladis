@@ -17,7 +17,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import exceptions.EspacioException;
 import exceptions.NombreRepetidoException;
+import exceptions.VacioException;
 import gladis.Dispositivo;
 import gladis.Habitacion;
 
@@ -89,7 +91,7 @@ public class DialogoHabitacion extends JDialog implements ActionListener {
 	public void hayRepetidoNombreHabitacion(String nombreVerificar) {
 		errorIgual=false;
 		mapa.entrySet().forEach(entry->{
-			if(nombreVerificar.equals(entry.getKey().getNombre())) {
+			if(nombreVerificar.toLowerCase().equals(entry.getKey().getNombre().toLowerCase())) {
 				try {
 					throw new NombreRepetidoException("msg");
 				} catch (NombreRepetidoException e) {
@@ -99,29 +101,39 @@ public class DialogoHabitacion extends JDialog implements ActionListener {
 			} 	
 		});	
 	}
-	
+	private void verificarVacio() throws VacioException{
+		if(nombre.getText().length()==0) throw new VacioException("Debe rellenar todos los campos");
+	}
 	private void check(String nombreVerificar) {
-		errorRellenar=false;
-		if(nombre.getText().length()==0) {
-			errorRellenar=true;
-		}
 		hayRepetidoNombreHabitacion(nombreVerificar);	
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().equals("ok")) {
-			check(nombre.getText());	
-			if(!errorRellenar && !errorIgual) {
-				habitacion = new Habitacion(nombre.getText());
-				this.dispose();
-			}else {
-				if(!errorIgual)JOptionPane.showMessageDialog(this,"Debes introducir un nombre", "Aviso",JOptionPane.WARNING_MESSAGE);
+			try {
+				verificarVacio();
+				verificarEspacio();
+				check(nombre.getText());	
+				if(!errorIgual) {
+					habitacion = new Habitacion(nombre.getText());
+					this.dispose();
+				}else {
+					if(!errorIgual)JOptionPane.showMessageDialog(this,"Debes introducir un nombre", "Aviso",JOptionPane.WARNING_MESSAGE);
+				}
+			} catch (VacioException e1) {
+				JOptionPane.showMessageDialog(this, "Debe rellenar todos los campos", "Aviso" , JOptionPane.WARNING_MESSAGE);	
+			} catch (EspacioException e1) {
+				JOptionPane.showMessageDialog(this, "El nombre no puede contener espacios", "Aviso" , JOptionPane.WARNING_MESSAGE);	
 			}
 		}
 		if(e.getActionCommand().equals("cancel")) {
 			this.dispose();
 		}
 		
+	}
+
+	private void verificarEspacio() throws EspacioException{
+		if(nombre.getText().contains(" ")) throw new EspacioException("El nombre no puede contener espacios");		
 	}
 
 }
