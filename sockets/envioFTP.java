@@ -71,6 +71,7 @@ public class envioFTP extends Thread{
 					borrarTodoFTP(ftpClient,ftpClient.listFiles());
 					ftpClient.changeToParentDirectory();
 				}else {
+					System.out.println(file.getName());
 					ftpClient.deleteFile(file.getName());
 				}
 			}

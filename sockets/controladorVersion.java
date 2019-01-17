@@ -21,12 +21,13 @@ public class controladorVersion extends Thread{
 		this.hostname=hostname;
 		this.casa=casa;
 		this.name=name;
+		this.password=password;
 		versionProg=0L;
 		inicializar=true;
-		this.password=password;
+		this.subirVersion();
 		soporte=new PropertyChangeSupport(this);
 		this.addPropertyChangeListener(principal);
-		this.subirVersion();
+		
 		
 	}
 
@@ -118,6 +119,8 @@ public class controladorVersion extends Thread{
 		versionProg=versionProg+1;
 		try(DataOutputStream Sversion=new DataOutputStream(new FileOutputStream("files/"+casa+"/version.txt"))){
 			Sversion.writeLong(versionProg);
+			Sversion.close();
+			if(inicializar)new envioFTP(hostname,casa,name,password).start();
 		}catch(IOException e) {
 			System.out.println("No se ha podido abrir version.txt");
 		}
