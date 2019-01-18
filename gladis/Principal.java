@@ -72,6 +72,8 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 	Alarma alarma;
 	List<String>oldVal;
 	String username,password;
+	JLabel lNombrePanelDispositivos; 
+
 	public Principal(){		
 		super ("Gladis");	
 		casa="test";
@@ -90,8 +92,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		renderer3= new RendererAgrupaciones(); 
 		eliminar=false;
 		habitacion="salon";
-		this.setSize(800,600);
-		//this.setExtendedState(MAXIMIZED_BOTH); 
+		this.setExtendedState(MAXIMIZED_BOTH); 
 		this.setLocation(0,0); 
 		this.setContentPane(crearPanelVentana());
 		controlador.inicializar(casa);
@@ -116,6 +117,14 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		bquitarHabitacion.setActionCommand("quitarHabitacion");
 		bquitarHabitacion.setEnabled(false);
 		toolbar.add(bquitarHabitacion);
+		toolbar.add(Box.createGlue()); 
+		 
+		JLabel lNombre = new JLabel("HABITACIONES"); 
+		lNombre.setFont(new Font("Garamond",Font.PLAIN,12)); 
+		lNombre.setForeground(new Color(35,35,5)); 
+		toolbar.add(lNombre); 
+		 
+		toolbar.add(Box.createHorizontalGlue()); 
 		return toolbar;
 	}
 	private Component crearPanelToolbarDispositivos() {
@@ -147,6 +156,10 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		botonAlarma.addActionListener(this); 
 		botonAlarma.setActionCommand("activarAlarma"); 
 		toolbar.add(botonAlarma); 
+		lNombrePanelDispositivos = new JLabel("DISPOSITIVOS"); 
+		lNombrePanelDispositivos.setFont(new Font("Garamond",Font.PLAIN,12)); 
+		lNombrePanelDispositivos.setForeground(new Color(35,35,5)); 
+		toolbar.add(lNombrePanelDispositivos); 
 		toolbar.add(Box.createHorizontalGlue()); 
 		 
 		noMolestar=new JButton(new ImageIcon("img/noMolestar.png")); 
@@ -209,7 +222,12 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		bquitarAgrupacion.setActionCommand("quitarAgrupacion");
 		bquitarAgrupacion.setEnabled(false);
 		toolbar.add(bquitarAgrupacion);
-
+		toolbar.add(Box.createGlue()); 
+		 
+		JLabel lNombre = new JLabel("AGRUPACIONES"); 
+		lNombre.setFont(new Font("Garamond",Font.PLAIN,12)); 
+		lNombre.setForeground(new Color(35,35,5)); 
+		toolbar.add(lNombre); 
 		toolbar.add(Box.createHorizontalGlue());
 
 		bactivarAgrupacion = new JButton(new ImageIcon("img/salir.png"));
@@ -368,6 +386,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		
 		case "quitarDispositivo":
 			eliminar=true;
+			lNombrePanelDispositivos.setText("PULSE EN UN DISPOSITIVO PARA ELIMINARLO"); 
 			listaDispositivos.clearSelection();
 			break;
 		case "activarAlarma":
@@ -432,6 +451,8 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			}
 			listaDispositivos.clearSelection();
 			eliminar=false;
+			lNombrePanelDispositivos.setText("DISPOSITIVOS"); 
+
 		}else if(arg0.getSource()==listaDispositivos) {
 			if(listaDispositivos.getSelectedIndex()!=-1) {
 				if(listaHabitaciones.getSelectedIndex()!=-1&&!listaHabitaciones.getSelectedValue().isNoMolestar()) { 
