@@ -346,9 +346,13 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			break;
 		case "activarAgrupacion":
 			controladorAgrupaciones.encenderAgrupacion(listaAgrupaciones.getSelectedValue());
-			propertyChange(new PropertyChangeEvent(this, "agrupacion", null, null));
+			propertyChange(new PropertyChangeEvent(this, "envioHabitacion", "activarAgrupacion", listaAgrupaciones.getSelectedValue()));			
 			break;
 		case "noMolestar":
+			controlador.escribirHabitacion(listaHabitaciones.getSelectedValue(), casa); 
+			controladorAgrupaciones.buscarDispositivos(controlador.getMapa().get(listaHabitaciones.getSelectedValue())).forEach(key->{ 
+				controladorAgrupaciones.escribirAgrupacion(key, casa); 
+			});
 			propertyChange(new PropertyChangeEvent(this, "noMolestar", true, listaHabitaciones.getSelectedValue().getNombre()));
 			propertyChange(new PropertyChangeEvent(this,"envioHabitacion","noMolestar",listaHabitaciones.getSelectedValue())); 
 			break;
@@ -498,6 +502,9 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		case "habitacion":
 			
 			break;
+		case "encenderAgrupacion": 
+			controladorAgrupaciones.encenderAgrupacion(listaAgrupaciones.getSelectedValue()); 
+			break; 
 		case "noMolestar":
 			List<Habitacion>habi=new ArrayList<>();
 			controlador.getMapa().keySet().forEach(key->{

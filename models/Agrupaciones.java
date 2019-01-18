@@ -217,6 +217,15 @@ public class Agrupaciones extends AbstractListModel<String> {
 		
 	}
 	public void eleminarDispositivoTodas (List<Dispositivo> lista) {
+		List<String>asdAS=buscarDispositivos(lista);
+		asdAS.forEach(key->{
+			lista.forEach(disp->mapa.get(key).remove(disp));
+			this.escribirAgrupacion(key, nCasa);
+			soporte.firePropertyChange("envioAgrupacion", "enviar", key);
+		});
+		this.fireContentsChanged(mapa, 0, mapa.size());
+	}
+	public List<String> buscarDispositivos(List<Dispositivo> lista) {
 		List<String>asdAS=new ArrayList<>();
 		mapa.entrySet().stream().forEach(entry->{
 			entry.getValue().forEach(Disp->{
@@ -225,12 +234,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 				});
 			});
 		});
-		asdAS.forEach(key->{
-			lista.forEach(disp->mapa.get(key).remove(disp));
-			this.escribirAgrupacion(key, nCasa);
-			soporte.firePropertyChange("envioAgrupacion", "enviar", key);
-		});
-		this.fireContentsChanged(mapa, 0, mapa.size());
+		return asdAS;
 	}
 	public void eleminarDispositivo(String nombre, Dispositivo dispositivo) {
 		mapa.get(nombre).remove(dispositivo);
