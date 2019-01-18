@@ -47,6 +47,10 @@ public class EnvioHabitaciones extends Thread{
     							out.writeObject("noMolestar");
     							break;
     						}
+    						if(nombre && modo.equals("encenderAgrupacion")) {
+    							out.writeObject("encenderAgrupacion");
+    							break;
+    						}
     						if(object.equals("Conexion establecida"))out.writeObject(habitacion);
     					}
     						if(nombre && num<2) {

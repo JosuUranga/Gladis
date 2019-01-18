@@ -154,6 +154,9 @@ public class Agrupaciones extends AbstractListModel<String> {
 		this.fireContentsChanged(mapa, 0, mapa.size());
 	}
 	public void inicializar(String casa) {
+		mapa = new HashMap<>();
+		mapaEstados=new HashMap<>();
+		mapaCasa=this.casa.getMapa();
 		File file= new File("files/"+casa+"/agrupaciones/originales");
 		File [] habitaciones=file.listFiles();
 		for(int i=0;i<habitaciones.length;i++) {
@@ -222,7 +225,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 	public Map<String, List<Dispositivo>> getMapaEstados() {
 		return mapaEstados;
 	}
-	public void eleminarDispositivoTodas (List<Dispositivo> lista) {
+	public List<String> buscarDispositivos(List<Dispositivo> lista) {
 		List<String>asdAS=new ArrayList<>();
 		mapa.entrySet().stream().forEach(entry->{
 			entry.getValue().forEach(Disp->{
@@ -231,6 +234,10 @@ public class Agrupaciones extends AbstractListModel<String> {
 				});
 			});
 		});
+		return asdAS;
+	}
+	public void eleminarDispositivoTodas (List<Dispositivo> lista) {
+		List<String>asdAS=buscarDispositivos(lista);
 		asdAS.forEach(key->{
 			lista.forEach(disp->mapa.get(key).remove(disp));
 			this.escribirAgrupacion(key);

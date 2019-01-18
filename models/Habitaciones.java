@@ -47,6 +47,8 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 		Reconocedor = new Reconocedor(mapa, principal);
 	}
 	public void inicializar(String casa) {
+		mapa = new HashMap<>();
+		this.fireContentsChanged(mapa, 0, mapa.size());
 		File file= new File("files/"+casa+"/habitaciones/");
 		File [] habitaciones=file.listFiles();
 		for(int i=0;i<habitaciones.length;i++) {

@@ -57,6 +57,7 @@ public class controladorVersion extends Thread{
 							try(DataInputStream version=new DataInputStream(ftpClient.retrieveFileStream(fileV.getName()))){
 								versionTMP=version.readLong();
 								version.close();
+								ftpClient.completePendingCommand();
 							if(versionProg<versionTMP && !inicializar) {
 								versionProg=versionTMP;
 								File file=new File("files/"+casa+"/");
@@ -81,6 +82,9 @@ public class controladorVersion extends Thread{
 			}	
 		} catch (IOException e) {
 			System.err.println("No se ha podido conectar con el servidor FTP");
+			e.printStackTrace();
+			this.run();
+			
 		}
 	}
 	public void recibirFTP(FTPSClient ftpClient,FTPFile[] files) {

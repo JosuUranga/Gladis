@@ -69,6 +69,16 @@ public class ComunicacionServidor extends Thread {
 							 oldValue=null;
 							 break;
 						 }
+						 if(((String)object).equals("encenderAgrupacion")) {
+							 File file = new File(nombreArchivo);
+							 List<String>oldValue=new ArrayList<>();
+							 oldValue.add("encenderAgrupacion");
+							 oldValue.add(socket.getRemoteSocketAddress().toString().substring(1, socket.getRemoteSocketAddress().toString().lastIndexOf(":")));
+							 soporte.firePropertyChange("envioHabitacion", oldValue, file.getName().replaceAll(".dat", ""));
+							 soporte.firePropertyChange("encenderAgrupacion", true,file.getName().replaceAll(".dat", ""));
+							 oldValue=null;
+							 break;
+						 }
 						 if(object.equals("Finalizado")) {
 							 try (ObjectOutputStream outf = new ObjectOutputStream(
 										new FileOutputStream(nombreArchivo))) {

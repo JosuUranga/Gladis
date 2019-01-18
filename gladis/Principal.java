@@ -310,7 +310,12 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			listaDispositivos.setListData(new Dispositivo[0]);
 			break;
 		case "activarAgrupacion":
+			oldVal=new ArrayList<>();
+			oldVal.add("activarAgrupacion");
+			oldVal.add("nada");
 			controladorAgrupaciones.encenderAgrupacion(listaAgrupaciones.getSelectedValue());
+			propertyChange(new PropertyChangeEvent(this, "envioHabitacion", oldVal, listaAgrupaciones.getSelectedValue()));
+			oldVal=null;
 			break;
 		case "anadirDispositivo":
 			DialogoDispositivos dialogoDispositivo = new DialogoDispositivos(this,"Anadir dispositivo",true,controlador.getMapa());
@@ -370,6 +375,10 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			oldVal.add("noMolestar");
 			oldVal.add("nada");
 			propertyChange(new PropertyChangeEvent(this,"noMolestar",true,listaHabitaciones.getSelectedValue().getNombre()));
+			controlador.escribirHabitacion(listaHabitaciones.getSelectedValue(), casa);
+			controladorAgrupaciones.buscarDispositivos(controlador.getMapa().get(listaHabitaciones.getSelectedValue())).forEach(key->{
+				controladorAgrupaciones.escribirAgrupacion(key);
+			});
 			propertyChange(new PropertyChangeEvent(this,"envioHabitacion",oldVal,listaHabitaciones.getSelectedValue().getNombre())); 
 			oldVal=null;
 			break; 
@@ -539,6 +548,9 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		case "inicializar":
 			controlador.inicializar(casa);
 			controladorAgrupaciones.inicializar(casa);
+			break;
+		case "encenderAgrupacion":
+			controladorAgrupaciones.encenderAgrupacion(listaAgrupaciones.getSelectedValue());
 			break;
 		case "comandosDisp": controlador.agregarComandoVar((Dispositivo)evt.getNewValue());
 		System.out.println("ASDALSIHDLASHFOAI�FJAM�SOIFASPODIAOPSDMAOPSD");
