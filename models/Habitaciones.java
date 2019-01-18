@@ -47,13 +47,16 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 		Reconocedor = new Reconocedor(mapa, principal);
 	}
 	public void inicializar(String casa) {
-		mapa = new HashMap<>();
+		mapa.clear();
 		this.fireContentsChanged(mapa, 0, mapa.size());
 		File file= new File("files/"+casa+"/habitaciones/");
 		File [] habitaciones=file.listFiles();
 		for(int i=0;i<habitaciones.length;i++) {
 			leerFichero("files/"+casa+"/"+"habitaciones/"+habitaciones[i].getName());
 		}
+		Reconocedor.setMapa(mapa);
+
+		System.out.println("AQUI SE INICIALIZA NUEVO MAPA "+mapa);
 	}
 	public void ordenarListas() { 
 		Set<Habitacion>mapakeys=this.mapa.keySet(); 

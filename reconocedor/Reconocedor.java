@@ -50,10 +50,15 @@ public class Reconocedor {
 	}
 	public void actualizaReconocedor() {
 		try {
+			System.out.println("AAAAAAAAAAA");
 			oreja.loadJSGF(new FileReader("Comandos.txt"));
 			oreja.commitChanges();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	public void setMapa(Map<Habitacion,List<Dispositivo>> mapaa) {
+		System.out.println(mapaa+"HOAL SOY EL MAPA RECONOCEDOR");
+		this.mapa=mapaa;
 	}
 }

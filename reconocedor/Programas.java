@@ -25,7 +25,7 @@ public class Programas extends ResultAdapter {
 	List<Dispositivo> lista;
 	Map<Habitacion,List<Dispositivo>> mapa;
 
-	public Programas(Map<Habitacion,List<Dispositivo>> mapa ) {
+	public Programas(Map<Habitacion,List<Dispositivo>> mapa) {
 		this.mapa=mapa;
 		lista = new ArrayList<>();
 		soporte=new PropertyChangeSupport(this);
@@ -60,9 +60,12 @@ public class Programas extends ResultAdapter {
 				comando="";
 			}
 			else {
+				System.out.println("LLEGA");
+
 				Set<Entry<Habitacion,List<Dispositivo>>> set = mapa.entrySet();
-				
+				System.out.println(mapa);
 				for(Entry<Habitacion,List<Dispositivo>> entry:set) {
+					
 					if(comando.equals("modo no molestar "+entry.getKey())) {
 						lista=entry.getValue();
 						lista.forEach(disp->disp.setNoMolestar(true));
@@ -70,20 +73,27 @@ public class Programas extends ResultAdapter {
 						System.out.println("Cambiando modo no molestar");
 						System.out.println(soporte.hasListeners(""));
 						comando="";
+						avisar(entry);
 					}
 					
 					lista=entry.getValue();
+					System.out.println(entry.getKey().isActivo()+" IS ACTIVO");
 					if(!entry.getKey().isActivo()&& !entry.getKey().isNoMolestar()) {
 						for(Dispositivo a: lista) {
+							System.out.println(a.getNombre()+"ANJKASDBUABIUBAF");
 							if(comando.equals("encender "+ a.getNombre())) {
 								a.setEstado(true);
+								System.out.println("Encendiendo luces");
 								comando="";
 								soporte.firePropertyChange("dispositivos", false, true);
+								avisar(entry);
 							}
 							else if(comando.equals("apagar "+a.getNombre())) {
 								a.setEstado(false);
 								comando="";
 								soporte.firePropertyChange("dispositivos", false, true);
+								avisar(entry);
+
 							}
 							else if(checkVariable(a)) {
 								for(Variable v : a.getVariables()) {
@@ -94,12 +104,16 @@ public class Programas extends ResultAdapter {
 										v.setVal(v.getVal()+1);
 										System.out.println(v.getVal());
 										comando="";
+										avisar(entry);
+
 									}
 									else if(comando.equals("bajar "+v.getVar()+" "+a.getNombre())) {
 										System.out.println("Bajando "+v.getVar()+" "+a.getNombre());
 										v.setVal(v.getVal()-1);
 										System.out.println(v.getVal());
 										comando="";
+										avisar(entry);
+
 									}
 									else if(comando.contains("cambiar "+v.getVar()+" "+a.getNombre())) {
 										String []split=comando.split(" ");
@@ -108,6 +122,8 @@ public class Programas extends ResultAdapter {
 											v.setVal(valor);
 											System.out.println("Cambiando "+v.getVar()+" "+a.getNombre());
 											System.out.println(v.getVal());
+											avisar(entry);
+
 
 										}catch(NumberFormatException aposjd) {
 											System.out.println("EXCEPTIOOON");
@@ -121,6 +137,8 @@ public class Programas extends ResultAdapter {
 							else if(comando.equals("aumentar Tiempo "+a.getNombre()) && a instanceof DispositivoTmp){
 								((DispositivoTmp) a).aumentarTiempo();
 								System.out.println(((DispositivoTmp) a).getTiempo());
+								avisar(entry);
+
 		
 							}
 						}
@@ -142,6 +160,16 @@ public class Programas extends ResultAdapter {
 	
 	public String getPrograma(){
 		return Programa;
+	}
+	public void setMapa(Map<Habitacion,List<Dispositivo>> mapa) {
+		this.mapa=mapa;
+	}
+	public void avisar(Entry<Habitacion,List<Dispositivo>> entry) {
+		List<String> lista = new ArrayList<>();
+		lista.add("enviar");
+		lista.add("nada");
+		soporte.firePropertyChange("envioHabitacion", lista, entry.getKey().toString());
+		lista=null;
 	}
 }
 

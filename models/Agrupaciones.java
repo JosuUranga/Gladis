@@ -144,8 +144,8 @@ public class Agrupaciones extends AbstractListModel<String> {
 		this.fireContentsChanged(mapa, 0, mapa.size());
 	}
 	public void inicializar(String casa) {
-		mapa = new HashMap<>();
-		mapaEstados=new HashMap<>();
+		mapa.clear();
+		mapaEstados.clear();
 		mapaCasa=this.casa.getMapa();
 		File file= new File("files/"+casa+"/agrupaciones/originales");
 		File [] habitaciones=file.listFiles();
