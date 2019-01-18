@@ -81,7 +81,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			System.exit(1);
 		}
 		this.ips=new ArrayList<>();
-		cVersion=new controladorVersion("192.168.0.172",casa,username,password,this);
+		cVersion=new controladorVersion("172.17.23.143",casa,username,password,this);
 		cVersion.start();
 		controlador= new Habitaciones(casa);
 		controlador.addPropertyChangeListener(this);
@@ -455,7 +455,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				file.delete();
 			}
 			cVersion.subirVersion();
-			new envioFTP("192.168.0.172",casa,username,password).start();
+			new envioFTP("172.17.23.143",casa,username,password).start();
 			break;
 		case "envioAgrupacion":
 			@SuppressWarnings("unchecked") List<String>oldV2=(List<String>) evt.getOldValue();
@@ -466,7 +466,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				file.delete();
 			}
 			cVersion.subirVersion();
-			new envioFTP("192.168.0.172",casa,username,password).start();
+			new envioFTP("172.17.23.143",casa,username,password).start();
 			break;
 		case "habitacionRecibida":
 			Path p= Paths.get((String)evt.getNewValue());
