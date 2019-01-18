@@ -64,9 +64,11 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 				lista.add(dispo);
 			}); 
 			controladorAgrupaciones.eleminarDispositivoTodas(lista);
+			eliminarDispositivosHabitacion(key);
 			mapa.remove(key);
 			eliminarComandoHabitacion(key);
 		});
+		Reconocedor.actualizaReconocedor();
 		this.fireContentsChanged(mapa, 0, mapa.size()); 
 	}
 	public void anadirHabitacion(Habitacion habitacion) {		
@@ -260,6 +262,8 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 				eliminarComandoHabitacion(key);
 				escribirComandoHabitacion(key);
 		//		Reconocedor.actualizaReconocedor();
+				soporte.firePropertyChange("dispositivos", false, true);
+
 				
 				this.fireContentsChanged(mapa, 0, mapa.size());
 			} catch (FileNotFoundException e) {

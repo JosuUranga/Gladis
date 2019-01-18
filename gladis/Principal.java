@@ -49,7 +49,7 @@ import sockets.EscuchaServidor;
 
 @SuppressWarnings("serial")
 public class Principal extends JFrame implements ActionListener, ListSelectionListener, PropertyChangeListener {
-	final String master="172.17.21.64";
+	final String master="172.17.20.169";
 	JMenuBar barra;	
 	JMenu editar,salir;
 	JMenuItem anadirHabitacion,quitarHabitacion,anadirDispositivo,quitarDispositivo,cerrar;
@@ -451,6 +451,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				bquitarDispositivo.setEnabled(true);
 				if(listaDispositivos.getModel().getSize()==0)bquitarDispositivo.setEnabled(false);
 			}
+			else listaDispositivos.setListData(new Dispositivo[0]);
 			break;
 		case "agrupacion":
 			if(listaAgrupaciones.getSelectedIndex()>-1) {
