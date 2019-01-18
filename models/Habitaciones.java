@@ -73,9 +73,11 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 				disp.add(dispo);
 			});
 			controladorAgrupaciones.eleminarDispositivoTodas(disp);
-			mapa.remove(key);
+			eliminarDispositivosHabitacion(key);
 			eliminarComandoHabitacion(key); 
+			mapa.remove(key);
 		});
+	//	Reconocedor.actualizaReconocedor();
 		this.fireContentsChanged(mapa, 0, mapa.size());
 	}
 	public void anadirHabitacion(Habitacion habitacion) {		
@@ -117,7 +119,6 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 			e.printStackTrace(); 
 		} 
 		reemplazar(fileName,tmp); 
-		//Reconocedor.actualizaReconocedor();		 
 	} 
 	public void anadirDispositivo (Habitacion habitacion,Dispositivo dispositivo) {
 		List<Dispositivo>lista = mapa.get(habitacion);
@@ -148,7 +149,6 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 				if(linea.contains(d.getNombre()+"Variables")) return linea;
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -175,6 +175,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 			eliminarComando(dispositivo, lineToRemove); 
 		} 
 		if(dispositivo instanceof DispositivoTmp) eliminarComando(dispositivo, "public <"+dispositivo.getNombre()+"Tiempo> = <tiempo> "+dispositivo.getNombre()+";"); 
+
 	} 
 	public void eliminarComando(Dispositivo dispositivo, String lineToRemove) {
 		String fileName="Comandos.txt";
@@ -189,7 +190,6 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 			e.printStackTrace();
 		}
 		reemplazar(fileName,tmp);
-//		Reconocedor.actualizaReconocedor();
 	}
 	public void reemplazar(String fileName, String tmp) {
 		String s;
@@ -211,7 +211,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 		File file = new File("Comandos.txt");
 		try (FileWriter fr= new FileWriter(file, true)){
 			if(!dispositivo.getTipo().equals("Programable tiempo") && !dispositivo.getTipo().equals("No programable")) 
-				fr.write("\n"+"public <"+dispositivo.getNombre()+"> = <accion> [<variables>] "+dispositivo.getNombre()+";");
+				fr.write("\n"+"public <"+dispositivo.getNombre()+"> = <accion> [<variables>] "+dispositivo.getNombre()+" [<numeros>];");
 			else {
 				List<Variable> v = dispositivo.getVariables();
 				if(!v.isEmpty()) if(!v.get(0).getVar().equals(" ")) agregarComandoVar(dispositivo);
@@ -219,7 +219,6 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 			if(dispositivo instanceof DispositivoTmp) fr.write("\n"+"public <"+dispositivo.getNombre()+"Tiempo> = <tiempo> "+dispositivo.getNombre()+";");
 			fr.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -231,12 +230,10 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 				fr.write(v.getVar()+" | ");
 			}
 			fr.write(");");
-			fr.write("\n"+"public <"+dispositivo.getNombre()+"> = <accion> [<"+dispositivo.getNombre()+"Variables>] "+dispositivo.getNombre()+";");
+			fr.write("\n"+"public <"+dispositivo.getNombre()+"> = <accion> [<"+dispositivo.getNombre()+"Variables>] "+dispositivo.getNombre()+" [<numeros>];");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	//	Reconocedor.actualizaReconocedor();
 	}
 	
 	public void escribirHabitacion(Habitacion habitacion,String casa) {
@@ -278,6 +275,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 				eliminarComandoHabitacion(key); 
 				escribirComandoHabitacion(key); 
 				//Reconocedor.actualizaReconocedor();
+				soporte.firePropertyChange("dispositivos", false, true);
 				
 				this.fireContentsChanged(mapa, 0, mapa.size());
 			} catch (FileNotFoundException e) {

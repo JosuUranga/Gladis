@@ -12,23 +12,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
-import java.util.stream.Stream;
 
 import javax.swing.AbstractListModel;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 
-import dialogs.DialogoDispositivos;
-import exceptions.NombreRepetidoException;
 import gladis.*;
 
 public class Agrupaciones extends AbstractListModel<String> {
@@ -82,13 +74,13 @@ public class Agrupaciones extends AbstractListModel<String> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//casa.Reconocedor.actualizaReconocedor();
 	}
 	public void eliminarString (String nombre) {	
 		if (mapa.containsKey(nombre)) {
 			mapa.remove(nombre);
 			mapaEstados.remove(nombre);
 			eliminarComandoAgrupacion(nombre);
+			//casa.Reconocedor.actualizaReconocedor();
 			System.out.println("ELIMINANDO COMANDO: "+nombre);
 			this.fireContentsChanged(mapa, 0, mapa.size());
 		}
@@ -107,7 +99,6 @@ public class Agrupaciones extends AbstractListModel<String> {
 			e.printStackTrace();
 		}
 		casa.reemplazar(fileName,tmp);
-		//casa.Reconocedor.actualizaReconocedor();
 		
 	}
 	public void escribirAgrupacion(String agrupacion) {
@@ -186,7 +177,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 					map.put(key, value);
 					eliminarComandoAgrupacion(key); 
 					agregarComandoAgrupacion(key); 
-					//Reconocedor.actualizaReconocedor(); 
+					//casa.Reconocedor.actualizaReconocedor();
 					  
 					this.fireContentsChanged(map, 0, map.size()); 
 				}
@@ -215,6 +206,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 		lista.forEach(disp->listaCopy.add((Dispositivo)disp.clone()));
 		mapaEstados.put(nombre, listaCopy);
 		agregarComandoAgrupacion(nombre);
+		//casa.Reconocedor.actualizaReconocedor();
 		listaCopy.forEach(disp->disp.modificar(principal));
 		System.out.println("ESCRIBIENDO AGRUPACION: "+nombre);
 		this.fireContentsChanged(mapa, 0, mapa.size());

@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -44,11 +45,11 @@ import models.Habitaciones;
 import renderers.RendererAgrupaciones;
 import renderers.RendererDispositivos;
 import renderers.RendererHabitaciones;
+import serialcomm.Alarma;
 import sockets.EnvioHabitaciones;
 import sockets.EscuchaServidor;
 import sockets.controladorVersion;
 import sockets.envioFTP;
-import serialcomm.*;
 
 public class Principal extends JFrame implements ActionListener, ListSelectionListener, PropertyChangeListener {
 	JMenuBar barra;	
@@ -138,7 +139,11 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
  
 		toolbar.add(Box.createHorizontalGlue());
 		toolbar.add(Box.createHorizontalGlue()); 
-		botonAlarma = new JButton(new ImageIcon("img/quitar.png")); 
+		botonAlarma = new JButton(); 
+		Image img = (new ImageIcon("img/alarma.png")).getImage();		
+		Image newimg = img.getScaledInstance(16, 16,  java.awt.Image.SCALE_SMOOTH);
+		ImageIcon imageIcon = new ImageIcon(newimg); 
+		botonAlarma.setIcon(imageIcon);
 		botonAlarma.addActionListener(this); 
 		botonAlarma.setActionCommand("activarAlarma"); 
 		toolbar.add(botonAlarma); 
@@ -458,6 +463,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				bquitarDispositivo.setEnabled(true);
 				if(listaDispositivos.getModel().getSize()==0)bquitarDispositivo.setEnabled(false);
 			}
+			else listaDispositivos.setListData(new Dispositivo[0]);
 			break;
 		case "agrupacion":
 			if(listaAgrupaciones.getSelectedIndex()>-1) {

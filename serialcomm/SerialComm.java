@@ -9,7 +9,6 @@ import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 
 public class SerialComm {
-	public static final String CARACTERFIN = "#";
 	InputStream in;
 	OutputStream out;
 	CommPort commPort;
