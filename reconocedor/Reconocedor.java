@@ -22,7 +22,7 @@ public class Reconocedor {
 		lista= new ArrayList<>();
 		programas =new Programas(mapa);
 		programas.addPropertyChangeListener(p);
-	//	iniciarRec();
+		iniciarRec();
 
 	}
 
@@ -52,12 +52,10 @@ public class Reconocedor {
 	return;
 	}
 	public void actualizaReconocedor() {
-		System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 		try {
 			oreja.loadJSGF(new FileReader("Comandos.txt"));
 			oreja.commitChanges();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
