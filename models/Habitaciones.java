@@ -77,14 +77,14 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 			eliminarComandoHabitacion(key); 
 			mapa.remove(key);
 		});
-	//	Reconocedor.actualizaReconocedor();
+		Reconocedor.actualizaReconocedor();
 		this.fireContentsChanged(mapa, 0, mapa.size());
 	}
 	public void anadirHabitacion(Habitacion habitacion) {		
 		mapa.put(habitacion, new ArrayList<>()); 
 		escribirComandoHabitacion(habitacion); 	
 		this.fireContentsChanged(mapa, 0, mapa.size());
-	//	Reconocedor.actualizaReconocedor(); 
+		Reconocedor.actualizaReconocedor(); 
 	}
 	private void escribirComandoHabitacion(Habitacion habitacion) { 
 		File file = new File("Comandos.txt"); 
@@ -103,7 +103,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 			eliminarComandoHabitacion(habitacion); 
 			mapa.remove(habitacion);
 			this.fireContentsChanged(mapa, 0, mapa.size());
-			//Reconocedor.actualizaReconocedor(); 
+			Reconocedor.actualizaReconocedor(); 
 		}
 	}
 	private void eliminarComandoHabitacion(Habitacion habitacion) { 
@@ -126,7 +126,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 		lista.add(dispositivo);
 		mapa.put(habitacion, lista);
 		agregarComando(dispositivo);
-//		Reconocedor.actualizaReconocedor();
+		Reconocedor.actualizaReconocedor();
 		soporte.firePropertyChange("dispositivos", false, true);
 		
 	}
@@ -135,7 +135,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 		lista.remove(dispositivo);
 		mapa.replace(habitacion, mapa.get(habitacion), lista);
 		eliminarComandoDispositivoCompleto(dispositivo); 
-		//	Reconocedor.actualizaReconocedor(); 
+		Reconocedor.actualizaReconocedor(); 
 		soporte.firePropertyChange("dispositivos", true, false);
 		
 	}
@@ -274,7 +274,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 				}
 				eliminarComandoHabitacion(key); 
 				escribirComandoHabitacion(key); 
-				//Reconocedor.actualizaReconocedor();
+				Reconocedor.actualizaReconocedor();
 				soporte.firePropertyChange("dispositivos", false, true);
 				
 				this.fireContentsChanged(mapa, 0, mapa.size());

@@ -71,7 +71,6 @@ public class Agrupaciones extends AbstractListModel<String> {
 			fr.write("\n"+"public <modo"+nombre+"> = modo "+nombre+";"); 	
 			fr.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -80,7 +79,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 			mapa.remove(nombre);
 			mapaEstados.remove(nombre);
 			eliminarComandoAgrupacion(nombre);
-			//casa.Reconocedor.actualizaReconocedor();
+			casa.Reconocedor.actualizaReconocedor();
 			System.out.println("ELIMINANDO COMANDO: "+nombre);
 			this.fireContentsChanged(mapa, 0, mapa.size());
 		}
@@ -177,7 +176,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 					map.put(key, value);
 					eliminarComandoAgrupacion(key); 
 					agregarComandoAgrupacion(key); 
-					//casa.Reconocedor.actualizaReconocedor();
+					casa.Reconocedor.actualizaReconocedor();
 					  
 					this.fireContentsChanged(map, 0, map.size()); 
 				}
@@ -206,7 +205,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 		lista.forEach(disp->listaCopy.add((Dispositivo)disp.clone()));
 		mapaEstados.put(nombre, listaCopy);
 		agregarComandoAgrupacion(nombre);
-		//casa.Reconocedor.actualizaReconocedor();
+		casa.Reconocedor.actualizaReconocedor();
 		listaCopy.forEach(disp->disp.modificar(principal));
 		System.out.println("ESCRIBIENDO AGRUPACION: "+nombre);
 		this.fireContentsChanged(mapa, 0, mapa.size());
@@ -285,8 +284,4 @@ public class Agrupaciones extends AbstractListModel<String> {
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		soporte.removePropertyChangeListener(listener);
 	}
-
-	
-	
-	
 }

@@ -47,7 +47,6 @@ public class Programas extends ResultAdapter {
 			for (int i=0; i < tokens.length; i++){
 				Programa = tokens[i].getSpokenText();
 				Frase[0]+=Programa+" "; 
-				System.out.println(Programa + " ");
 			}
 			for(String a : Frase) {
 				comando+=a;
@@ -55,7 +54,6 @@ public class Programas extends ResultAdapter {
 			}
 			comando= comando.substring(0, comando.length()-2);
 
-			System.out.println();
 			System.out.println("Este es el comando :"+comando+":");
 			if(comando.length()>128) comando=".";
 			if(Programa.equals("gladis")) {
@@ -137,7 +135,6 @@ public class Programas extends ResultAdapter {
 	}
 	public boolean checkVariable(Dispositivo d) {
 		for(Variable a : d.getVariables()) {
-			System.out.println(a.getVar());
 			if(comando.contains(a.getVar())) return true;
 		}
 		return false;
