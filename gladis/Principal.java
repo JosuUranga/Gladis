@@ -65,6 +65,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 	Agrupaciones controladorAgrupaciones;
 	JList<String>listaAgrupaciones;
 	DialogoAgrupaciones dialogoAgrupacion;
+	JLabel lNombrePanelDispositivos;
 	public Principal(){		
 		super ("Gladis");
 		casa="test";	
@@ -114,6 +115,15 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		bquitarHabitacion.setEnabled(false);
 		toolbar.add(bquitarHabitacion);
 		
+		toolbar.add(Box.createGlue());
+		
+		JLabel lNombre = new JLabel("HABITACIONES");
+		lNombre.setFont(new Font("Garamond",Font.PLAIN,12));
+		lNombre.setForeground(new Color(35,35,5));
+		toolbar.add(lNombre);
+		
+		toolbar.add(Box.createHorizontalGlue());
+
 		return toolbar;
 	}
 	private Component crearPanelToolbarDispositivos() {
@@ -134,10 +144,10 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		
 		toolbar.add(Box.createGlue());
 		
-		JLabel lNombre = new JLabel("DISPOSITIVOS");
-		lNombre.setFont(new Font("Garamond",Font.PLAIN,12));
-		lNombre.setForeground(new Color(35,35,5));
-		toolbar.add(lNombre);
+		lNombrePanelDispositivos = new JLabel("DISPOSITIVOS");
+		lNombrePanelDispositivos.setFont(new Font("Garamond",Font.PLAIN,12));
+		lNombrePanelDispositivos.setForeground(new Color(35,35,5));
+		toolbar.add(lNombrePanelDispositivos);
 
 		toolbar.add(Box.createHorizontalGlue());
 		noMolestar=new JButton(new ImageIcon("img/noMolestar.png"));
@@ -202,6 +212,13 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		bquitarAgrupacion.setEnabled(false);
 		toolbar.add(bquitarAgrupacion);
 
+		toolbar.add(Box.createGlue());
+		
+		JLabel lNombre = new JLabel("AGRUPACIONES");
+		lNombre.setFont(new Font("Garamond",Font.PLAIN,12));
+		lNombre.setForeground(new Color(35,35,5));
+		toolbar.add(lNombre);
+		
 		toolbar.add(Box.createHorizontalGlue());
 
 		bactivarAgrupacion = new JButton(new ImageIcon("img/salir.png"));
@@ -348,6 +365,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		
 		case "quitarDispositivo":
 			eliminar=true;
+			lNombrePanelDispositivos.setText("PULSE EN UN DISPOSITIVO PARA ELIMINARLO");
 			listaDispositivos.clearSelection();
 			break;
 		}
@@ -399,6 +417,8 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			}
 			listaDispositivos.clearSelection();
 			eliminar=false;
+			lNombrePanelDispositivos.setText("DISPOSITIVOS");
+
 		}else if(arg0.getSource()==listaDispositivos) {
 			if(listaDispositivos.getSelectedIndex()!=-1) {
 				if(listaHabitaciones.getSelectedIndex()!=-1&&!listaHabitaciones.getSelectedValue().isNoMolestar()) {
