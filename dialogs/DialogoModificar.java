@@ -51,7 +51,7 @@ public class DialogoModificar extends JDialog implements ActionListener, Seriali
 	
 	
 	public DialogoModificar(Principal p ,Dispositivo dispositivo) {
-		super(p, "Modificar", true);
+		super(p, "Modificar "+dispositivo.getNombre(), true);
 		variables=dispositivo.getVariablesCopia();
 		tipo="";
 		estado=dispositivo.isEstado();
