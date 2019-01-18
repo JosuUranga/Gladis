@@ -15,7 +15,6 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -31,45 +30,40 @@ import otros.TextPrompt;
 public class Login extends JDialog implements ActionListener{
 	JTextField usuario;
 	JPasswordField password;
-	JCheckBox recordar;
 	JButton logear;
 	Boolean loginCorrecto;
 	public Login(JFrame ventana) {
 		super(ventana,"Login",true);
-		this.setSize(600,600);
-		this.setLocation (600,200);
+		this.setSize(600,325);
+		this.setLocation (600,400);
 		loginCorrecto=false;
 		this.setContentPane(crearPanelGeneral());
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);		
 		this.setVisible(true);
 	}
 	private Container crearPanelGeneral() {
-		JPanel panel = new JPanel(new GridLayout(2,1));
+		JPanel panel = new JPanel(new GridLayout(1,1));
 		panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-		panel.setBackground(new Color(0,153,255));
-		panel.add(crearPanelTitulo());
 		panel.add(crearPanelCuadro());	
 		return panel;
 	}
 	public Container crearPanelTitulo() {
 		JPanel panel=new JPanel();
 		JLabel label= new JLabel("GLADIS");
-		panel.setBackground(new Color(0,153,255));
-		panel.setBorder(BorderFactory.createEmptyBorder(200,20, 20, 20));
+		panel.setBorder(BorderFactory.createEmptyBorder(20,20, 20, 20));
 		panel.add(label);
 		return panel;
 	}
 	public Container crearPanelCuadro() {
 		JPanel panel= new JPanel();
-		panel.setBorder(BorderFactory.createEmptyBorder(20,20, 20, 20));
-		panel.setBackground(new Color(0,153,255));
+		panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		panel.add(crearPanelLogin());
 		panel.setOpaque(true);
 		return panel;
 	}
 	public Container crearPanelLogin() {
 		JPanel panel=new JPanel(new GridLayout(2,2,10,10));
-		panel.setBorder(BorderFactory.createRaisedBevelBorder());
+		panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(),BorderFactory.createEmptyBorder(20, 40, 0, 40)));
 		panel.setPreferredSize(new Dimension(500,200));
 		panel.add(crearPanelTextos());
 		panel.add(crearPanelBoton());
@@ -81,9 +75,9 @@ public class Login extends JDialog implements ActionListener{
 		JLabel label,label2;
 		label=new JLabel("Usuario:");
 		panel.setBackground(Color.white);
-		label.setHorizontalAlignment(JLabel.CENTER);
-		label2=new JLabel("ContraseÃ±a:");
-		label2.setHorizontalAlignment(JLabel.CENTER);
+		label.setHorizontalAlignment(JLabel.LEFT);
+		label2=new JLabel("Contraseña:");
+		label2.setHorizontalAlignment(JLabel.LEFT);
 		panel.add(label);
 		usuario=new JTextField();
 		TextPrompt placeholder=new TextPrompt("Usuario@domoticaf2.eus",usuario);
@@ -96,10 +90,7 @@ public class Login extends JDialog implements ActionListener{
 	}
 	public Container crearPanelBoton() {
 		JPanel panel=new JPanel();
-		recordar=new JCheckBox("Recordar");
 		panel.setBackground(Color.white);
-		recordar.setBackground(Color.white);
-		panel.add(recordar);
 		logear=new JButton("Entrar");
 		logear.setActionCommand("logear");
 		logear.setPreferredSize(new Dimension(150,50));
