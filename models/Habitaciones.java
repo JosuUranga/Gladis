@@ -89,7 +89,6 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 		List<Dispositivo>lista = mapa.get(habitacion);
 		lista.remove(dispositivo);
 		mapa.replace(habitacion, mapa.get(habitacion), lista);
-		//	Reconocedor.actualizaReconocedor(); 
 		soporte.firePropertyChange("dispositivos", true, false);
 		
 	}

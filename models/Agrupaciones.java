@@ -90,7 +90,6 @@ public class Agrupaciones extends AbstractListModel<String> {
 		if (mapa.containsKey(nombre)) {
 			mapa.remove(nombre);
 			mapaEstados.remove(nombre);
-			System.out.println("ELIMINANDO COMANDO: "+nombre);
 			this.fireContentsChanged(mapa, 0, mapa.size());
 		}
 		
