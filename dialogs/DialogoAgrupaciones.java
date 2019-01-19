@@ -48,9 +48,10 @@ public class DialogoAgrupaciones extends JDialog implements ActionListener{
 	boolean crear=false;
 	boolean	errorIgual=false;
 	public DialogoAgrupaciones(JFrame ventana, Agrupaciones controladorAgrupaciones) {
-		super(ventana,"Nueva Agrupación", true);
+		super(ventana,"Nueva Agrupaciï¿½n", true);
 		
 		habitaciones=controladorAgrupaciones.getMapaCasa().keySet().toArray(new Habitacion[0]);
+		System.out.println(controladorAgrupaciones.getMapaCasa().isEmpty());
 		this.mapa=controladorAgrupaciones.getMapaCasa();
 		this.mapaAgrupacion=controladorAgrupaciones.getMapa();
 		modeloHabitacion= new ListaDispositivos();
@@ -83,7 +84,7 @@ public class DialogoAgrupaciones extends JDialog implements ActionListener{
 		JPanel panel = new JPanel(new GridLayout(1,2,20,20));
 
 		tnombre = new JTextField();
-		panel.add(new JLabel("Nombre de la agrupación: "));
+		panel.add(new JLabel("Nombre de la agrupaciï¿½n: "));
 		panel.add(tnombre);
 		
 		return panel;
@@ -180,7 +181,7 @@ public class DialogoAgrupaciones extends JDialog implements ActionListener{
 			if(!modeloAgrupacion.contains((Dispositivo)modeloHabitacion.getElementAt(indice)))modeloAgrupacion.add((Dispositivo)modeloHabitacion.getElementAt(indice));
 			else repetido = true;
 		}
-		if(repetido)JOptionPane.showMessageDialog(this, "Hay uno o más dispositivos repetidos","Error",JOptionPane.ERROR_MESSAGE);
+		if(repetido)JOptionPane.showMessageDialog(this, "Hay uno o mï¿½s dispositivos repetidos","Error",JOptionPane.ERROR_MESSAGE);
 	}
 	
 	@Override
@@ -217,7 +218,7 @@ public class DialogoAgrupaciones extends JDialog implements ActionListener{
 				}
 			} 
 			catch (ListaVaciaException e1) {
-			JOptionPane.showMessageDialog(this, "La lista de la agrupación está vacía","Error",JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "La lista de la agrupaciï¿½n estï¿½ vacï¿½a","Error",JOptionPane.ERROR_MESSAGE);
 			}catch (VacioException e1) {
 			JOptionPane.showMessageDialog(this, "Debe de introducir un nombre","Error",JOptionPane.ERROR_MESSAGE);
 			}
@@ -229,7 +230,7 @@ public class DialogoAgrupaciones extends JDialog implements ActionListener{
 	}
 		
 	private void verificarLista() throws ListaVaciaException{
-		if(this.getListaAgrupacion().isEmpty()) throw new ListaVaciaException("La lista de la agrupación está vacía");
+		if(this.getListaAgrupacion().isEmpty()) throw new ListaVaciaException("La lista de la agrupaciï¿½n estï¿½ vacï¿½a");
 	}
 
 	private void verificarVacio() throws VacioException{
@@ -241,7 +242,7 @@ public class DialogoAgrupaciones extends JDialog implements ActionListener{
 					try {
 						throw new NombreRepetidoException("msg");
 					} catch (NombreRepetidoException e) {
-						JOptionPane.showMessageDialog(this, "Ya existe una agrupación con ese mismo nombre","Error",JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(this, "Ya existe una agrupaciï¿½n con ese mismo nombre","Error",JOptionPane.ERROR_MESSAGE);
 						errorIgual=true;
 					}
 				} 

@@ -79,8 +79,6 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		renderer2= new RendererDispositivos();
 		renderer3= new RendererAgrupaciones();
 		eliminar=false;
-		habitacion="salon";
-		
 		this.setExtendedState(MAXIMIZED_BOTH);
 		this.setLocation(0,0);
 		this.setContentPane(crearPanelVentana());
@@ -290,7 +288,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		switch(e.getActionCommand()) {		
 		case "quitarHabitacion":
 			listaDispositivos.clearSelection();
-			propertyChange(new PropertyChangeEvent(this,"envioHabitacion", "borrar", listaHabitaciones.getSelectedValue()));
+			propertyChange(new PropertyChangeEvent(this,"envioHabitacion", "borrar", listaHabitaciones.getSelectedValue().getNombre()));
 			controladorAgrupaciones.eleminarDispositivoTodas(controlador.getMapa().get(listaHabitaciones.getSelectedValue()));
 			controlador.eliminarDispositivosHabitacion(listaHabitaciones.getSelectedValue());
 			controlador.eliminarHabitacion(listaHabitaciones.getSelectedValue());
@@ -311,7 +309,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			if(habitacion!=null) {
 				controlador.anadirHabitacion(habitacion);
 				controlador.escribirHabitacion(habitacion, casa);
-				propertyChange(new PropertyChangeEvent(this,"envioHabitacion", "enviar", habitacion));
+				propertyChange(new PropertyChangeEvent(this,"envioHabitacion", "enviar", habitacion.getNombre()));
 			}
 			listaHabitaciones.clearSelection();
 			listaDispositivos.setListData(new Dispositivo[0]);
@@ -324,7 +322,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			if(dialogoDispositivo.getDispositivo()!=null) {
 				controlador.anadirDispositivo(listaHabitaciones.getSelectedValue(), dialogoDispositivo.getDispositivo());
 				controlador.escribirHabitacion(listaHabitaciones.getSelectedValue(), casa);
-				propertyChange(new PropertyChangeEvent(this,"envioHabitacion", "enviar", listaHabitaciones.getSelectedValue()));
+				propertyChange(new PropertyChangeEvent(this,"envioHabitacion", "enviar", listaHabitaciones.getSelectedValue().getNombre()));
 			}
 			
 			break;
@@ -334,7 +332,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				dialogoAgrupacion=new DialogoAgrupaciones(this, controladorAgrupaciones);
 				if(dialogoAgrupacion.isCrear()) {
 					controladorAgrupaciones.anadirDispositivos(dialogoAgrupacion.getNombre(), dialogoAgrupacion.getListaAgrupacion(), this);
-					controladorAgrupaciones.escribirAgrupacion(dialogoAgrupacion.getNombre(), casa);
+					controladorAgrupaciones.escribirAgrupacion(dialogoAgrupacion.getNombre());
 				}
 				listaAgrupaciones.clearSelection();
 				listaDispositivos.setListData(new Dispositivo[0]);
@@ -346,15 +344,12 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			break;
 		case "activarAgrupacion":
 			controladorAgrupaciones.encenderAgrupacion(listaAgrupaciones.getSelectedValue());
+			propertyChange(new PropertyChangeEvent(this, "agrupacion", true, false));
 			propertyChange(new PropertyChangeEvent(this, "envioHabitacion", "activarAgrupacion", listaAgrupaciones.getSelectedValue()));			
 			break;
 		case "noMolestar":
-			controlador.escribirHabitacion(listaHabitaciones.getSelectedValue(), casa); 
-			controladorAgrupaciones.buscarDispositivos(controlador.getMapa().get(listaHabitaciones.getSelectedValue())).forEach(key->{ 
-				controladorAgrupaciones.escribirAgrupacion(key, casa); 
-			});
 			propertyChange(new PropertyChangeEvent(this, "noMolestar", true, listaHabitaciones.getSelectedValue().getNombre()));
-			propertyChange(new PropertyChangeEvent(this,"envioHabitacion","noMolestar",listaHabitaciones.getSelectedValue())); 
+			propertyChange(new PropertyChangeEvent(this,"envioHabitacion","noMolestar",listaHabitaciones.getSelectedValue().getNombre())); 
 			break;
 		case "quitarAgrupacion":{
 			if(listaAgrupaciones.getSelectedValue()!=null) {
@@ -411,12 +406,8 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				lista=null;
 				controlador.eleminarDispositivo(listaHabitaciones.getSelectedValue(), listaDispositivos.getSelectedValue());
 				controlador.escribirHabitacion(listaHabitaciones.getSelectedValue(), casa);
-				propertyChange(new PropertyChangeEvent(this,"envioHabitacion", "enviar", listaHabitaciones.getSelectedValue()));
+				propertyChange(new PropertyChangeEvent(this,"envioHabitacion", "enviar", listaHabitaciones.getSelectedValue().getNombre()));
 			}else {
-				controlador.escribirHabitacion(controlador.getElementAt(0), casa); //TEST
-				controlador.escribirHabitacion(controlador.getElementAt(1), casa); //TEST
-				controladorAgrupaciones.escribirAgrupacion(listaAgrupaciones.getSelectedValue(), casa); //TEST 
-				propertyChange(new PropertyChangeEvent(this, "envioHabitacion", null,controlador.getElementAt(0)));
 				controladorAgrupaciones.eleminarDispositivo(listaAgrupaciones.getSelectedValue(),listaDispositivos.getSelectedValue());	
 			}
 			listaDispositivos.clearSelection();
@@ -428,12 +419,12 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				if(listaHabitaciones.getSelectedIndex()!=-1&&!listaHabitaciones.getSelectedValue().isNoMolestar()) {
 					listaDispositivos.getSelectedValue().modificar(this);
 					controlador.escribirHabitacion(listaHabitaciones.getSelectedValue(), casa);
-					propertyChange(new PropertyChangeEvent(this,"envioHabitacion", "enviar", listaHabitaciones.getSelectedValue()));
+					propertyChange(new PropertyChangeEvent(this,"envioHabitacion", "enviar", listaHabitaciones.getSelectedValue().getNombre()));
 					controladorAgrupaciones.dispositivoModificado(listaDispositivos.getSelectedValue());
 				}
 				else if(listaAgrupaciones.getSelectedIndex()!=-1) {
 					controladorAgrupaciones.getMapaEstados().get(listaAgrupaciones.getSelectedValue()).get(listaDispositivos.getSelectedIndex()).modificar(this);
-					controladorAgrupaciones.escribirAgrupacion(listaAgrupaciones.getSelectedValue(), casa);
+					controladorAgrupaciones.escribirAgrupacion(listaAgrupaciones.getSelectedValue());
 				}
 				listaDispositivos.clearSelection();	
 				controlador.ordenarListas();
@@ -461,7 +452,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			}
 			break;
 		case "envioHabitacion":
-			new EnvioHabitaciones(master,"files/"+casa+"/habitaciones/"+((Habitacion) evt.getNewValue()).getNombre()+".dat",(String) evt.getOldValue()).start();
+			new EnvioHabitaciones(master,"files/"+casa+"/habitaciones/"+evt.getNewValue()+".dat",(String) evt.getOldValue()).start();
 			if(((String)evt.getOldValue()).equals("borrar")) {
 				File file = new File("files/"+casa+"/habitaciones/"+evt.getNewValue()+".dat");
 				file.delete();
@@ -500,11 +491,9 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			File p3= new File((String)evt.getNewValue());
 			controladorAgrupaciones.descargarAgrupacion(p3);
 			break;
-		case "habitacion":
-			
-			break;
 		case "encenderAgrupacion": 
 			controladorAgrupaciones.encenderAgrupacion(listaAgrupaciones.getSelectedValue()); 
+			propertyChange(new PropertyChangeEvent(this, "agrupacion", true, false));
 			break; 
 		case "noMolestar":
 			List<Habitacion>habi=new ArrayList<>();
@@ -532,6 +521,10 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				else bquitarDispositivo.setEnabled(true); 
 				
 			}
+			controlador.escribirHabitacion(listaHabitaciones.getSelectedValue(), casa);
+			controladorAgrupaciones.buscarDispositivos(controlador.getMapa().get(listaHabitaciones.getSelectedValue())).forEach(key->{
+				controladorAgrupaciones.escribirAgrupacion(key);
+			});
 			controlador.noMolestar(); 
 			break;
 		case "comandosDisp": controlador.agregarComandoVar((Dispositivo)evt.getNewValue());

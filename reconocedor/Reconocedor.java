@@ -22,7 +22,7 @@ public class Reconocedor {
 		lista= new ArrayList<>();
 		programas =new Programas(mapa);
 		programas.addPropertyChangeListener(p);
-		iniciarRec();
+		//iniciarRec();
 
 	}
 

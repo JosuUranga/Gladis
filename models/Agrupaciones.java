@@ -26,12 +26,6 @@ public class Agrupaciones extends AbstractListModel<String> {
 	Map<String,List<Dispositivo>>mapa;
 	Map<String,List<Dispositivo>>mapaEstados;
 	Map<Habitacion,List<Dispositivo>>mapaCasa;
-	
-	public Map<Habitacion, List<Dispositivo>> getMapaCasa() {
-		return mapaCasa;
-	}
-	
-
 	PropertyChangeSupport soporte;
 	Habitaciones casa;
 	String nCasa;
@@ -42,6 +36,9 @@ public class Agrupaciones extends AbstractListModel<String> {
 		this.casa=casa;
 		soporte=new PropertyChangeSupport(this);
 		this.nCasa=nCasa;
+	}
+	public Map<Habitacion, List<Dispositivo>> getMapaCasa() {
+		return mapaCasa;
 	}
 	public void anadirString(String nombre) {		
 		mapa.put(nombre, new ArrayList<>());
@@ -83,15 +80,15 @@ public class Agrupaciones extends AbstractListModel<String> {
 		casa.Reconocedor.actualizaReconocedor();
 		
 	}
-	public void escribirAgrupacion(String agrupacion,String casa) {
+	public void escribirAgrupacion(String agrupacion) {
 		Set<Entry<String,List<Dispositivo>>> datos = mapa.entrySet();
 		Set<Entry<String,List<Dispositivo>>> datosEstados = mapaEstados.entrySet();
 		datos.stream().forEach(set->{
-			if(set.getKey().equals(agrupacion))escribirFichero(set,"files/"+casa+"/"+"agrupaciones/originales/");
+			if(set.getKey().equals(agrupacion))escribirFichero(set,"files/"+nCasa+"/"+"agrupaciones/originales/");
 		});
 		datosEstados.stream().forEach(set->{
 			if(set.getKey().equals(agrupacion)) {
-				escribirFichero(set,"files/"+casa+"/"+"agrupaciones/estados/");
+				escribirFichero(set,"files/"+nCasa+"/"+"agrupaciones/estados/");
 			}
 		});
 		soporte.firePropertyChange("envioAgrupacion", "enviar", agrupacion);
@@ -197,29 +194,44 @@ public class Agrupaciones extends AbstractListModel<String> {
 		asdAS.forEach(key->soporte.firePropertyChange("envioAgrupacion", "enviar", key));
 	}
 	public void encenderAgrupacion(String keyAgrup) {
-		
-		List<Dispositivo>disps=mapa.get(keyAgrup); 
-		for(Dispositivo disp:disps) { 
-			int a=disps.indexOf(disp); 
-			Dispositivo disp2=mapaEstados.get(keyAgrup).get(a); 
-			disp=disp2; 
-			disps.set(a, disp); 
-			disp2=disp.clone(); 
-			mapaEstados.get(keyAgrup).set(a, disp2); 
-		} 
-		mapa.put(keyAgrup, disps); 
-		mapaCasa.entrySet().forEach(entry->{ 
-			entry.getValue().forEach(disp3->disps.forEach(disp4->{ 
-				if(disp4.getNombre().equals(disp3.getNombre()))entry.getValue().set(entry.getValue().indexOf(disp3), disp4); 
-			})); 
-		});  
-		
+		List<Dispositivo>disps=mapa.get(keyAgrup);
+		List<String>keys=buscarDispositivos(disps); //Busca en que agrupaciones se encuentra este disp y guarda la lista de agrupaciones
+		List<String>agrupsAEscribir=new ArrayList<>();
+		agrupsAEscribir.add(keyAgrup);
+		for(Dispositivo disp:disps) {
+			int a=disps.indexOf(disp);
+			Dispositivo disp2=mapaEstados.get(keyAgrup).get(a);
+			for(String key:keys) {		//Recorre la lista de agrupaciones en las que se encuentra el dispositivo a cambiar y los cambia por el que se ha encendido
+				for(Dispositivo dispss:mapa.get(key)) {
+					if(dispss.getNombre().equals(disp2.getNombre())) {
+						mapa.get(key).set(mapa.get(key).indexOf(dispss), disp2);
+						agrupsAEscribir.add(key);
+					}
+				}
+			}
+			disp=disp2;
+			disps.set(a, disp);
+			disp2=disp.clone();		//Crea un clon del dispositivo en mapaEstados para que dejen de ser el mismo dispositivo y no se hagan los cambios en el si se cambia el disp verdadero
+			mapaEstados.get(keyAgrup).set(a, disp2);
+		}
+		mapa.put(keyAgrup, disps);
+		List<Habitacion>habAEscribir=new ArrayList<>();
+		mapaCasa.entrySet().forEach(entry->{
+			entry.getValue().forEach(disp3->disps.forEach(disp4->{
+				if(disp4.getNombre().equals(disp3.getNombre())) {
+					entry.getValue().set(entry.getValue().indexOf(disp3), disp4);
+					habAEscribir.add(entry.getKey());
+				}
+			}));
+		}); 
+		habAEscribir.forEach(hab->casa.escribirHabitacion(hab, nCasa));
+		agrupsAEscribir.forEach(agr->escribirAgrupacion(agr));
 	}
 	public void eleminarDispositivoTodas (List<Dispositivo> lista) {
 		List<String>asdAS=buscarDispositivos(lista);
 		asdAS.forEach(key->{
 			lista.forEach(disp->mapa.get(key).remove(disp));
-			this.escribirAgrupacion(key, nCasa);
+			this.escribirAgrupacion(key);
 			soporte.firePropertyChange("envioAgrupacion", "enviar", key);
 		});
 		this.fireContentsChanged(mapa, 0, mapa.size());
