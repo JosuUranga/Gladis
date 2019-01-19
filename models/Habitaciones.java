@@ -2,13 +2,10 @@ package models;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -39,7 +36,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 	public void inicializar(String casa) {
 		File file= new File("files/"+casa+"/habitaciones/");
 		File [] habitaciones=file.listFiles();
-		mapa = new HashMap<>();
+		mapa.clear();
 		for(int i=0;i<habitaciones.length;i++) {
 			System.out.println(habitaciones[i].getName());
 			leerFichero("files/"+casa+"/"+"habitaciones/"+habitaciones[i].getName());
@@ -64,58 +61,27 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 			});
 			controladorAgrupaciones.eleminarDispositivoTodas(disp);
 			mapa.remove(key);
-			eliminarComandoHabitacion(key); 
 		});
 		this.fireContentsChanged(mapa, 0, mapa.size());
 	}
 	public void anadirHabitacion(Habitacion habitacion) {		
 		mapa.put(habitacion, new ArrayList<>()); 
-		escribirComandoHabitacion(habitacion); 	
 		this.fireContentsChanged(mapa, 0, mapa.size());
-	//	Reconocedor.actualizaReconocedor(); 
 	}
-	private void escribirComandoHabitacion(Habitacion habitacion) { 
-		File file = new File("Comandos.txt"); 
-		try (FileWriter fr= new FileWriter(file, true)){ 
-			fr.write("\n"+"public <noMolestar"+habitacion+"> = <noMolestar> "+habitacion+";"); 
-			fr.close(); 
-		} catch (IOException e) { 
-			e.printStackTrace(); 
-		}		 
-	} 
 	public void noMolestar() { 
 		this.fireContentsChanged(mapa, 0, mapa.size()); 
 	} 
 	public void eliminarHabitacion (Habitacion habitacion) {	
 		if (mapa.containsKey(habitacion)) {
-			eliminarComandoHabitacion(habitacion); 
 			mapa.remove(habitacion);
 			this.fireContentsChanged(mapa, 0, mapa.size());
-			//Reconocedor.actualizaReconocedor(); 
 		}
 	}
-	private void eliminarComandoHabitacion(Habitacion habitacion) { 
-		String fileName="Comandos.txt"; 
-		String tmp ="tmp.txt"; 
-		String line; 
-		try(FileWriter fr = new FileWriter(tmp); 
-					BufferedReader br = new BufferedReader(new FileReader(fileName))){ 
-			while((line=br.readLine())!=null) { 
-				if(!line.contains("public <noMolestar"+habitacion)) fr.write(line+"\n"); 
-			} 
-		} catch (IOException e) { 
-			e.printStackTrace(); 
-		} 
-		reemplazar(fileName,tmp); 
-		//Reconocedor.actualizaReconocedor();		 
-	} 
 	public void anadirDispositivo (Habitacion habitacion,Dispositivo dispositivo) {
 		List<Dispositivo>lista = mapa.get(habitacion);
 		if(lista==null)lista = new ArrayList<>();
 		lista.add(dispositivo);
 		mapa.put(habitacion, lista);
-		agregarComando(dispositivo);
-//		Reconocedor.actualizaReconocedor();
 		soporte.firePropertyChange("dispositivos", false, true);
 		
 	}
@@ -123,26 +89,9 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 		List<Dispositivo>lista = mapa.get(habitacion);
 		lista.remove(dispositivo);
 		mapa.replace(habitacion, mapa.get(habitacion), lista);
-		eliminarComandoDispositivoCompleto(dispositivo); 
 		//	Reconocedor.actualizaReconocedor(); 
 		soporte.firePropertyChange("dispositivos", true, false);
 		
-	}
-	public String leerLineaVariables(Dispositivo d) {
-		String fileName="Comandos.txt";
-		String linea=null;
-		File f = new File(fileName);
-		try (FileReader fr = new FileReader(f);
-				BufferedReader br = new BufferedReader(fr)){
-			while((linea=br.readLine())!=null) {
-				if(linea.contains(d.getNombre()+"Variables")) return linea;
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return linea;
 	}
 	public void eliminarDispositivosHabitacion(Habitacion habitacion) {
 		List<Dispositivo> l = mapa.get(habitacion);
@@ -154,81 +103,6 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 			mapa.put(habitacion, l);
 		}
 	}
-	public void eliminarComandoDispositivoCompleto(Dispositivo dispositivo) { 
-		if(!dispositivo.getTipo().equals("Programable tiempo") &&!dispositivo.getTipo().equals("No programable") ) { 
-			eliminarComando(dispositivo,"public <"+dispositivo.getNombre()+"> = <accion> [<variables>] "+dispositivo.getNombre()+" [<numeros>];"); 
-		} 
-		else { 
-			eliminarComando(dispositivo,"public <"+dispositivo.getNombre()+"> = <accion> [<"+dispositivo.getNombre()+"Variables>] "+dispositivo.getNombre()+" [<numeros>];"); 
-			String lineToRemove=leerLineaVariables(dispositivo); 
-			System.out.println("ESTO HA BORRADO: "+lineToRemove); 
-			eliminarComando(dispositivo, lineToRemove); 
-		} 
-		if(dispositivo instanceof DispositivoTmp) eliminarComando(dispositivo, "public <"+dispositivo.getNombre()+"Tiempo> = <tiempo> "+dispositivo.getNombre()+";"); 
-	} 
-	public void eliminarComando(Dispositivo dispositivo, String lineToRemove) {
-		String fileName="Comandos.txt";
-		String tmp ="tmp.txt";
-		String line; 
-		try(FileWriter fr = new FileWriter(tmp); 
-					BufferedReader br = new BufferedReader(new FileReader(fileName))){ 
-			while((line=br.readLine())!=null) { 
-				if(!line.equals(lineToRemove)) fr.write(line+"\n"); 
-			} 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		reemplazar(fileName,tmp);
-//		Reconocedor.actualizaReconocedor();
-	}
-	public void reemplazar(String fileName, String tmp) {
-		String s;
-		try(FileReader fr = new FileReader(tmp);
-				FileWriter fw = new FileWriter(fileName,false);
-				BufferedReader br = new BufferedReader(fr)) {
-			
-			while((s=br.readLine())!=null) {
-				fw.write(s+"\n");
-				fw.flush();
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-	}
-	public void agregarComando(Dispositivo dispositivo) {
-		File file = new File("Comandos.txt");
-		try (FileWriter fr= new FileWriter(file, true)){
-			if(!dispositivo.getTipo().equals("Programable tiempo") && !dispositivo.getTipo().equals("No programable")) 
-				fr.write("\n"+"public <"+dispositivo.getNombre()+"> = <accion> [<variables>] "+dispositivo.getNombre()+";");
-			else {
-				List<Variable> v = dispositivo.getVariables();
-				if(!v.isEmpty()) if(!v.get(0).getVar().equals(" ")) agregarComandoVar(dispositivo);
-			}
-			if(dispositivo instanceof DispositivoTmp) fr.write("\n"+"public <"+dispositivo.getNombre()+"Tiempo> = <tiempo> "+dispositivo.getNombre()+";");
-			fr.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	public void agregarComandoVar(Dispositivo dispositivo) {
-		File file = new File("Comandos.txt");
-		try (FileWriter fr= new FileWriter(file, true)){
-			fr.write("\n"+"public <"+dispositivo.getNombre()+"Variables> = (");
-			for(Variable v: dispositivo.getVariables()) {
-				fr.write(v.getVar()+" | ");
-			}
-			fr.write(");");
-			fr.write("\n"+"public <"+dispositivo.getNombre()+"> = <accion> [<"+dispositivo.getNombre()+"Variables>] "+dispositivo.getNombre()+";");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	//	Reconocedor.actualizaReconocedor();
-	}
-	
 	public void escribirHabitacion(Habitacion habitacion,String casa) {
 		Set<Entry<Habitacion,List<Dispositivo>>> datos = mapa.entrySet();
 		datos.stream().forEach(set->{
@@ -255,15 +129,6 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 				@SuppressWarnings("unchecked")
 				List<Dispositivo> value=(List<Dispositivo>) in.readObject();
 				mapa.put(key, value);
-				for(Dispositivo d:value) {
-					eliminarComandoDispositivoCompleto(d); 
-					agregarComando(d);
-					if(d.getTipo().equals("Programable tiempo")||d.getTipo().equals("No Programable")) agregarComandoVar(d);
-				}
-				eliminarComandoHabitacion(key); 
-				escribirComandoHabitacion(key); 
-				//Reconocedor.actualizaReconocedor();
-				
 				this.fireContentsChanged(mapa, 0, mapa.size());
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();

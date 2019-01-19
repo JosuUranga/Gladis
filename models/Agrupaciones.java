@@ -54,60 +54,45 @@ public class Agrupaciones extends AbstractListModel<String> {
 	}
 	public void encenderAgrupacion(String keyAgrup) {
 		List<Dispositivo>disps=mapa.get(keyAgrup);
+		List<String>keys=buscarDispositivos(disps); //Busca en que agrupaciones se encuentra este disp y guarda la lista de agrupaciones
+		List<String>agrupsAEscribir=new ArrayList<>();
+		agrupsAEscribir.add(keyAgrup);
 		for(Dispositivo disp:disps) {
 			int a=disps.indexOf(disp);
 			Dispositivo disp2=mapaEstados.get(keyAgrup).get(a);
+			for(String key:keys) {		//Recorre la lista de agrupaciones en las que se encuentra el dispositivo a cambiar y los cambia por el que se ha encendido
+				for(Dispositivo dispss:mapa.get(key)) {
+					if(dispss.getNombre().equals(disp2.getNombre())) {
+						mapa.get(key).set(mapa.get(key).indexOf(dispss), disp2);
+						agrupsAEscribir.add(key);
+					}
+				}
+			}
 			disp=disp2;
 			disps.set(a, disp);
-			disp2=disp.clone();
+			disp2=disp.clone();		//Crea un clon del dispositivo en mapaEstados para que dejen de ser el mismo dispositivo y no se hagan los cambios en el si se cambia el disp verdadero
 			mapaEstados.get(keyAgrup).set(a, disp2);
 		}
 		mapa.put(keyAgrup, disps);
+		List<Habitacion>habAEscribir=new ArrayList<>();
 		mapaCasa.entrySet().forEach(entry->{
 			entry.getValue().forEach(disp3->disps.forEach(disp4->{
-				if(disp4.getNombre().equals(disp3.getNombre()))entry.getValue().set(entry.getValue().indexOf(disp3), disp4);
+				if(disp4.getNombre().equals(disp3.getNombre())) {
+					entry.getValue().set(entry.getValue().indexOf(disp3), disp4);
+					habAEscribir.add(entry.getKey());
+				}
 			}));
 		}); 
-	}
-	public void anadirString(String nombre) {		
-		mapa.put(nombre, new ArrayList<>());
-		this.fireContentsChanged(mapa, 0, mapa.size());
-	}
-	public void agregarComandoAgrupacion(String nombre) {
-		File file = new File("Comandos.txt");
-		try (FileWriter fr= new FileWriter(file, true)){
-			fr.write("\n"+"public <modo"+nombre+"> = modo "+nombre+";"); 	
-			fr.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		//casa.Reconocedor.actualizaReconocedor();
+		habAEscribir.forEach(hab->casa.escribirHabitacion(hab, nCasa));
+		agrupsAEscribir.forEach(agr->escribirAgrupacion(agr));
 	}
 	public void eliminarString (String nombre) {	
 		if (mapa.containsKey(nombre)) {
 			mapa.remove(nombre);
 			mapaEstados.remove(nombre);
-			eliminarComandoAgrupacion(nombre);
 			System.out.println("ELIMINANDO COMANDO: "+nombre);
 			this.fireContentsChanged(mapa, 0, mapa.size());
 		}
-		
-	}
-	public void eliminarComandoAgrupacion(String nombre) {
-		String fileName="Comandos.txt";
-		String tmp ="tmp.txt";
-		String line; 
-		try(FileWriter fr = new FileWriter(tmp); 
-					BufferedReader br = new BufferedReader(new FileReader(fileName))){ 
-			while((line=br.readLine())!=null) { 
-				if(!line.contains("public <modo"+nombre+">")) fr.write(line+"\n"); 
-			} 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		casa.reemplazar(fileName,tmp);
-		//casa.Reconocedor.actualizaReconocedor();
 		
 	}
 	public void escribirAgrupacion(String agrupacion) {
@@ -183,9 +168,6 @@ public class Agrupaciones extends AbstractListModel<String> {
 						}));
 					});
 					map.put(key, value);
-					eliminarComandoAgrupacion(key); 
-					agregarComandoAgrupacion(key); 
-					//Reconocedor.actualizaReconocedor(); 
 					  
 					this.fireContentsChanged(map, 0, map.size()); 
 				}
@@ -208,7 +190,6 @@ public class Agrupaciones extends AbstractListModel<String> {
 		List<Dispositivo>listaCopy=new ArrayList<>();
 		lista.forEach(disp->listaCopy.add((Dispositivo)disp.clone()));
 		mapaEstados.put(nombre, listaCopy);
-		agregarComandoAgrupacion(nombre);
 		listaCopy.forEach(disp->disp.modificar(principal));
 		System.out.println("ESCRIBIENDO AGRUPACION: "+nombre);
 		this.fireContentsChanged(mapa, 0, mapa.size());
@@ -219,7 +200,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 	public Map<String, List<Dispositivo>> getMapaEstados() {
 		return mapaEstados;
 	}
-	public void eleminarDispositivoTodas (List<Dispositivo> lista) {
+	public List<String> buscarDispositivos(List<Dispositivo> lista) {
 		List<String>asdAS=new ArrayList<>();
 		mapa.entrySet().stream().forEach(entry->{
 			entry.getValue().forEach(Disp->{
@@ -228,6 +209,10 @@ public class Agrupaciones extends AbstractListModel<String> {
 				});
 			});
 		});
+		return asdAS;
+	}
+	public void eleminarDispositivoTodas (List<Dispositivo> lista) {
+		List<String>asdAS=buscarDispositivos(lista);
 		asdAS.forEach(key->{
 			lista.forEach(disp->mapa.get(key).remove(disp));
 			this.escribirAgrupacion(key);
