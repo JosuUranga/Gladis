@@ -46,20 +46,37 @@ public class Agrupaciones extends AbstractListModel<String> {
 	}
 	public void encenderAgrupacion(String keyAgrup) {
 		List<Dispositivo>disps=mapa.get(keyAgrup);
+		List<String>keys=buscarDispositivos(disps); //Busca en que agrupaciones se encuentra este disp y guarda la lista de agrupaciones
+		List<String>agrupsAEscribir=new ArrayList<>();
+		agrupsAEscribir.add(keyAgrup);
 		for(Dispositivo disp:disps) {
 			int a=disps.indexOf(disp);
 			Dispositivo disp2=mapaEstados.get(keyAgrup).get(a);
+			for(String key:keys) {		//Recorre la lista de agrupaciones en las que se encuentra el dispositivo a cambiar y los cambia por el que se ha encendido
+				for(Dispositivo dispss:mapa.get(key)) {
+					if(dispss.getNombre().equals(disp2.getNombre())) {
+						mapa.get(key).set(mapa.get(key).indexOf(dispss), disp2);
+						agrupsAEscribir.add(key);
+					}
+				}
+			}
 			disp=disp2;
 			disps.set(a, disp);
-			disp2=disp.clone();
+			disp2=disp.clone();		//Crea un clon del dispositivo en mapaEstados para que dejen de ser el mismo dispositivo y no se hagan los cambios en el si se cambia el disp verdadero
 			mapaEstados.get(keyAgrup).set(a, disp2);
 		}
 		mapa.put(keyAgrup, disps);
+		List<Habitacion>habAEscribir=new ArrayList<>();
 		mapaCasa.entrySet().forEach(entry->{
 			entry.getValue().forEach(disp3->disps.forEach(disp4->{
-				if(disp4.getNombre().equals(disp3.getNombre()))entry.getValue().set(entry.getValue().indexOf(disp3), disp4);
+				if(disp4.getNombre().equals(disp3.getNombre())) {
+					entry.getValue().set(entry.getValue().indexOf(disp3), disp4);
+					habAEscribir.add(entry.getKey());
+				}
 			}));
 		}); 
+		habAEscribir.forEach(hab->casa.escribirHabitacion(hab, nCasa));
+		agrupsAEscribir.forEach(agr->escribirAgrupacion(agr));
 	}
 	public void anadirString(String nombre) {		
 		mapa.put(nombre, new ArrayList<>());

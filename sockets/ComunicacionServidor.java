@@ -64,8 +64,8 @@ public class ComunicacionServidor extends Thread {
 							 List<String>oldValue=new ArrayList<>();
 							 oldValue.add("noMolestar");
 							 oldValue.add(socket.getRemoteSocketAddress().toString().substring(1, socket.getRemoteSocketAddress().toString().lastIndexOf(":")));
-							 soporte.firePropertyChange("envioHabitacion", oldValue, file.getName().replaceAll(".dat", ""));
 							 soporte.firePropertyChange("noMolestar", true,file.getName().replaceAll(".dat", ""));
+							 soporte.firePropertyChange("envioHabitacion", oldValue, file.getName().replaceAll(".dat", ""));
 							 oldValue=null;
 							 break;
 						 }
@@ -74,8 +74,8 @@ public class ComunicacionServidor extends Thread {
 							 List<String>oldValue=new ArrayList<>();
 							 oldValue.add("encenderAgrupacion");
 							 oldValue.add(socket.getRemoteSocketAddress().toString().substring(1, socket.getRemoteSocketAddress().toString().lastIndexOf(":")));
-							 soporte.firePropertyChange("envioHabitacion", oldValue, file.getName().replaceAll(".dat", ""));
 							 soporte.firePropertyChange("encenderAgrupacion", true,file.getName().replaceAll(".dat", ""));
+							 soporte.firePropertyChange("envioHabitacion", oldValue, file.getName().replaceAll(".dat", ""));
 							 oldValue=null;
 							 break;
 						 }

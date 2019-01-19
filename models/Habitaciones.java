@@ -55,8 +55,6 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 			leerFichero("files/"+casa+"/"+"habitaciones/"+habitaciones[i].getName());
 		}
 		Reconocedor.setMapa(mapa);
-
-		System.out.println("AQUI SE INICIALIZA NUEVO MAPA "+mapa);
 	}
 	public void ordenarListas() { 
 		Set<Habitacion>mapakeys=this.mapa.keySet(); 

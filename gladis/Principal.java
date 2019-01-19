@@ -233,7 +233,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		bactivarAgrupacion = new JButton(new ImageIcon("img/salir.png"));
 		bactivarAgrupacion.addActionListener(this);
 		bactivarAgrupacion.setActionCommand("activarAgrupacion");
-		bactivarAgrupacion.setEnabled(true);
+		bactivarAgrupacion.setEnabled(false);
 		toolbar.add(bactivarAgrupacion);
 		
 		
@@ -399,10 +399,6 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			oldVal.add("noMolestar");
 			oldVal.add("nada");
 			propertyChange(new PropertyChangeEvent(this,"noMolestar",true,listaHabitaciones.getSelectedValue().getNombre()));
-			controlador.escribirHabitacion(listaHabitaciones.getSelectedValue(), casa);
-			controladorAgrupaciones.buscarDispositivos(controlador.getMapa().get(listaHabitaciones.getSelectedValue())).forEach(key->{
-				controladorAgrupaciones.escribirAgrupacion(key);
-			});
 			propertyChange(new PropertyChangeEvent(this,"envioHabitacion",oldVal,listaHabitaciones.getSelectedValue().getNombre())); 
 			oldVal=null;
 			break; 
@@ -429,8 +425,10 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				listaDispositivos.setListData(controladorAgrupaciones.getDispositivosData(listaAgrupaciones.getSelectedValue()));
 				bquitarAgrupacion.setEnabled(true);
 				banadirDispositivo.setEnabled(false);
+				bactivarAgrupacion.setEnabled(true);
 				noMolestar.setEnabled(false); 
 			}else {
+				bactivarAgrupacion.setEnabled(false);
 				bquitarAgrupacion.setEnabled(false);
 			}
 		}else if (eliminar==true && listaDispositivos.getSelectedIndex()!=-1) {
@@ -570,6 +568,10 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				else bquitarDispositivo.setEnabled(true); 
 				
 			}
+			controlador.escribirHabitacion(listaHabitaciones.getSelectedValue(), casa);
+			controladorAgrupaciones.buscarDispositivos(controlador.getMapa().get(listaHabitaciones.getSelectedValue())).forEach(key->{
+				controladorAgrupaciones.escribirAgrupacion(key);
+			});
 			controlador.noMolestar(); 
 			break;
 		case "inicializar":
