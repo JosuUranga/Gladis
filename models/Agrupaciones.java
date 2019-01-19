@@ -156,9 +156,8 @@ public class Agrupaciones extends AbstractListModel<String> {
 	public void inicializar(String casa) {
 		File file= new File("files/"+casa+"/agrupaciones/originales");
 		File [] habitaciones=file.listFiles();
-		mapa = new HashMap<>();
-		mapaEstados=new HashMap<>();
-		mapaCasa=this.casa.getMapa();
+		mapa.clear();
+		mapaEstados.clear();
 		for(int i=0;i<habitaciones.length;i++) {
 			leerFichero("files/"+casa+"/"+"agrupaciones/originales/"+habitaciones[i].getName(),mapa);
 		}
