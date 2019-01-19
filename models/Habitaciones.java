@@ -298,7 +298,9 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		soporte.addPropertyChangeListener(listener);
 	}
-
+	public Reconocedor getReconocedor() { 
+		return Reconocedor; 
+	} 
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		soporte.removePropertyChangeListener(listener);
 	}
