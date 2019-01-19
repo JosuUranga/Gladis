@@ -61,4 +61,7 @@ public class Reconocedor {
 		System.out.println(mapaa+"HOAL SOY EL MAPA RECONOCEDOR");
 		this.mapa=mapaa;
 	}
+	public void setMapaAgrup(Map<String,List<Dispositivo>> mapa) {
+		programas.setMapaAgrupaciones(mapa);
+	}
 }

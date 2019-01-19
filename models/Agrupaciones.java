@@ -42,6 +42,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 		mapaCasa=casa.getMapa();
 		this.casa=casa;
 		this.nCasa=nCasa;
+		casa.getReconocedor().setMapaAgrup(mapa);
 		soporte=new PropertyChangeSupport(this);
 	}
 	public void encenderAgrupacion(String keyAgrup) {
@@ -174,6 +175,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 		for(int i=0;i<habitaciones.length;i++) {
 			leerFichero("files/"+casa+"/"+"agrupaciones/estados/"+habitaciones[i].getName(),mapaEstados);
 		}
+		this.casa.getReconocedor().setMapaAgrup(mapa);
 	}
 	public void leerFichero(String filename,Map<String,List<Dispositivo>>map)
 	{

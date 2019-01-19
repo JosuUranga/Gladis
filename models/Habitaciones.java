@@ -36,6 +36,8 @@ import reconocedor.Reconocedor;
 @SuppressWarnings("serial")
 public class Habitaciones extends AbstractListModel<Habitacion> {
 	Reconocedor Reconocedor;
+	
+
 	Map<Habitacion,List<Dispositivo>>mapa;
 	PropertyChangeSupport soporte;
 	String casa;
@@ -302,6 +304,9 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 	@Override
 	public int getSize() {
 		return mapa.size();
+	}
+	public Reconocedor getReconocedor() {
+		return Reconocedor;
 	}
 	@Override
 	public Habitacion getElementAt(int index) {

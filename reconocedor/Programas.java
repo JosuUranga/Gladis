@@ -24,9 +24,11 @@ public class Programas extends ResultAdapter {
 	PropertyChangeSupport soporte;
 	List<Dispositivo> lista;
 	Map<Habitacion,List<Dispositivo>> mapa;
+	Map<String,List<Dispositivo>> mapaAgrupaciones;
 
 	public Programas(Map<Habitacion,List<Dispositivo>> mapa) {
 		this.mapa=mapa;
+		mapaAgrupaciones=null;
 		lista = new ArrayList<>();
 		soporte=new PropertyChangeSupport(this);
 	}
@@ -144,6 +146,13 @@ public class Programas extends ResultAdapter {
 						}
 					}
 				}
+				Set<Entry<String,List<Dispositivo>>> setAgrup = mapaAgrupaciones.entrySet();
+				for(Entry<String,List<Dispositivo>> entryAgrup : setAgrup) {
+					if(comando.equals("modo "+entryAgrup.getKey().toString())) {
+						System.out.println("Encendiendo agrupacion "+entryAgrup.getKey());
+						soporte.firePropertyChange("encenderAgrupacionVoz", false, entryAgrup.getKey());
+					}
+				}
 				getPrograma();
 				oreja.suspend();		
 				oreja.resume();
@@ -163,6 +172,9 @@ public class Programas extends ResultAdapter {
 	}
 	public void setMapa(Map<Habitacion,List<Dispositivo>> mapa) {
 		this.mapa=mapa;
+	}
+	public void setMapaAgrupaciones(Map<String,List<Dispositivo>> mapaAgrup) {
+		this.mapaAgrupaciones=mapaAgrup;
 	}
 	public void avisar(Entry<Habitacion,List<Dispositivo>> entry) {
 		List<String> lista = new ArrayList<>();

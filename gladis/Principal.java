@@ -579,7 +579,17 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			controladorAgrupaciones.inicializar(casa);
 			break;
 		case "encenderAgrupacion":
-			controladorAgrupaciones.encenderAgrupacion(listaAgrupaciones.getSelectedValue());
+			controladorAgrupaciones.encenderAgrupacion((String)evt.getNewValue());
+			propertyChange(new PropertyChangeEvent(this, "agrupacion", true,false));
+			break;
+		case "encenderAgrupacionVoz":
+			if(evt.getNewValue() instanceof String)	controladorAgrupaciones.encenderAgrupacion((String)evt.getNewValue());
+			List<String> lista = new ArrayList<>();
+			lista.add("activarAgrupacion");
+			lista.add("nada");
+			propertyChange(new PropertyChangeEvent(this, "envioHabitacion", lista,(String)evt.getNewValue()));
+			lista=null;
+			propertyChange(new PropertyChangeEvent(this, "agrupacion", true,false));
 			break;
 		case "comandosDisp": controlador.agregarComandoVar((Dispositivo)evt.getNewValue());
 		System.out.println("ASDALSIHDLASHFOAI�FJAM�SOIFASPODIAOPSDMAOPSD");
