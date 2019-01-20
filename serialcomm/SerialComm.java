@@ -20,16 +20,16 @@ public class SerialComm {
 	
 	public void conectar ( CommPortIdentifier portIdentifier ) throws Exception
     {
-        if ( portIdentifier.isCurrentlyOwned() ){
+        if ( portIdentifier.isCurrentlyOwned() ){ //por si el pueto esta en uso
             System.out.println("Error puerta en uso");
         }else {
-             commPort = portIdentifier.open("Mi programa",2000);
+             commPort = portIdentifier.open("Mi programa",2000); //sino lo abre
             
-            if ( commPort instanceof SerialPort ) {
+            if ( commPort instanceof SerialPort ) { //se configura el puerto
                 SerialPort serialPort = (SerialPort) commPort;
                 serialPort.setSerialPortParams(9600,SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE);
-                serialPort.disableReceiveTimeout();
-                serialPort.enableReceiveThreshold(1);
+                serialPort.disableReceiveTimeout();		//estas dos funciones para que se pare en el .read hasta
+                serialPort.enableReceiveThreshold(1); 	//que llegue algo que leer
                 in = serialPort.getInputStream();
                 out = serialPort.getOutputStream();
             }else {
@@ -41,16 +41,16 @@ public class SerialComm {
     /**
      * @throws IOException  */
     
-    public String  leer () throws IOException
+    public String  leer () throws IOException //esta funcion lee lo que llege de la linea serie
     {
     	int max = 1024;
-        byte[] buffer = new byte[max];
+        byte[] buffer = new byte[max]; //aqui mete lo que va llegando
         int len = -1;
         int offset = 0;
-        len = this.in.read(buffer,offset,max-offset);
+        len = this.in.read(buffer,offset,max-offset); //va metiendo en buffer lo que llega byte a byte.
         offset+= len;
 
-        return (new String (buffer,0,offset));
+        return (new String (buffer,0,offset)); //devuelve lo que ha llegado en modo String, que sera una letra
      }
     
 
@@ -59,7 +59,7 @@ public class SerialComm {
     {
         try
         {                
-            this.out.write(msg.getBytes());   
+            this.out.write(msg.getBytes());   //el String a mandar lo pasa a bytes  y lo manda por la linea serie
             System.out.println(msg.getBytes());
         }
         catch ( IOException e )
@@ -67,13 +67,13 @@ public class SerialComm {
             e.printStackTrace();
         }            
     }
-    public CommPortIdentifier encontrarPuerto()
+    public CommPortIdentifier encontrarPuerto() //coje todos los puertos del pc y te devuelve si hay un serial
     {
         java.util.Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();
         while ( portEnum.hasMoreElements() ) 
         {
             CommPortIdentifier portIdentifier = portEnum.nextElement();
-            if (this.getPortTypeName(portIdentifier.getPortType()).equals("Serial")) {
+            if (this.getPortTypeName(portIdentifier.getPortType()).equals("Serial")) { //si el puerto identificado es serial
             	return portIdentifier;
             }
             System.out.println(portIdentifier.getName()  +  " - " +  getPortTypeName(portIdentifier.getPortType()) );
@@ -99,7 +99,7 @@ public class SerialComm {
                 return "unknown type";
         }
     }
-    public void cerrar() {
+    public void cerrar() { //cierra el puerto
     	commPort.close();
     }
 }

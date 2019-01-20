@@ -69,7 +69,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 	DialogoAgrupaciones dialogoAgrupacion;
 	List<String>ips;
 	controladorVersion cVersion;
-	Alarma alarma;
+	Alarma alarma; //para activar la alarma
 	List<String>oldVal;
 	String username,password;
 	JLabel lNombrePanelDispositivos; 
@@ -389,7 +389,8 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			lNombrePanelDispositivos.setText("PULSE EN UN DISPOSITIVO PARA ELIMINARLO"); 
 			listaDispositivos.clearSelection();
 			break;
-		case "activarAlarma":
+		case "activarAlarma": //cuando se le de al boton de activar alarma se inicializa esta en null y se crea una
+							  //despes empieza.
 			alarma=null;
 			alarma = new Alarma();
 			alarma.accion();

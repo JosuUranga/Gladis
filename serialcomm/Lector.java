@@ -41,30 +41,30 @@ public class Lector extends Thread {
 		
 		try {
 			do {
-				  mensaje = lineaSerie.leer();
-				  System.out.println("Recivido: "+mensaje);//0010 0011 #
-				  if(mensaje.equals("D")) {
+				  mensaje = lineaSerie.leer();		//espera aqui hasta que llega algo
+				  System.out.println("Recivido: "+mensaje);
+				  if(mensaje.equals("D")) { 		//si lo recibido es una D apaga la alarma
 					  lineaSerie.escribir("D");
 					  System.out.println("Apagando alarma");
 					  this.parar();
 					  soporte.firePropertyChange("apagarAlarma", true, false);
 				  }
-				  else {
+				  else {			//si es otra cosa cont++
 					  cont++;
 				  }
-				  if(cont>=3) {
+				  if(cont>=3) {		//si el cont es 3 manda a la basys una C, que pase a modo alarma sonando
 					  cont=0;
 					  lineaSerie.escribir("C");
-					  ruido();
+					  ruido();									//suena lel .wav
 				  }
-			}while (!parar);
+			}while (!parar); 	
 			
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
 		System.out.println("fin hilo lector");
 	}
-	public void parar() {
+	public void parar() { //para el clip y hace que salga del do while.
 		
 		if(clip!=null)if(clip.isActive())clip.stop();
 		parar = true;
@@ -74,7 +74,6 @@ public class Lector extends Thread {
 			clip = AudioSystem.getClip();
 			clip.open(AudioSystem.getAudioInputStream(sonido));
 		} catch (LineUnavailableException | IOException | UnsupportedAudioFileException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
