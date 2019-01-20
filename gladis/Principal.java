@@ -81,8 +81,8 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		username="Administrador";
 		password="123456789aA@";
 		this.ips=new ArrayList<>();
-		//cVersion=new controladorVersion("172.17.23.143",casa,username,password,this);
-		cVersion=new controladorVersion("192.168.0.143",casa,username,password,this);
+		cVersion=new controladorVersion("172.17.23.143",casa,username,password,this);
+		//cVersion=new controladorVersion("192.168.0.143",casa,username,password,this);
 
 		cVersion.start();
 		new EscuchaServidor(this,ips).start();
@@ -521,8 +521,8 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			}
 			if(!oldV.get(0).equals("noFTP")) {
 				cVersion.subirVersion();
-				//new envioFTP("172.17.23.143",casa,username,password).start();
-				new envioFTP("192.168.0.143",casa,username,password).start();
+				new envioFTP("172.17.23.143",casa,username,password).start();
+				//new envioFTP("192.168.0.143",casa,username,password).start();
 
 			}
 			break;
@@ -544,19 +544,17 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			if(!oldV2.get(0).equals("noFTP")) {
 				cVersion.subirVersion();
 				
-				//new envioFTP("172.17.23.143",casa,username,password).start();
-				new envioFTP("192.168.0.143",casa,username,password).start();
+				new envioFTP("172.17.23.143",casa,username,password).start();
+				//new envioFTP("192.168.0.143",casa,username,password).start();
 
 			}
 			break;
 		case "habitacionRecibida":
-			clearSelectionAll();
 			Path p= Paths.get((String)evt.getNewValue());
 			controlador.descargarHabitacion(p,controladorAgrupaciones);
 			controlador.leerFichero(p.toString());
 			break;
 		case "agrupacionRecibida":
-			clearSelectionAll();
 			File w= new File((String)evt.getNewValue());
 			controladorAgrupaciones.descargarAgrupacion(w);
 			if(w.toString().contains("estados")) {
@@ -570,17 +568,14 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			ips.forEach(ip->System.out.println(ip));
 			break;
 		case "borrarHabitacion":
-			clearSelectionAll();
 			Path p2= Paths.get((String)evt.getNewValue());
 			controlador.descargarHabitacion(p2,controladorAgrupaciones);
 			break;
 		case "borrarAgrupacion":
-			clearSelectionAll();
 			File p3= new File((String)evt.getNewValue());
 			controladorAgrupaciones.descargarAgrupacion(p3);
 			break;
 		case "noMolestar":
-			clearSelectionAll();
 			List<Habitacion>habi=new ArrayList<>();
 			controlador.getMapa().keySet().forEach(key->{
 				if(key.getNombre().equals((String)evt.getNewValue()))habi.add(key);
@@ -613,14 +608,12 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			
 			break;
 		case "inicializar":
-			clearSelectionAll();
 			controlador.setFtp(true);
 			controlador.inicializar(casa);
 			controladorAgrupaciones.inicializar(casa);
 			controlador.setFtp(false);
 			break;
 		case "encenderAgrupacion":
-			clearSelectionAll();
 			controladorAgrupaciones.encenderAgrupacion((String)evt.getNewValue());
 			propertyChange(new PropertyChangeEvent(this, "agrupacion", true,false));
 			break;
@@ -628,7 +621,6 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			//Este case llega desde la clase Programas para encender una agrupacion mediante voz
 			//Tabien avisa de que tiene que mandar la agrupacion y actualizar la pantalla
 		case "encenderAgrupacionVoz":
-			clearSelectionAll();
 			if(evt.getNewValue() instanceof String)	controladorAgrupaciones.encenderAgrupacion((String)evt.getNewValue());
 			List<String> lista = new ArrayList<>();
 			lista.add("encenderAgrupacion");
@@ -642,11 +634,4 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		}
 		
 	}
-	public void clearSelectionAll() {
-		//listaHabitaciones.clearSelection();
-		//listaAgrupaciones.clearSelection();
-		//listaDispositivos.clearSelection();
-		//listaDispositivos.setListData(new Dispositivo[0]);
-	}
-
 }
