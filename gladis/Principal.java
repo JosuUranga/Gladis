@@ -346,7 +346,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		case "activarAgrupacion":
 			controladorAgrupaciones.encenderAgrupacion(listaAgrupaciones.getSelectedValue());
 			propertyChange(new PropertyChangeEvent(this, "agrupacion", true, false));
-			propertyChange(new PropertyChangeEvent(this, "envioHabitacion", "activarAgrupacion", listaAgrupaciones.getSelectedValue()));			
+			propertyChange(new PropertyChangeEvent(this, "envioHabitacion", "encenderAgrupacion", listaAgrupaciones.getSelectedValue()));			
 			break;
 		case "noMolestar":
 			propertyChange(new PropertyChangeEvent(this, "noMolestar", true, listaHabitaciones.getSelectedValue().getNombre()));
@@ -426,7 +426,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				else if(listaAgrupaciones.getSelectedIndex()!=-1) {
 					controladorAgrupaciones.getMapaEstados().get(listaAgrupaciones.getSelectedValue()).get(listaDispositivos.getSelectedIndex()).modificar(this);
 					controladorAgrupaciones.escribirAgrupacion(listaAgrupaciones.getSelectedValue());
-					propertyChange(new PropertyChangeEvent(this,"envioAgrupacion","envio",dialogoAgrupacion.getNombre()));
+					propertyChange(new PropertyChangeEvent(this,"envioAgrupacion","envio",listaAgrupaciones.getSelectedValue()));
 				}
 				listaDispositivos.clearSelection();	
 				controlador.ordenarListas();
@@ -472,11 +472,13 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			}
 			break;
 		case "habitacionRecibida":
+			clearSelectionAll();
 			Path p= Paths.get((String)evt.getNewValue());
 			controlador.descargarHabitacion(p,controladorAgrupaciones);
 			controlador.leerFichero(p.toString());
 			break;
 		case "agrupacionRecibida":
+			clearSelectionAll();
 			File w= new File((String)evt.getNewValue());
 			controladorAgrupaciones.descargarAgrupacion(w);
 			System.out.println("W--> "+w.toString());
@@ -487,23 +489,29 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			}
 			break;
 		case "borrarHabitacion":
+			clearSelectionAll();
 			Path p2= Paths.get((String)evt.getNewValue());
 			controlador.descargarHabitacion(p2, controladorAgrupaciones);
 			break;
 		case "borrarAgrupacion":
+			clearSelectionAll();
 			File p3= new File((String)evt.getNewValue());
 			controladorAgrupaciones.descargarAgrupacion(p3);
 			break;
-		case "encenderAgrupacion": 
+		case "encenderAgrupacion":
+			clearSelectionAll();
 			controladorAgrupaciones.encenderAgrupacion((String)evt.getNewValue()); 
+			propertyChange(new PropertyChangeEvent(this, "agrupacion", true,false));
 			break; 
-		case "encenderAgrupacionVoz": 
+		case "encenderAgrupacionVoz":
+			clearSelectionAll();
 			if(evt.getNewValue() instanceof String)	controladorAgrupaciones.encenderAgrupacion((String)evt.getNewValue()); 
 			propertyChange(new PropertyChangeEvent(this, "envioHabitacion", "encenderAgrupacion",(String)evt.getNewValue())); 
 			propertyChange(new PropertyChangeEvent(this, "agrupacion", true,false));
 			
 			break;
 		case "noMolestar":
+			clearSelectionAll();
 			List<Habitacion>habi=new ArrayList<>();
 			controlador.getMapa().keySet().forEach(key->{
 				if(key.getNombre().equals((String)evt.getNewValue()))habi.add(key);
@@ -542,9 +550,10 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		
 	}
 	public void clearSelectionAll() {
-		listaHabitaciones.clearSelection();
-		listaAgrupaciones.clearSelection();
-		listaDispositivos.clearSelection();
+		//listaHabitaciones.clearSelection();
+		//listaAgrupaciones.clearSelection();
+		//listaDispositivos.clearSelection();
+		//listaDispositivos.setListData(new Dispositivo[0]);
 	}
 
 }

@@ -176,7 +176,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 		try(FileWriter fr = new FileWriter(tmp);
 					BufferedReader br = new BufferedReader(new FileReader(fileName))){
 			while((line=br.readLine())!=null) {
-				if(!line.equals(lineToRemove)) fr.write(line+"\n");
+				if(!line.equals(lineToRemove)|| !line.equals("\n")) fr.write(line+"\n");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
