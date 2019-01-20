@@ -290,6 +290,11 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			listaDispositivos.clearSelection();
 			propertyChange(new PropertyChangeEvent(this,"envioHabitacion", "borrar", listaHabitaciones.getSelectedValue().getNombre()));
 			controladorAgrupaciones.eleminarDispositivoTodas(controlador.getMapa().get(listaHabitaciones.getSelectedValue()));
+			controladorAgrupaciones.buscarDispositivos(controlador.getMapa().get(listaHabitaciones.getSelectedValue())).forEach(agrup->{
+				controladorAgrupaciones.escribirAgrupacion(agrup);
+				propertyChange(new PropertyChangeEvent(this,"envioAgrupacion", "borrar", agrup));
+			});
+			
 			controlador.eliminarDispositivosHabitacion(listaHabitaciones.getSelectedValue());
 			controlador.eliminarHabitacion(listaHabitaciones.getSelectedValue());
 			listaHabitaciones.clearSelection();
@@ -404,6 +409,10 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				List<Dispositivo> lista = new ArrayList<>();
 				lista.add(listaDispositivos.getSelectedValue());
 				controladorAgrupaciones.eleminarDispositivoTodas(lista);
+				controladorAgrupaciones.buscarDispositivos(lista).forEach(agrup->{
+					controladorAgrupaciones.escribirAgrupacion(agrup);
+					propertyChange(new PropertyChangeEvent(this,"envioAgrupacion", "enviar", agrup));
+				});
 				lista=null;
 				controlador.eleminarDispositivo(listaHabitaciones.getSelectedValue(), listaDispositivos.getSelectedValue());
 				controlador.escribirHabitacion(listaHabitaciones.getSelectedValue(), casa);
@@ -543,7 +552,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			});
 			controlador.noMolestar(); 
 			break;
-		case "comandosDisp": controlador.agregarComandoVar((Dispositivo)evt.getNewValue());
+		case "comandosDisp": 
 		System.out.println("ASDALSIHDLASHFOAI�FJAM�SOIFASPODIAOPSDMAOPSD");
 		break;
 		}

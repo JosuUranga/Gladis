@@ -36,7 +36,6 @@ public class Agrupaciones extends AbstractListModel<String> {
 		this.casa=casa;
 		soporte=new PropertyChangeSupport(this);
 		this.nCasa=nCasa;
-		casa.getReconocedor().setMapaAgrup(mapa); 
 
 	}
 	public Map<Habitacion, List<Dispositivo>> getMapaCasa() {
@@ -46,40 +45,13 @@ public class Agrupaciones extends AbstractListModel<String> {
 		mapa.put(nombre, new ArrayList<>());
 		this.fireContentsChanged(mapa, 0, mapa.size());
 	}
-	public void agregarComandoAgrupacion(String nombre) {
-		File file = new File("Comandos.txt");
-		try (FileWriter fr= new FileWriter(file, true)){
-				fr.write("\n"+"public <modo"+nombre+"> = modo "+nombre+";");
-				fr.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		casa.Reconocedor.actualizaReconocedor();
-	}
 	public void eliminarString (String nombre) {	
 		if (mapa.containsKey(nombre)) {
 			mapa.remove(nombre);
 			mapaEstados.remove(nombre);
-			eliminarComandoAgrupacion(nombre);
 			System.out.println("ELIMINANDO COMANDO: "+nombre);
 			this.fireContentsChanged(mapa, 0, mapa.size());
 		}
-		
-	}
-	public void eliminarComandoAgrupacion(String nombre) {
-		String fileName="Comandos.txt";
-		String tmp ="tmp.txt";
-		String line;
-		try(FileWriter fr = new FileWriter(tmp);
-					BufferedReader br = new BufferedReader(new FileReader(fileName))){
-			while((line=br.readLine())!=null) {
-				if(!line.contains("public <modo"+nombre+">")) fr.write(line+"\n");
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		casa.reemplazar(fileName,tmp);
-		casa.Reconocedor.actualizaReconocedor();
 		
 	}
 	public void escribirAgrupacion(String agrupacion) {
@@ -150,9 +122,6 @@ public class Agrupaciones extends AbstractListModel<String> {
 					});
 					mapa.put(key, value);
 					System.out.println("LEERFICHERO AGRUPACION");
-					eliminarComandoAgrupacion(key);
-					agregarComandoAgrupacion(key);
-					casa.Reconocedor.actualizaReconocedor();
 					 
 					this.fireContentsChanged(map, 0, map.size());
 				}
@@ -175,7 +144,6 @@ public class Agrupaciones extends AbstractListModel<String> {
 		List<Dispositivo>listaCopy=new ArrayList<>();
 		lista.forEach(disp->listaCopy.add((Dispositivo)disp.clone()));
 		mapaEstados.put(nombre, listaCopy);
-		agregarComandoAgrupacion(nombre);
 		listaCopy.forEach(disp->disp.modificar(principal));
 		System.out.println("ESCRIBIENDO AGRUPACION: "+nombre);
 		this.fireContentsChanged(mapa, 0, mapa.size());
@@ -233,8 +201,6 @@ public class Agrupaciones extends AbstractListModel<String> {
 		List<String>asdAS=buscarDispositivos(lista);
 		asdAS.forEach(key->{
 			lista.forEach(disp->mapa.get(key).remove(disp));
-			this.escribirAgrupacion(key);
-			soporte.firePropertyChange("envioAgrupacion", "enviar", key);
 		});
 		this.fireContentsChanged(mapa, 0, mapa.size());
 	}

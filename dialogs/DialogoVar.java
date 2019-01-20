@@ -236,7 +236,6 @@ public class DialogoVar extends JDialog implements ActionListener{
 			     if(dispositivo.getTipo().equals("Programable tiempo")||dispositivo.getTipo().equals("No programable")) {
 			    	 verificarNombre();
 			    	 guardarValoresVacios();
-			    	 soporte.firePropertyChange("comandosDisp", false, dispositivo);
 			     }
 				 else guardarValoresDefinidos();
 			     this.dispose();
