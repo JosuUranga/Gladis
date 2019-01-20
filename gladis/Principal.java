@@ -70,7 +70,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 	public Principal(){		
 		super ("Gladis");	
 		casa="test";
-		/*Login login = new Login(this);
+		Login login = new Login(this);
 		System.out.println(login.esCorrecto());
 		if(login.esCorrecto()) {
 			username=login.getUsername();
@@ -78,7 +78,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		}else {
 			this.dispose();
 			System.exit(1);
-		}*/
+		}
 		this.ips=new ArrayList<>();
 		cVersion=new controladorVersion("172.17.23.143",casa,username,password,this);
 		cVersion.start();
@@ -315,7 +315,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				if(dialogoAgrupacion.isCrear()) {
 					controladorAgrupaciones.anadirDispositivos(dialogoAgrupacion.getNombre(), dialogoAgrupacion.getListaAgrupacion(), this);
 					controladorAgrupaciones.escribirAgrupacion(dialogoAgrupacion.getNombre());
-					
+					propertyChange(new PropertyChangeEvent(this,"envioAgrupacion","envio",dialogoAgrupacion.getNombre()));					
 				}
 				listaAgrupaciones.clearSelection();
 				listaHabitaciones.clearSelection();
@@ -398,6 +398,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				else if(listaAgrupaciones.getSelectedIndex()!=-1) {
 					controladorAgrupaciones.getMapaEstados().get(listaAgrupaciones.getSelectedValue()).get(listaDispositivos.getSelectedIndex()).modificar(this);
 					controladorAgrupaciones.escribirAgrupacion(listaAgrupaciones.getSelectedValue());
+					propertyChange(new PropertyChangeEvent(this,"envioAgrupacion","borrar",listaAgrupaciones.getSelectedValue()));
 				}
 				listaDispositivos.clearSelection();	
 				controlador.ordenarListas(); 

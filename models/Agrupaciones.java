@@ -105,11 +105,6 @@ public class Agrupaciones extends AbstractListModel<String> {
 				escribirFichero(set,"files/"+nCasa+"/"+"agrupaciones/estados/");
 			}
 		});
-		oldVal=new ArrayList<>();
-		oldVal.add("enviar");
-		oldVal.add("nada");
-		soporte.firePropertyChange("envioAgrupacion", oldVal, agrupacion);
-		oldVal=null;
 	}
 	public void escribirFichero(Entry<String,List<Dispositivo>> habitacion, String casa) {
 		try (ObjectOutputStream out = new ObjectOutputStream(
