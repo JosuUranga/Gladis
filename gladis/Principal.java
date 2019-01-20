@@ -145,9 +145,9 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		lNombre.setFont(new Font("Garamond",Font.PLAIN,12)); 
 		lNombre.setForeground(new Color(35,35,5)); 
 		toolbar.add(lNombre); 
- 
-		toolbar.add(Box.createHorizontalGlue());
 		toolbar.add(Box.createHorizontalGlue()); 
+
+	
 		botonAlarma = new JButton(); 
 		Image img = (new ImageIcon("img/alarma.png")).getImage();		
 		Image newimg = img.getScaledInstance(16, 16,  java.awt.Image.SCALE_SMOOTH);
@@ -156,11 +156,6 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		botonAlarma.addActionListener(this); 
 		botonAlarma.setActionCommand("activarAlarma"); 
 		toolbar.add(botonAlarma); 
-		lNombrePanelDispositivos = new JLabel("DISPOSITIVOS"); 
-		lNombrePanelDispositivos.setFont(new Font("Garamond",Font.PLAIN,12)); 
-		lNombrePanelDispositivos.setForeground(new Color(35,35,5)); 
-		toolbar.add(lNombrePanelDispositivos); 
-		toolbar.add(Box.createHorizontalGlue()); 
 		 
 		noMolestar=new JButton(new ImageIcon("img/noMolestar.png")); 
 		noMolestar.addActionListener(this); 
