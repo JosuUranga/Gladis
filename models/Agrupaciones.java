@@ -200,7 +200,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 					this.fireContentsChanged(map, 0, map.size()); 
 				}
 				oldVal=new ArrayList<>();
-				oldVal.add("enviar");
+				oldVal.add("noFTP");
 				oldVal.add("nada");
 				soporte.firePropertyChange("envioAgrupacion", oldVal, key);
 				oldVal=null;

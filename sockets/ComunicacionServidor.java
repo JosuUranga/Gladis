@@ -34,15 +34,15 @@ public class ComunicacionServidor extends Thread {
 						 if(((String) object).endsWith(".dat")) {
 						    	nombreArchivo=(String)object;
 						    	if (nombreArchivo.contains("/agrupaciones/")) esAgrupacion=true;
-						    	out.writeObject("Nombre Recibido");
+						    	out.writeObject("Nombre Recibido"); //Le decimos al EnvioHabitaciones del otro cliente que ya hemos recibido el nombre.
 						 }
-						 if(((String)object).equals("Hola!")) {
+						 if(((String)object).equals("Hola!")) {  //Si recibimos hola significa que la otra pantalla acaba de iniciarse y recogeremos su ip si no la tenemos en la lista.
 							 if (!ips.contains(socket.getRemoteSocketAddress().toString().substring(1, socket.getRemoteSocketAddress().toString().lastIndexOf(":")))) {
 								 ips.add(socket.getRemoteSocketAddress().toString().substring(1, socket.getRemoteSocketAddress().toString().lastIndexOf(":")));
 							 }
 							 break;
 						 }
-						 if(((String)object).equals("borrar")) {
+						 if(((String)object).equals("borrar")) { //Si recibimos borrar significa que hay que borrar el archivo que tenga el nombre recibido.
 							 File file = new File(nombreArchivo);
 							 List<String>oldValue=new ArrayList<>();
 							 oldValue.add("borrar");
@@ -59,7 +59,7 @@ public class ComunicacionServidor extends Thread {
 							 file.delete();
 							 break;
 						 }
-						 if(((String)object).equals("noMolestar")) {
+						 if(((String)object).equals("noMolestar")) { //Si recibimos noMolestar significa que hay que poner en no molestar la habitacion que tenga el nombre recibido.
 							 File file = new File(nombreArchivo);
 							 List<String>oldValue=new ArrayList<>();
 							 oldValue.add("noMolestar");
@@ -69,7 +69,7 @@ public class ComunicacionServidor extends Thread {
 							 oldValue=null;
 							 break;
 						 }
-						 if(((String)object).equals("encenderAgrupacion")) {
+						 if(((String)object).equals("encenderAgrupacion")) {  //Si recibimos encenderAgrupacion significa que hay que encender la agrupacion que tenga el nombre recibido.
 							 File file = new File(nombreArchivo);
 							 List<String>oldValue=new ArrayList<>();
 							 oldValue.add("encenderAgrupacion");
@@ -79,7 +79,7 @@ public class ComunicacionServidor extends Thread {
 							 oldValue=null;
 							 break;
 						 }
-						 if(object.equals("Finalizado")) {
+						 if(object.equals("Finalizado")) { //Si se recibe finalizado significa que ya hemos recibido todo el archivo, y procederemos a su escritura en un fichero local con el mismo nombre.
 							 try (ObjectOutputStream outf = new ObjectOutputStream(
 										new FileOutputStream(nombreArchivo))) {
 											for(Object a:archivo) {
@@ -106,7 +106,7 @@ public class ComunicacionServidor extends Thread {
 										e.printStackTrace();
 								}
 						 	}
-						 } else {
+						 } else {  //Se añadira a la lista de objetos cada objeto que recibamos, estos seran habitaciones y list o String y list
 							 if(nombreArchivo!=null) {
 								 archivo.add(object);
 								

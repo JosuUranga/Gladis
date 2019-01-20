@@ -21,7 +21,7 @@ public class EscuchaServidor extends Thread{
             ServerSocket serverSocket = new ServerSocket(5001);
         ) {
             while (escuchando) {
-	            new ComunicacionServidor(serverSocket.accept(),listener,ips).start();
+	            new ComunicacionServidor(serverSocket.accept(),listener,ips).start(); //Siempre que alguien nos hable por el puerto 5001 se iniciara un ComunicacionServidor.
 	        }
     	} catch (IOException e) {
 

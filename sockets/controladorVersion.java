@@ -54,18 +54,18 @@ public class controladorVersion extends Thread{
 				if(files!=null&&files.length>0) {
 					for(FTPFile fileV:files) {
 						if(fileV.getName().contains("version")) {
-							try(DataInputStream version=new DataInputStream(ftpClient.retrieveFileStream(fileV.getName()))){
+							try(DataInputStream version=new DataInputStream(ftpClient.retrieveFileStream(fileV.getName()))){ //Lee la version.txt del servidor y lo guarda en versionTMP
 								versionTMP=version.readLong();
 								version.close();
 								ftpClient.completePendingCommand();
-							if(versionProg<versionTMP && !inicializar) {
+							if(versionProg<versionTMP && !inicializar) {  //Si la version del servidor es mayor y no estamos inicializandonos vamos a recibir todos los ficheros del ftp
 								versionProg=versionTMP;
 								File file=new File("files/"+casa+"/");
-								borrarTodoLocal(file.listFiles());
-								recibirFTP(ftpClient,files);
-								soporte.firePropertyChange("inicializar", false, true);
-								soporte.firePropertyChange("dispositivos", false, true);
-								soporte.firePropertyChange("agrupaciones", true, false);
+								borrarTodoLocal(file.listFiles());   //Borrar todos los .dats y version.txt locales
+								recibirFTP(ftpClient,files);		//Recibir todos los .dats y version.txt del servidor
+								soporte.firePropertyChange("inicializar", false, true);   //Volver a reinicializar los mapas con los archivos recibidos y esto se encargara de mandarlos a las pantallas
+								soporte.firePropertyChange("dispositivos", false, true); //Actualizar lista de disp
+								soporte.firePropertyChange("agrupaciones", true, false);	//Actualizar lista de disp
 							}
 							System.out.println(versionProg);
 							inicializar=false;
@@ -83,11 +83,11 @@ public class controladorVersion extends Thread{
 		} catch (IOException e) {
 			System.err.println("No se ha podido conectar con el servidor FTP");
 			e.printStackTrace();
-			this.run();
+			this.run(); //Si hay algun fallo se volvera a reiniciar controladorVersion ya que este hilo siempre tiene que estar funcionando y probablemente el fallo no sera mas que un error de concurrencia y no afectara a la funcionalidad del programa
 			
 		}
 	}
-	public void recibirFTP(FTPSClient ftpClient,FTPFile[] files) {
+	public void recibirFTP(FTPSClient ftpClient,FTPFile[] files) {					//Funciones recursivas para borrar escribir etc....
 		try {
 			for(FTPFile file:files) {
 				if(!file.isFile()) {
@@ -119,7 +119,7 @@ public class controladorVersion extends Thread{
 			e.printStackTrace();
 		}
 	}
-	public void subirVersion() {
+	public void subirVersion() {   //Cada vez que hagamos un cambio se subira la version +1 y se iniciara un envioFTP solo en la inicializacion.
 		versionProg=versionProg+1;
 		try(DataOutputStream Sversion=new DataOutputStream(new FileOutputStream("files/"+casa+"/version.txt"))){
 			Sversion.writeLong(versionProg);

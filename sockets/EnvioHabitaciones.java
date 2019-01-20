@@ -53,17 +53,16 @@ public class EnvioHabitaciones extends Thread{
     						}
     						if(object.equals("Conexion establecida"))out.writeObject(habitacion);
     					}
-    						if(nombre && num<2) {
+    						if(nombre && num<2) {			//Si el receptor ha recibido el nombre iniciaremos la transmision del .dat
     							System.out.println(habitacion);
     							try (ObjectInputStream inf = new ObjectInputStream(
     									new FileInputStream(habitacion))) {
     								while(num<=1) {
     									Object obj=inf.readObject();
-    									System.out.println(obj);
     									out.writeObject(obj);
     									num++;
     								}
-    								out.writeObject("Finalizado");
+    								out.writeObject("Finalizado");  //Una vez terminada la transmision del archivo mandaremos "Finalizado" para informar que ya hemos enviado todo el archivo
     								break;
     								} catch (FileNotFoundException e) {
     									e.printStackTrace();
@@ -84,7 +83,7 @@ public class EnvioHabitaciones extends Thread{
         	}
             
         } catch (UnknownHostException e) {
-            System.err.println("Don't know about host " + hostname);
+            System.err.println("No se ha encontrado el host " + hostname);
         } catch (IOException e) {
             System.err.println("No se ha podido conectar con: " +
                 hostname+", quitandolo de la lista...");

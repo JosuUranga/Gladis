@@ -56,6 +56,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 		for(int i=0;i<habitaciones.length;i++) {
 			leerFichero("files/"+casa+"/"+"habitaciones/"+habitaciones[i].getName());
 		}
+
 		Reconocedor.setMapa(mapa);
 	}
 	public void ordenarListas() { 
@@ -266,7 +267,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 				List<Dispositivo> value=(List<Dispositivo>) in.readObject();
 				mapa.put(key, value);
 				oldValue=new ArrayList<>();
-				oldValue.add("enviar");
+				oldValue.add("noFTP");
 				oldValue.add("nada");
 				soporte.firePropertyChange("envioHabitacion", oldValue, key.getNombre());
 				oldValue=null;

@@ -29,18 +29,18 @@ public class envioFTP extends Thread{
 			ftpClient.login(name, password);
 			ftpClient.changeWorkingDirectory("/"+casa);
 			FTPFile[]fils=ftpClient.listFiles();
-			borrarTodoFTP(ftpClient,fils);
+			borrarTodoFTP(ftpClient,fils);					//Borrar todos los archivos que existan en el ftp
 			ftpClient.changeWorkingDirectory("/"+casa);
 			File file1=new File("files/"+casa);
 			File[] files=file1.listFiles();
-			enviarTodoFTP(ftpClient,files);
+			enviarTodoFTP(ftpClient,files);					//Enviar todos los archivos locales al ftp
 			ftpClient.logout();
 			ftpClient.disconnect();
 		} catch (IOException e) {
 			System.err.println("No se ha podido conectar con el servidor FTP");
 		}
 	}
-	public void enviarTodoFTP(FTPSClient ftpClient,File[]files) {
+	public void enviarTodoFTP(FTPSClient ftpClient,File[]files) {		
 		try {
 			for(File file:files) {
 				if(!file.isFile()) {
