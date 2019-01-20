@@ -7,6 +7,8 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPFile;
@@ -17,6 +19,7 @@ public class controladorVersion extends Thread{
 	Long versionProg,versionTMP;
 	Boolean inicializar;
 	PropertyChangeSupport soporte;
+	PropertyChangeListener principal;
 	public controladorVersion(String hostname,String casa,String name,String password,PropertyChangeListener principal) {
 		this.hostname=hostname;
 		this.casa=casa;
@@ -26,6 +29,7 @@ public class controladorVersion extends Thread{
 		inicializar=true;
 		this.subirVersion();
 		soporte=new PropertyChangeSupport(this);
+		this.principal=principal;
 		this.addPropertyChangeListener(principal);
 		
 		
@@ -108,6 +112,16 @@ public class controladorVersion extends Thread{
 				File tmp=new File(file.getPath());
 				borrarTodoLocal(tmp.listFiles());
 			}else {
+				List<String>lista=new ArrayList<>();
+				lista.add("borrar");
+				lista.add("nada");
+				if(file.toString().contains("agrupaciones")) {
+					soporte.firePropertyChange("envioAgrupaciones", lista, file.getName());
+				}else {
+					soporte.firePropertyChange("envioHabitaciones", lista, file.getName());
+				}
+				
+				lista=null;
 				file.delete();
 			}
 		}
@@ -115,6 +129,7 @@ public class controladorVersion extends Thread{
 	public void guardarArchivo(FTPSClient ftpClient,FTPFile file) {
 		try(FileOutputStream OutStream=new FileOutputStream("files"+ftpClient.printWorkingDirectory()+"/"+file.getName())) {
 			ftpClient.retrieveFile(file.getName(), OutStream);
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

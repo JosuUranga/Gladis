@@ -171,10 +171,11 @@ public class Programas extends ResultAdapter {//Es un result adapter del reconoc
 		this.mapaAgrupaciones=mapaAgrup;
 	}
 	public void avisar(Entry<Habitacion,List<Dispositivo>> entry) {
+		soporte.firePropertyChange("escribirHabitacion", false, entry.getKey());
 		List<String> lista = new ArrayList<>();
 		lista.add("enviar");
 		lista.add("nada");
-		soporte.firePropertyChange("envioHabitacion", lista, entry.getKey().toString()); //avisa de que tiene que enviar la habitacion
+		soporte.firePropertyChange("envioHabitacion", lista, entry.getKey().getNombre()); //avisa de que tiene que enviar la habitacion
 		lista=null;
 	}
 }

@@ -136,7 +136,6 @@ public class Agrupaciones extends AbstractListModel<String> {
 		oldVal=new ArrayList<>();
 		oldVal.add("enviar");
 		oldVal.add("nada");
-		soporte.firePropertyChange("envioAgrupacion", oldVal, agrupacion);
 		oldVal=null;
 	}
 	public void escribirFichero(Entry<String,List<Dispositivo>> habitacion, String casa) {
@@ -179,7 +178,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 		for(int i=0;i<habitaciones.length;i++) {
 			leerFichero("files/"+casa+"/"+"agrupaciones/estados/"+habitaciones[i].getName(),mapaEstados);
 		}
-		this.casa.getReconocedor().setMapaAgrup(mapa); //actualiza el mapa de la clase PRogramas mediante la clase Reconocedor
+
 	}
 	public void leerFichero(String filename,Map<String,List<Dispositivo>>map)
 	{
@@ -197,7 +196,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 						}));
 					});
 					map.put(key, value);
-					eliminarComandoAgrupacion(key); //borra el comando por si ya exite
+					if(casa.isFtp())eliminarComandoAgrupacion(key); //borra el comando por si ya exite
 					agregarComandoAgrupacion(key);  //agrega el comando correspondiente
 					casa.Reconocedor.actualizaReconocedor(); //actualiza el reconocedor
 					  
@@ -252,13 +251,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 	public void eleminarDispositivoTodas (List<Dispositivo> lista) {
 		List<String>asdAS=buscarDispositivos(lista);
 		asdAS.forEach(key->{
-			lista.forEach(disp->mapa.get(key).remove(disp));
-			this.escribirAgrupacion(key);
-			oldVal=new ArrayList<>();
-			oldVal.add("enviar");
-			oldVal.add("nada");
-			soporte.firePropertyChange("envioAgrupacion", oldVal, key);
-			oldVal=null;
+			lista.forEach(disp->mapa.get(key).remove(disp));			
 		});
 		this.fireContentsChanged(mapa, 0, mapa.size());
 	}

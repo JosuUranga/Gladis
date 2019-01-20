@@ -74,6 +74,7 @@ public class ComunicacionServidor extends Thread {
 							 List<String>oldValue=new ArrayList<>();
 							 oldValue.add("encenderAgrupacion");
 							 oldValue.add(socket.getRemoteSocketAddress().toString().substring(1, socket.getRemoteSocketAddress().toString().lastIndexOf(":")));
+							 System.out.println(oldValue.get(1));
 							 soporte.firePropertyChange("encenderAgrupacion", true,file.getName().replaceAll(".dat", ""));
 							 soporte.firePropertyChange("envioHabitacion", oldValue, file.getName().replaceAll(".dat", ""));
 							 oldValue=null;

@@ -42,6 +42,7 @@ import dialogs.DialogoDispositivos;
 import dialogs.DialogoHabitacion;
 import models.Agrupaciones;
 import models.Habitaciones;
+import reconocedor.Programas;
 import renderers.RendererAgrupaciones;
 import renderers.RendererDispositivos;
 import renderers.RendererHabitaciones;
@@ -80,7 +81,9 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		username="Administrador";
 		password="123456789aA@";
 		this.ips=new ArrayList<>();
-		cVersion=new controladorVersion("172.17.23.143",casa,username,password,this);
+		//cVersion=new controladorVersion("172.17.23.143",casa,username,password,this);
+		cVersion=new controladorVersion("192.168.0.143",casa,username,password,this);
+
 		cVersion.start();
 		new EscuchaServidor(this,ips).start();
 		controlador= new Habitaciones(casa,this);
@@ -297,8 +300,12 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			oldVal.add("borrar");
 			oldVal.add("nada");
 			propertyChange(new PropertyChangeEvent(this, "envioHabitacion", oldVal, listaHabitaciones.getSelectedValue().getNombre()));
-			oldVal=null;
+			oldVal.clear();
+			oldVal.add("envio");
+			oldVal.add("nada");
 			controladorAgrupaciones.eleminarDispositivoTodas(controlador.getMapa().get(listaHabitaciones.getSelectedValue()));
+			oldVal=null;
+			controladorAgrupaciones.buscarDispositivos(controlador.getMapa().get(listaHabitaciones.getSelectedValue())).forEach(agrup->propertyChange(new PropertyChangeEvent(this, "envioAgrupacion", oldVal, agrup)));
 			controlador.eliminarDispositivosHabitacion(listaHabitaciones.getSelectedValue()); //antes de eliminar la habit. se eliminan sus disp para eliminar sus comandos
 			controlador.eliminarHabitacion(listaHabitaciones.getSelectedValue());
 			listaHabitaciones.clearSelection();
@@ -329,11 +336,13 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			break;
 		case "activarAgrupacion":
 			oldVal=new ArrayList<>();
-			oldVal.add("activarAgrupacion");
+			oldVal.add("encenderAgrupacion");
 			oldVal.add("nada");
 			controladorAgrupaciones.encenderAgrupacion(listaAgrupaciones.getSelectedValue());
 			propertyChange(new PropertyChangeEvent(this, "envioHabitacion", oldVal, listaAgrupaciones.getSelectedValue()));
 			oldVal=null;
+			propertyChange(new PropertyChangeEvent(this, "agrupacion", true,false));
+
 			break;
 		case "anadirDispositivo":
 			DialogoDispositivos dialogoDispositivo = new DialogoDispositivos(this,"Anadir dispositivo",true,controlador.getMapa());
@@ -354,7 +363,12 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				if(dialogoAgrupacion.isCrear()) {
 					controladorAgrupaciones.anadirDispositivos(dialogoAgrupacion.getNombre(), dialogoAgrupacion.getListaAgrupacion(), this);
 					controladorAgrupaciones.escribirAgrupacion(dialogoAgrupacion.getNombre());
-					
+					List<String> lista = new ArrayList<>();
+					lista.add("enviar");
+					lista.add("nada");
+					propertyChange(new PropertyChangeEvent(this,"envioAgrupacion",lista,dialogoAgrupacion.getNombre())); 
+					lista=null;
+
 				}
 				listaAgrupaciones.clearSelection();
 				listaHabitaciones.clearSelection();
@@ -432,12 +446,16 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				List<Dispositivo>disp=new ArrayList<>();
 				disp.add(listaDispositivos.getSelectedValue());
 				controladorAgrupaciones.eleminarDispositivoTodas(disp);
-				disp=null;
-				controlador.eleminarDispositivo(listaHabitaciones.getSelectedValue(), listaDispositivos.getSelectedValue());
-				controlador.escribirHabitacion(listaHabitaciones.getSelectedValue(), casa);
 				oldVal=new ArrayList<>();
 				oldVal.add("enviar");
 				oldVal.add("nada");
+				controladorAgrupaciones.buscarDispositivos(disp).forEach(agrup->{
+					controladorAgrupaciones.escribirAgrupacion(agrup);
+					propertyChange(new PropertyChangeEvent(this, "envioAgrupacion", oldVal, agrup));
+				});
+				disp=null;
+				controlador.eleminarDispositivo(listaHabitaciones.getSelectedValue(), listaDispositivos.getSelectedValue());
+				controlador.escribirHabitacion(listaHabitaciones.getSelectedValue(), casa);
 				propertyChange(new PropertyChangeEvent(this, "envioHabitacion", oldVal, listaHabitaciones.getSelectedValue().getNombre()));
 				oldVal=null;
 			}else {
@@ -462,7 +480,11 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				else if(listaAgrupaciones.getSelectedIndex()!=-1) {
 					controladorAgrupaciones.getMapaEstados().get(listaAgrupaciones.getSelectedValue()).get(listaDispositivos.getSelectedIndex()).modificar(this);
 					controladorAgrupaciones.escribirAgrupacion(listaAgrupaciones.getSelectedValue());
-				}
+					List<String> lista = new ArrayList<>();
+					lista.add("enviar");
+					lista.add("nada");
+					propertyChange(new PropertyChangeEvent(this, "envioAgrupacion", lista,(String)listaAgrupaciones.getSelectedValue()));
+					lista=null;				}
 				listaDispositivos.clearSelection();	
 				controlador.ordenarListas(); 
 				if(listaHabitaciones.getSelectedValue()!=null)listaDispositivos.setListData(controlador.getDispositivosData(listaHabitaciones.getSelectedValue())); 
@@ -489,15 +511,23 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			break;
 		case "envioHabitacion":
 			@SuppressWarnings("unchecked") List<String>oldV=(List<String>) evt.getOldValue();
-			ips.stream().filter(ipf->!ipf.equals(oldV.get(1))).forEach(ip->new EnvioHabitaciones(ip,"files/"+casa+"/habitaciones/"+evt.getNewValue()+".dat",oldV.get(0),this).start());
+			ips.stream().filter(ipf->!ipf.equals(oldV.get(1))).forEach(ip->{
+				System.out.println(ip);
+				new EnvioHabitaciones(ip,"files/"+casa+"/habitaciones/"+evt.getNewValue()+".dat",oldV.get(0),this).start();
+			});
 			if((oldV.get(0)).equals("borrar")) {
 				File file = new File("files/"+casa+"/habitaciones/"+evt.getNewValue()+".dat");
 				file.delete();
 			}
 			if(!oldV.get(0).equals("noFTP")) {
 				cVersion.subirVersion();
-				new envioFTP("172.17.23.143",casa,username,password).start();
+				//new envioFTP("172.17.23.143",casa,username,password).start();
+				new envioFTP("192.168.0.143",casa,username,password).start();
+
 			}
+			break;
+		case "escribirHabitacion":
+			controlador.escribirHabitacion((Habitacion)evt.getNewValue(), casa);
 			break;
 		case "envioAgrupacion":
 			@SuppressWarnings("unchecked") List<String>oldV2=(List<String>) evt.getOldValue();
@@ -513,16 +543,20 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			}
 			if(!oldV2.get(0).equals("noFTP")) {
 				cVersion.subirVersion();
-				new envioFTP("172.17.23.143",casa,username,password).start();
 				
+				//new envioFTP("172.17.23.143",casa,username,password).start();
+				new envioFTP("192.168.0.143",casa,username,password).start();
+
 			}
 			break;
 		case "habitacionRecibida":
+			clearSelectionAll();
 			Path p= Paths.get((String)evt.getNewValue());
 			controlador.descargarHabitacion(p,controladorAgrupaciones);
 			controlador.leerFichero(p.toString());
 			break;
 		case "agrupacionRecibida":
+			clearSelectionAll();
 			File w= new File((String)evt.getNewValue());
 			controladorAgrupaciones.descargarAgrupacion(w);
 			if(w.toString().contains("estados")) {
@@ -536,14 +570,17 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			ips.forEach(ip->System.out.println(ip));
 			break;
 		case "borrarHabitacion":
+			clearSelectionAll();
 			Path p2= Paths.get((String)evt.getNewValue());
 			controlador.descargarHabitacion(p2,controladorAgrupaciones);
 			break;
 		case "borrarAgrupacion":
+			clearSelectionAll();
 			File p3= new File((String)evt.getNewValue());
 			controladorAgrupaciones.descargarAgrupacion(p3);
 			break;
 		case "noMolestar":
+			clearSelectionAll();
 			List<Habitacion>habi=new ArrayList<>();
 			controlador.getMapa().keySet().forEach(key->{
 				if(key.getNombre().equals((String)evt.getNewValue()))habi.add(key);
@@ -567,19 +604,23 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				banadirDispositivo.setEnabled(true); 
 				if(listaDispositivos.getModel().getSize()==0)bquitarDispositivo.setEnabled(false);
 				else bquitarDispositivo.setEnabled(true); 
-				
-			}
-			controlador.escribirHabitacion(listaHabitaciones.getSelectedValue(), casa);
-			controladorAgrupaciones.buscarDispositivos(controlador.getMapa().get(listaHabitaciones.getSelectedValue())).forEach(key->{
+			}	
+			controlador.escribirHabitacion(hab, casa);
+			controladorAgrupaciones.buscarDispositivos(controlador.getMapa().get(hab)).forEach(key->{
 				controladorAgrupaciones.escribirAgrupacion(key);
 			});
 			controlador.noMolestar(); 
+			
 			break;
 		case "inicializar":
+			clearSelectionAll();
+			controlador.setFtp(true);
 			controlador.inicializar(casa);
 			controladorAgrupaciones.inicializar(casa);
+			controlador.setFtp(false);
 			break;
 		case "encenderAgrupacion":
+			clearSelectionAll();
 			controladorAgrupaciones.encenderAgrupacion((String)evt.getNewValue());
 			propertyChange(new PropertyChangeEvent(this, "agrupacion", true,false));
 			break;
@@ -587,9 +628,10 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			//Este case llega desde la clase Programas para encender una agrupacion mediante voz
 			//Tabien avisa de que tiene que mandar la agrupacion y actualizar la pantalla
 		case "encenderAgrupacionVoz":
+			clearSelectionAll();
 			if(evt.getNewValue() instanceof String)	controladorAgrupaciones.encenderAgrupacion((String)evt.getNewValue());
 			List<String> lista = new ArrayList<>();
-			lista.add("activarAgrupacion");
+			lista.add("encenderAgrupacion");
 			lista.add("nada");
 			propertyChange(new PropertyChangeEvent(this, "envioHabitacion", lista,(String)evt.getNewValue()));
 			lista=null;
@@ -599,6 +641,12 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		break;
 		}
 		
+	}
+	public void clearSelectionAll() {
+		//listaHabitaciones.clearSelection();
+		//listaAgrupaciones.clearSelection();
+		//listaDispositivos.clearSelection();
+		//listaDispositivos.setListData(new Dispositivo[0]);
 	}
 
 }

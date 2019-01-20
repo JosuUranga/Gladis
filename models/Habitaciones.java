@@ -36,7 +36,7 @@ import reconocedor.Reconocedor;
 @SuppressWarnings("serial")
 public class Habitaciones extends AbstractListModel<Habitacion> {
 	Reconocedor Reconocedor; //el reconocedor de voz
-	
+	boolean ftp;
 
 	Map<Habitacion,List<Dispositivo>>mapa;
 	PropertyChangeSupport soporte;
@@ -47,17 +47,17 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 		this.casa=casa;
 		soporte=new PropertyChangeSupport(this);
 		Reconocedor = new Reconocedor(mapa, principal); //se inicializa el reconocedor de voz
+		ftp=false;
 	}
 	public void inicializar(String casa) {
 		mapa.clear();
-		this.fireContentsChanged(mapa, 0, mapa.size());
+		reemplazar("Comandos.txt", "Frequisto.txt");
 		File file= new File("files/"+casa+"/habitaciones/");
 		File [] habitaciones=file.listFiles();
 		for(int i=0;i<habitaciones.length;i++) {
 			leerFichero("files/"+casa+"/"+"habitaciones/"+habitaciones[i].getName());
 		}
-
-		Reconocedor.setMapa(mapa); //esta funcion se hace al leer del ftp y hay que actualizar el mapa del reconocedor
+		this.fireContentsChanged(mapa, 0, mapa.size());
 	}
 	public void ordenarListas() { 
 		Set<Habitacion>mapakeys=this.mapa.keySet(); 
@@ -210,7 +210,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 		try(FileWriter fr = new FileWriter(tmp); 
 					BufferedReader br = new BufferedReader(new FileReader(fileName))){ 
 			while((line=br.readLine())!=null) { 
-				if(!line.equals(lineToRemove)) fr.write(line+"\n"); //si la linea no es la lineToRemove la copia al tmp.txt
+				if(!line.equals(lineToRemove) || !line.equals("\n")) fr.write(line+"\n"); //si la linea no es la lineToRemove la copia al tmp.txt
 			} 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -314,16 +314,17 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 				//Al leer fichero se borran primero los comandos que hayan de los dispositivos que esten ya en local
 				//para luego cuando los vuelva a leer que no esten repetidos. Si éste no existia simplemente no
 				//borrará nada
+	
 				for(Dispositivo d:value) { 		
-					eliminarComandoDispositivoCompleto(d); 
+					if(ftp)eliminarComandoDispositivoCompleto(d); 
 					agregarComando(d);
 					if(d.getTipo().equals("Programable tiempo")||d.getTipo().equals("No Programable")) agregarComandoVar(d);
 				}
 				//Borra tambien el de la habitacion por el mismo motivo
-				eliminarComandoHabitacion(key); 
+				if(ftp)eliminarComandoHabitacion(key); 
 				escribirComandoHabitacion(key); 
 				Reconocedor.actualizaReconocedor(); //actualiza el reconocedor
-				soporte.firePropertyChange("dispositivos", false, true); //avisa a la pantalla para que se actualize
+				//soporte.firePropertyChange("dispositivos", false, true); //avisa a la pantalla para que se actualize
 				
 				this.fireContentsChanged(mapa, 0, mapa.size());
 			} catch (FileNotFoundException e) {
@@ -333,6 +334,12 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
+	}
+	public void setFtp(boolean ftp) {
+		this.ftp = ftp;
+	}
+	public boolean isFtp() {
+		return ftp;
 	}
 	public boolean isEmpty() {
 		if(mapa.isEmpty())return true;
