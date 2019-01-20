@@ -49,7 +49,7 @@ import sockets.EscuchaServidor;
 
 @SuppressWarnings("serial")
 public class Principal extends JFrame implements ActionListener, ListSelectionListener, PropertyChangeListener {
-	final String master="172.17.20.169";
+	final String master="192.168.0.12";
 	JMenuBar barra;	
 	JMenu editar,salir;
 	JMenuItem anadirHabitacion,quitarHabitacion,anadirDispositivo,quitarDispositivo,cerrar;
@@ -333,6 +333,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				if(dialogoAgrupacion.isCrear()) {
 					controladorAgrupaciones.anadirDispositivos(dialogoAgrupacion.getNombre(), dialogoAgrupacion.getListaAgrupacion(), this);
 					controladorAgrupaciones.escribirAgrupacion(dialogoAgrupacion.getNombre());
+					propertyChange(new PropertyChangeEvent(this,"envioAgrupacion","envio",dialogoAgrupacion.getNombre()));
 				}
 				listaAgrupaciones.clearSelection();
 				listaDispositivos.setListData(new Dispositivo[0]);
@@ -425,6 +426,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				else if(listaAgrupaciones.getSelectedIndex()!=-1) {
 					controladorAgrupaciones.getMapaEstados().get(listaAgrupaciones.getSelectedValue()).get(listaDispositivos.getSelectedIndex()).modificar(this);
 					controladorAgrupaciones.escribirAgrupacion(listaAgrupaciones.getSelectedValue());
+					propertyChange(new PropertyChangeEvent(this,"envioAgrupacion","envio",dialogoAgrupacion.getNombre()));
 				}
 				listaDispositivos.clearSelection();	
 				controlador.ordenarListas();
@@ -498,7 +500,8 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		case "encenderAgrupacionVoz": 
 			if(evt.getNewValue() instanceof String)	controladorAgrupaciones.encenderAgrupacion((String)evt.getNewValue()); 
 			propertyChange(new PropertyChangeEvent(this, "envioHabitacion", "encenderAgrupacion",(String)evt.getNewValue())); 
-			propertyChange(new PropertyChangeEvent(this, "agrupacion", true,false)); 
+			propertyChange(new PropertyChangeEvent(this, "agrupacion", true,false));
+			
 			break;
 		case "noMolestar":
 			List<Habitacion>habi=new ArrayList<>();
@@ -526,8 +529,8 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 				else bquitarDispositivo.setEnabled(true); 
 				
 			}
-			controlador.escribirHabitacion(listaHabitaciones.getSelectedValue(), casa);
-			controladorAgrupaciones.buscarDispositivos(controlador.getMapa().get(listaHabitaciones.getSelectedValue())).forEach(key->{
+			controlador.escribirHabitacion(hab, casa);
+			controladorAgrupaciones.buscarDispositivos(controlador.getMapa().get(hab)).forEach(key->{
 				controladorAgrupaciones.escribirAgrupacion(key);
 			});
 			controlador.noMolestar(); 
@@ -537,6 +540,11 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		break;
 		}
 		
+	}
+	public void clearSelectionAll() {
+		listaHabitaciones.clearSelection();
+		listaAgrupaciones.clearSelection();
+		listaDispositivos.clearSelection();
 	}
 
 }

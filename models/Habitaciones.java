@@ -38,12 +38,12 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 	}
 	public void inicializar(String casa) {
 		mapa.clear();
-		this.fireContentsChanged(mapa, 0, mapa.size());
 		File file= new File("files/"+casa+"/habitaciones/");
 		File [] habitaciones=file.listFiles();
 		for(int i=0;i<habitaciones.length;i++) {
 			leerFichero("files/"+casa+"/"+"habitaciones/"+habitaciones[i].getName());
 		}
+		this.fireContentsChanged(mapa, 0, mapa.size());
 	}
 	public void ordenarListas() {
 		Set<Habitacion>mapakeys=this.mapa.keySet();

@@ -48,7 +48,6 @@ public class ComunicacionServidor extends Thread {
 						 }
 						 if(((String)object).equals("encenderAgrupacion")) {
 							 File file = new File(nombreArchivo);
-							 soporte.firePropertyChange("envioHabitacion", "encenderAgrupacion", file.getName().replaceAll(".dat", ""));
 							 soporte.firePropertyChange("encenderAgrupacion", true,file.getName().replaceAll(".dat", ""));
 							 break;
 						 }

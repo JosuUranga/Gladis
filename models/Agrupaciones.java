@@ -93,7 +93,6 @@ public class Agrupaciones extends AbstractListModel<String> {
 				escribirFichero(set,"files/"+nCasa+"/"+"agrupaciones/estados/");
 			}
 		});
-		soporte.firePropertyChange("envioAgrupacion", "enviar", agrupacion);
 	}
 	public void escribirFichero(Entry<String,List<Dispositivo>> habitacion, String casa) {
 		try (ObjectOutputStream out = new ObjectOutputStream(
@@ -133,8 +132,6 @@ public class Agrupaciones extends AbstractListModel<String> {
 		for(int i=0;i<habitaciones.length;i++) {
 			leerFichero("files/"+casa+"/"+"agrupaciones/estados/"+habitaciones[i].getName(),mapaEstados);
 		}
-		this.casa.getReconocedor().setMapaAgrup(mapa); 
-
 	}
 	public void leerFichero(String filename,Map<String,List<Dispositivo>>map)
 	{
@@ -152,6 +149,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 						}));
 					});
 					mapa.put(key, value);
+					System.out.println("LEERFICHERO AGRUPACION");
 					eliminarComandoAgrupacion(key);
 					agregarComandoAgrupacion(key);
 					casa.Reconocedor.actualizaReconocedor();
