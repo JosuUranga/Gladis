@@ -49,7 +49,7 @@ import sockets.EscuchaServidor;
 
 @SuppressWarnings("serial")
 public class Principal extends JFrame implements ActionListener, ListSelectionListener, PropertyChangeListener {
-	final String master="192.168.0.12";
+	final String master="172.17.23.143";
 	JMenuBar barra;	
 	JMenu editar,salir;
 	JMenuItem anadirHabitacion,quitarHabitacion,anadirDispositivo,quitarDispositivo,cerrar;
@@ -481,16 +481,13 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			}
 			break;
 		case "habitacionRecibida":
-			clearSelectionAll();
 			Path p= Paths.get((String)evt.getNewValue());
 			controlador.descargarHabitacion(p,controladorAgrupaciones);
 			controlador.leerFichero(p.toString());
 			break;
 		case "agrupacionRecibida":
-			clearSelectionAll();
 			File w= new File((String)evt.getNewValue());
 			controladorAgrupaciones.descargarAgrupacion(w);
-			System.out.println("W--> "+w.toString());
 			if(w.toString().contains("estados")) {
 				controladorAgrupaciones.leerFichero(w.toString(),controladorAgrupaciones.getMapaEstados());
 			}else {
@@ -498,29 +495,24 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			}
 			break;
 		case "borrarHabitacion":
-			clearSelectionAll();
 			Path p2= Paths.get((String)evt.getNewValue());
 			controlador.descargarHabitacion(p2, controladorAgrupaciones);
 			break;
 		case "borrarAgrupacion":
-			clearSelectionAll();
 			File p3= new File((String)evt.getNewValue());
 			controladorAgrupaciones.descargarAgrupacion(p3);
 			break;
 		case "encenderAgrupacion":
-			clearSelectionAll();
 			controladorAgrupaciones.encenderAgrupacion((String)evt.getNewValue()); 
 			propertyChange(new PropertyChangeEvent(this, "agrupacion", true,false));
 			break; 
 		case "encenderAgrupacionVoz":
-			clearSelectionAll();
 			if(evt.getNewValue() instanceof String)	controladorAgrupaciones.encenderAgrupacion((String)evt.getNewValue()); 
 			propertyChange(new PropertyChangeEvent(this, "envioHabitacion", "encenderAgrupacion",(String)evt.getNewValue())); 
 			propertyChange(new PropertyChangeEvent(this, "agrupacion", true,false));
 			
 			break;
 		case "noMolestar":
-			clearSelectionAll();
 			List<Habitacion>habi=new ArrayList<>();
 			controlador.getMapa().keySet().forEach(key->{
 				if(key.getNombre().equals((String)evt.getNewValue()))habi.add(key);
@@ -558,11 +550,19 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		}
 		
 	}
-	public void clearSelectionAll() {
-		//listaHabitaciones.clearSelection();
-		//listaAgrupaciones.clearSelection();
-		//listaDispositivos.clearSelection();
-		//listaDispositivos.setListData(new Dispositivo[0]);
-	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }
