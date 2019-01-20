@@ -304,7 +304,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			propertyChange(new PropertyChangeEvent(this, "envioHabitacion", oldVal, listaHabitaciones.getSelectedValue().getNombre()));
 			oldVal=null;
 			controladorAgrupaciones.eleminarDispositivoTodas(controlador.getMapa().get(listaHabitaciones.getSelectedValue()));
-			controlador.eliminarDispositivosHabitacion(listaHabitaciones.getSelectedValue());
+			controlador.eliminarDispositivosHabitacion(listaHabitaciones.getSelectedValue()); //antes de eliminar la habit. se eliminan sus disp para eliminar sus comandos
 			controlador.eliminarHabitacion(listaHabitaciones.getSelectedValue());
 			listaHabitaciones.clearSelection();
 			listaDispositivos.setListData(new Dispositivo[0]);
@@ -587,6 +587,9 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			controladorAgrupaciones.encenderAgrupacion((String)evt.getNewValue());
 			propertyChange(new PropertyChangeEvent(this, "agrupacion", true,false));
 			break;
+			
+			//Este case llega desde la clase Programas para encender una agrupacion mediante voz
+			//Tabien avisa de que tiene que mandar la agrupacion y actualizar la pantalla
 		case "encenderAgrupacionVoz":
 			if(evt.getNewValue() instanceof String)	controladorAgrupaciones.encenderAgrupacion((String)evt.getNewValue());
 			List<String> lista = new ArrayList<>();
@@ -596,8 +599,7 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			lista=null;
 			propertyChange(new PropertyChangeEvent(this, "agrupacion", true,false));
 			break;
-		case "comandosDisp": controlador.agregarComandoVar((Dispositivo)evt.getNewValue());
-		System.out.println("ASDALSIHDLASHFOAI�FJAM�SOIFASPODIAOPSDMAOPSD");
+		case "comandosDisp": controlador.agregarComandoVar((Dispositivo)evt.getNewValue()); //esta al final Ima no lo usa, los demas no se, por si acaso lo dejo
 		break;
 		}
 		

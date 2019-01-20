@@ -42,7 +42,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 		mapaCasa=casa.getMapa();
 		this.casa=casa;
 		this.nCasa=nCasa;
-		casa.getReconocedor().setMapaAgrup(mapa);
+		casa.getReconocedor().setMapaAgrup(mapa); // le añade a la clase Programas el mapa de las agrupaciones mediante el Reconocedor
 		soporte=new PropertyChangeSupport(this);
 	}
 	public void encenderAgrupacion(String keyAgrup) {
@@ -83,6 +83,8 @@ public class Agrupaciones extends AbstractListModel<String> {
 		mapa.put(nombre, new ArrayList<>());
 		this.fireContentsChanged(mapa, 0, mapa.size());
 	}
+	
+	//Esta funcion añade al Comandos.txt el comando de la agrupacion necesario
 	public void agregarComandoAgrupacion(String nombre) {
 		File file = new File("Comandos.txt");
 		try (FileWriter fr= new FileWriter(file, true)){
@@ -96,13 +98,15 @@ public class Agrupaciones extends AbstractListModel<String> {
 		if (mapa.containsKey(nombre)) {
 			mapa.remove(nombre);
 			mapaEstados.remove(nombre);
-			eliminarComandoAgrupacion(nombre);
-			casa.Reconocedor.actualizaReconocedor();
-			System.out.println("ELIMINANDO COMANDO: "+nombre);
+			eliminarComandoAgrupacion(nombre); //eliminar el comando
+			casa.Reconocedor.actualizaReconocedor(); //actualizar el reconocedor
 			this.fireContentsChanged(mapa, 0, mapa.size());
 		}
 		
 	}
+	
+	//esta funcion elimina el comando de la agrupacion correspondiente de la misma manera que borra todos los demas 
+	//comandos, vease la clase Habitaciones.
 	public void eliminarComandoAgrupacion(String nombre) {
 		String fileName="Comandos.txt";
 		String tmp ="tmp.txt";
@@ -115,7 +119,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		casa.reemplazar(fileName,tmp);
+		casa.reemplazar(fileName,tmp); //se reutiliza la funcion en Habitaciones
 		
 	}
 	public void escribirAgrupacion(String agrupacion) {
@@ -175,7 +179,7 @@ public class Agrupaciones extends AbstractListModel<String> {
 		for(int i=0;i<habitaciones.length;i++) {
 			leerFichero("files/"+casa+"/"+"agrupaciones/estados/"+habitaciones[i].getName(),mapaEstados);
 		}
-		this.casa.getReconocedor().setMapaAgrup(mapa);
+		this.casa.getReconocedor().setMapaAgrup(mapa); //actualiza el mapa de la clase PRogramas mediante la clase Reconocedor
 	}
 	public void leerFichero(String filename,Map<String,List<Dispositivo>>map)
 	{
@@ -193,9 +197,9 @@ public class Agrupaciones extends AbstractListModel<String> {
 						}));
 					});
 					map.put(key, value);
-					eliminarComandoAgrupacion(key); 
-					agregarComandoAgrupacion(key); 
-					casa.Reconocedor.actualizaReconocedor();
+					eliminarComandoAgrupacion(key); //borra el comando por si ya exite
+					agregarComandoAgrupacion(key);  //agrega el comando correspondiente
+					casa.Reconocedor.actualizaReconocedor(); //actualiza el reconocedor
 					  
 					this.fireContentsChanged(map, 0, map.size()); 
 				}
@@ -223,10 +227,9 @@ public class Agrupaciones extends AbstractListModel<String> {
 		List<Dispositivo>listaCopy=new ArrayList<>();
 		lista.forEach(disp->listaCopy.add((Dispositivo)disp.clone()));
 		mapaEstados.put(nombre, listaCopy);
-		agregarComandoAgrupacion(nombre);
-		casa.Reconocedor.actualizaReconocedor();
+		agregarComandoAgrupacion(nombre); //añade el comandode la agrupacion
+		casa.Reconocedor.actualizaReconocedor(); //actualiza el reconocedor
 		listaCopy.forEach(disp->disp.modificar(principal));
-		System.out.println("ESCRIBIENDO AGRUPACION: "+nombre);
 		this.fireContentsChanged(mapa, 0, mapa.size());
 	}
 	public Map<String, List<Dispositivo>> getMapa() {

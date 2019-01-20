@@ -35,7 +35,7 @@ import reconocedor.Reconocedor;
 
 @SuppressWarnings("serial")
 public class Habitaciones extends AbstractListModel<Habitacion> {
-	Reconocedor Reconocedor;
+	Reconocedor Reconocedor; //el reconocedor de voz
 	
 
 	Map<Habitacion,List<Dispositivo>>mapa;
@@ -46,7 +46,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 		mapa = new HashMap<>();
 		this.casa=casa;
 		soporte=new PropertyChangeSupport(this);
-		Reconocedor = new Reconocedor(mapa, principal);
+		Reconocedor = new Reconocedor(mapa, principal); //se inicializa el reconocedor de voz
 	}
 	public void inicializar(String casa) {
 		mapa.clear();
@@ -57,7 +57,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 			leerFichero("files/"+casa+"/"+"habitaciones/"+habitaciones[i].getName());
 		}
 
-		Reconocedor.setMapa(mapa);
+		Reconocedor.setMapa(mapa); //esta funcion se hace al leer del ftp y hay que actualizar el mapa del reconocedor
 	}
 	public void ordenarListas() { 
 		Set<Habitacion>mapakeys=this.mapa.keySet(); 
@@ -77,23 +77,25 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 				disp.add(dispo);
 			});
 			controladorAgrupaciones.eleminarDispositivoTodas(disp);
-			eliminarDispositivosHabitacion(key);
-			eliminarComandoHabitacion(key); 
+			eliminarDispositivosHabitacion(key); //se eliminan los dispositivos de la habitacion primero, antes de borrarla, para eliminar sus comandos
+			eliminarComandoHabitacion(key); //se elimina el comando de la habitacion(no molestar)
 			mapa.remove(key);
 		});
-		Reconocedor.actualizaReconocedor();
+		Reconocedor.actualizaReconocedor(); //se actualiza el reconocedor con los cambios en Comandos.txt
 		this.fireContentsChanged(mapa, 0, mapa.size());
 	}
 	public void anadirHabitacion(Habitacion habitacion) {		
 		mapa.put(habitacion, new ArrayList<>()); 
-		escribirComandoHabitacion(habitacion); 	
+		escribirComandoHabitacion(habitacion); 	//añade el comando necesario para la habitacion
 		this.fireContentsChanged(mapa, 0, mapa.size());
 		Reconocedor.actualizaReconocedor(); 
 	}
+	
+	//Escribe el comando de no molestar de la habitacion
 	private void escribirComandoHabitacion(Habitacion habitacion) { 
 		File file = new File("Comandos.txt"); 
-		try (FileWriter fr= new FileWriter(file, true)){ 
-			fr.write("\n"+"public <noMolestar"+habitacion+"> = <noMolestar> "+habitacion+";"); 
+		try (FileWriter fr= new FileWriter(file, true)){ //hace un append del Comandos.txt (gracias al true)
+			fr.write("\n"+"public <noMolestar"+habitacion+"> = <noMolestar> "+habitacion+";");  //escribe la linea necesaria
 			fr.close(); 
 		} catch (IOException e) { 
 			e.printStackTrace(); 
@@ -104,13 +106,16 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 	} 
 	public void eliminarHabitacion (Habitacion habitacion) {	
 		if (mapa.containsKey(habitacion)) {
-			eliminarComandoHabitacion(habitacion); 
+			eliminarComandoHabitacion(habitacion);  //elimina el comando de la habitacion
 			mapa.remove(habitacion);
 			this.fireContentsChanged(mapa, 0, mapa.size());
 			Reconocedor.actualizaReconocedor(); 
 		}
 	}
-	private void eliminarComandoHabitacion(Habitacion habitacion) { 
+	
+	//Esta funcion busca la linea del no molestar d ela habitacion en comandos y copia todas las lineas menos esa
+	//en el tmp.txt para luego reemplazarlo por el Comandos.txt sin el comando de la habitacion.
+	private void eliminarComandoHabitacion(Habitacion habitacion) {  
 		String fileName="Comandos.txt"; 
 		String tmp ="tmp.txt"; 
 		String line; 
@@ -124,25 +129,31 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 		} 
 		reemplazar(fileName,tmp); 
 	} 
+	
+	//Esta funcion añade un dispositivo a la lista de una habitacion
 	public void anadirDispositivo (Habitacion habitacion,Dispositivo dispositivo) {
 		List<Dispositivo>lista = mapa.get(habitacion);
 		if(lista==null)lista = new ArrayList<>();
 		lista.add(dispositivo);
 		mapa.put(habitacion, lista);
-		agregarComando(dispositivo);
-		Reconocedor.actualizaReconocedor();
-		soporte.firePropertyChange("dispositivos", false, true);
+		agregarComando(dispositivo); //agrega el comando al .txt depende el dispositivo que sea
+		Reconocedor.actualizaReconocedor(); //actualiza el reconocedor con el nuevo Comandos.txt
+		soporte.firePropertyChange("dispositivos", false, true); //avisa de acutalizar la pantalla
 		
 	}
+	
+	//Esta funcion elimina un dispositivo de una habitacion
 	public void eleminarDispositivo (Habitacion habitacion,Dispositivo dispositivo) {
 		List<Dispositivo>lista = mapa.get(habitacion);
 		lista.remove(dispositivo);
 		mapa.replace(habitacion, mapa.get(habitacion), lista);
-		eliminarComandoDispositivoCompleto(dispositivo); 
-		Reconocedor.actualizaReconocedor(); 
-		soporte.firePropertyChange("dispositivos", true, false);
+		eliminarComandoDispositivoCompleto(dispositivo); //elimina el comando necesario depende el tipo de dispositivo que sea
+		Reconocedor.actualizaReconocedor(); //actualiza el reconocedor
+		soporte.firePropertyChange("dispositivos", true, false); //avisa al principal pa que actualice la pantalla
 		
 	}
+	
+	//determina la linea de las variables personalizadas del dispositivo OTROS para returnearla y borrarla despues
 	public String leerLineaVariables(Dispositivo d) {
 		String fileName="Comandos.txt";
 		String linea=null;
@@ -158,29 +169,40 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 		
 		return linea;
 	}
+	
+	//esta funcion elimina TODOS los dispositivos de una habitacion, asi como sus comandos
 	public void eliminarDispositivosHabitacion(Habitacion habitacion) {
 		List<Dispositivo> l = mapa.get(habitacion);
 		int size = l.size();
 	for(int i=0;i<size;i++) {
 			l= mapa.get(habitacion);
-			eleminarDispositivo(habitacion,l.get(0));
+			eleminarDispositivo(habitacion,l.get(0));//funcion para eliminar un dispositivo
 			System.out.println("dispositivo eliminado");
 			mapa.put(habitacion, l);
 		}
 	}
+	
+	//elimina el comando necesario depende el tipo de dispositivo que sea
 	public void eliminarComandoDispositivoCompleto(Dispositivo dispositivo) { 
+		
+			//si el comando no es OTROS, llama al eliminar comando con la linea que hay que borrar.
 		if(!dispositivo.getTipo().equals("Programable tiempo") &&!dispositivo.getTipo().equals("No programable") ) { 
 			eliminarComando(dispositivo,"public <"+dispositivo.getNombre()+"> = <accion> [<variables>] "+dispositivo.getNombre()+" [<numeros>];"); 
 		} 
+		
+			//si el dispositicos es OTROS, se borran sus comandos especificos
 		else { 
 			eliminarComando(dispositivo,"public <"+dispositivo.getNombre()+"> = <accion> [<"+dispositivo.getNombre()+"Variables>] "+dispositivo.getNombre()+" [<numeros>];"); 
-			String lineToRemove=leerLineaVariables(dispositivo); 
-			System.out.println("ESTO HA BORRADO: "+lineToRemove); 
-			eliminarComando(dispositivo, lineToRemove); 
+			String lineToRemove=leerLineaVariables(dispositivo);	 //determina la linea de las variables personalizadas del dispositivo OTROS para returnearla y borrarla despues
+			eliminarComando(dispositivo, lineToRemove); 	//elimina la linea de las variables
 		} 
 		if(dispositivo instanceof DispositivoTmp) eliminarComando(dispositivo, "public <"+dispositivo.getNombre()+"Tiempo> = <tiempo> "+dispositivo.getNombre()+";"); 
 
 	} 
+	
+	//esta funcion elimina del COmandos.txt una linea en especifico, el lineToRemove
+	//Para ello copia todas las lineas menos la lineToRemove en el tmp.txt para luego reemplazarlo en el Comandos.txt
+	//original sin la lineToRemove
 	public void eliminarComando(Dispositivo dispositivo, String lineToRemove) {
 		String fileName="Comandos.txt";
 		String tmp ="tmp.txt";
@@ -188,13 +210,15 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 		try(FileWriter fr = new FileWriter(tmp); 
 					BufferedReader br = new BufferedReader(new FileReader(fileName))){ 
 			while((line=br.readLine())!=null) { 
-				if(!line.equals(lineToRemove)) fr.write(line+"\n"); 
+				if(!line.equals(lineToRemove)) fr.write(line+"\n"); //si la linea no es la lineToRemove la copia al tmp.txt
 			} 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		reemplazar(fileName,tmp);
+		reemplazar(fileName,tmp);//reemplaza lo del tmp.txt en comandos.txt
 	}
+	
+	//reemplaza lo del tmp.txt en comandos.txt
 	public void reemplazar(String fileName, String tmp) {
 		String s;
 		try(FileReader fr = new FileReader(tmp);
@@ -211,29 +235,44 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 			e1.printStackTrace();
 		}
 	}
+	
+	
+	//Esta funcion agrega el/los comando/s del dispostivo necesarios dependiendo de su tipo
 	public void agregarComando(Dispositivo dispositivo) {
 		File file = new File("Comandos.txt");
 		try (FileWriter fr= new FileWriter(file, true)){
+			
+				//Si el disp no es un OTROS, 
 			if(!dispositivo.getTipo().equals("Programable tiempo") && !dispositivo.getTipo().equals("No programable")) 
 				fr.write("\n"+"public <"+dispositivo.getNombre()+"> = <accion> [<variables>] "+dispositivo.getNombre()+" [<numeros>];");
 			else {
+				
+				//Si es un OTROS, 
 				List<Variable> v = dispositivo.getVariables();
-				if(!v.isEmpty()) if(!v.get(0).getVar().equals(" ")) agregarComandoVar(dispositivo);
+				if(!v.isEmpty()) if(!v.get(0).getVar().equals(" ")) agregarComandoVar(dispositivo); //agrega los comandos necesarios para un disp OTROS
 			}
+			
+			//Independientemente del tipo, si es de Tiempo, el comando del tiempo
 			if(dispositivo instanceof DispositivoTmp) fr.write("\n"+"public <"+dispositivo.getNombre()+"Tiempo> = <tiempo> "+dispositivo.getNombre()+";");
 			fr.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+	
+	//Esta funcion escribe los comandos necesarios con las variables personalizadas de los dispositivos OTROS
 	public void agregarComandoVar(Dispositivo dispositivo) {
 		File file = new File("Comandos.txt");
 		try (FileWriter fr= new FileWriter(file, true)){
+			
+				//Va escribiendo el comando de sus variables
 			fr.write("\n"+"public <"+dispositivo.getNombre()+"Variables> = (");
 			for(Variable v: dispositivo.getVariables()) {
 				fr.write(v.getVar()+" | ");
 			}
 			fr.write(");");
+				
+				//Escribe el comando especial por tener variables personalizadas.
 			fr.write("\n"+"public <"+dispositivo.getNombre()+"> = <accion> [<"+dispositivo.getNombre()+"Variables>] "+dispositivo.getNombre()+" [<numeros>];");
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -271,15 +310,20 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 				oldValue.add("nada");
 				soporte.firePropertyChange("envioHabitacion", oldValue, key.getNombre());
 				oldValue=null;
-				for(Dispositivo d:value) {
+				
+				//Al leer fichero se borran primero los comandos que hayan de los dispositivos que esten ya en local
+				//para luego cuando los vuelva a leer que no esten repetidos. Si éste no existia simplemente no
+				//borrará nada
+				for(Dispositivo d:value) { 		
 					eliminarComandoDispositivoCompleto(d); 
 					agregarComando(d);
 					if(d.getTipo().equals("Programable tiempo")||d.getTipo().equals("No Programable")) agregarComandoVar(d);
 				}
+				//Borra tambien el de la habitacion por el mismo motivo
 				eliminarComandoHabitacion(key); 
 				escribirComandoHabitacion(key); 
-				Reconocedor.actualizaReconocedor();
-				soporte.firePropertyChange("dispositivos", false, true);
+				Reconocedor.actualizaReconocedor(); //actualiza el reconocedor
+				soporte.firePropertyChange("dispositivos", false, true); //avisa a la pantalla para que se actualize
 				
 				this.fireContentsChanged(mapa, 0, mapa.size());
 			} catch (FileNotFoundException e) {
@@ -306,7 +350,7 @@ public class Habitaciones extends AbstractListModel<Habitacion> {
 	public int getSize() {
 		return mapa.size();
 	}
-	public Reconocedor getReconocedor() {
+	public Reconocedor getReconocedor() { //funcion necesaria para que la clase Agrupaciones tenga el Reconocedor
 		return Reconocedor;
 	}
 	@Override
