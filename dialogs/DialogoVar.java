@@ -228,16 +228,16 @@ public class DialogoVar extends JDialog implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().equals("OK")) {
 			try {
-			     verificarVacio();
-			     verificarInt();
-			     verificarMaxMin();
-			     verificarValorInicial();
+			     verificarVacio(); //verifica si hay algo en el jtext
+			     verificarInt(); //verifica si todos son int
+			     verificarMaxMin(); //verificar intervalo max min
+			     verificarValorInicial(); //verificar si el val inicial esta dentro de maxmin
 			     if(dispositivo.getTipo().equals("Programable tiempo")||dispositivo.getTipo().equals("No programable")) {
-			    	 verificarNombre();
-			    	 guardarValoresVacios();
+			    	 verificarNombre(); //verifica si esta puesto el abecedario y no caracteres raros
+			    	 guardarValoresVacios(); //los guarda en la list
 			    	 soporte.firePropertyChange("comandosDisp", false, dispositivo);
 			     }
-				 else guardarValoresDefinidos();
+				 else guardarValoresDefinidos(); //los guarda en la list
 			     this.dispose();
 			}
 			catch(VacioException c) {

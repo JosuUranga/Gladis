@@ -105,15 +105,15 @@ public class DialogoHabitacion extends JDialog implements ActionListener {
 		if(nombre.getText().length()==0) throw new VacioException("Debe rellenar todos los campos");
 	}
 	private void check(String nombreVerificar) {
-		hayRepetidoNombreHabitacion(nombreVerificar);	
+		hayRepetidoNombreHabitacion(nombreVerificar);	//verifica el mapa a ver si hay alguna habitacion igual
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().equals("ok")) {
 			try {
-				verificarVacio();
-				verificarEspacio();
-				check(nombre.getText());	
+				verificarVacio(); //verificar si el jtext esta vacio
+				verificarEspacio(); //verificar si el nombre no esta junto
+				check(nombre.getText());	 //funcion para tratar excepcion
 				if(!errorIgual) {
 					habitacion = new Habitacion(nombre.getText());
 					this.dispose();

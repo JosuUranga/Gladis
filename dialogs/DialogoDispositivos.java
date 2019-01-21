@@ -157,7 +157,7 @@ public class DialogoDispositivos extends JDialog implements ActionListener{
 		boton1.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
 				
-				check(nombre.getText());	
+				check(nombre.getText()); //funcion q trata excepciones	
 				if(!errorRellenar && !errorIgual) {
 				System.out.println("entro");
 					switch((String) comboTipo.getSelectedItem()) {
@@ -290,12 +290,13 @@ public class DialogoDispositivos extends JDialog implements ActionListener{
 		errorRellenar=false;
 		errorIgual=false;
 		if(nombre.getText().length()==0) {
-			errorRellenar=true;
+			errorRellenar=true; //si esta vacio se activa el error
 		}
 
 		hayRepetidoNombreDispositivo(nombreVerificar);	
 	}
 	public void hayRepetidoNombreDispositivo(String nombreVerificar){
+		//se mira en el mapa a ver si hay algun dispositivo igual
 		map.entrySet().forEach(entry->{
 			entry.getValue().forEach(disp2->{
 				if(nombreVerificar.toLowerCase().equals(disp2.getNombre().toLowerCase())) {

@@ -211,11 +211,11 @@ public class DialogoAgrupaciones extends JDialog implements ActionListener{
 		
 		if(e.getActionCommand().equals("ok")) {
 			try {
-				verificarLista();
-				verificarVacio();
-				hayRepetidoNombreAgrupacion(tnombre.getText());
+				verificarLista(); //verificar si la lista no esta vacia
+				verificarVacio(); //verificar si ha introducido nombre agrupacion
+				hayRepetidoNombreAgrupacion(tnombre.getText()); //verificar mirando todo el mapa a ver si hay algo q coincide con el nombre d la agrupacion
 				if(!errorIgual) {
-				crear=true;
+				crear=true; //si todo esta en orden y no hay nada q sea igual se puede crear (al hacer for each no deja tratarlo como exception por eso esta puesto el erroIgual)
 				this.dispose();
 				}
 			} 

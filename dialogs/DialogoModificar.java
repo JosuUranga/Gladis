@@ -259,9 +259,9 @@ public class DialogoModificar extends JDialog implements ActionListener, Seriali
 			break;
 		case "OK":
 			try {
-			    verificarVacio();
-				verificarInt();
-				verificarTiempo();
+			    verificarVacio(); //verifica a ver si hay algo en el jtext
+				verificarInt(); //Verifica si todos son int
+				verificarTiempo(); //verifica el tiempo
 				if(dispositivo instanceof DispositivoTmp) {
 					tiempo.setMinutos(Integer.parseInt(text1.getText()));
 					tiempo.setSegundos(Integer.parseInt(text2.getText()));
