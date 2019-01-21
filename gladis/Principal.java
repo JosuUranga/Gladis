@@ -81,11 +81,11 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 		username="Administrador";
 		password="123456789aA@";
 		this.ips=new ArrayList<>();
-		cVersion=new controladorVersion("172.17.23.143",casa,username,password,this);
+		cVersion=new controladorVersion("172.17.23.143",casa,username,password,this); //Se pone a escuchar ftp
 		//cVersion=new controladorVersion("192.168.0.143",casa,username,password,this);
 
 		cVersion.start();
-		new EscuchaServidor(this,ips).start();
+		new EscuchaServidor(this,ips).start(); //Se pone a escuchar sockets
 		controlador= new Habitaciones(casa,this);
 		controlador.addPropertyChangeListener(this);
 		controladorAgrupaciones = new Agrupaciones(controlador,casa);
@@ -530,18 +530,18 @@ public class Principal extends JFrame implements ActionListener, ListSelectionLi
 			controlador.escribirHabitacion((Habitacion)evt.getNewValue(), casa);
 			break;
 		case "envioAgrupacion":
-			@SuppressWarnings("unchecked") List<String>oldV2=(List<String>) evt.getOldValue();
-			ips.stream().filter(ipf->!ipf.equals(oldV2.get(1))).forEach(ip->{
-				new EnvioHabitaciones(ip,"files/"+casa+"/agrupaciones/originales/"+evt.getNewValue()+".dat",oldV2.get(0),this).start();
+			@SuppressWarnings("unchecked") List<String>oldV2=(List<String>) evt.getOldValue(); //Se recibe lista de variables oldV.get(1) es la ip a filtrar si es algo que no sea la ip no filtrara nada
+			ips.stream().filter(ipf->!ipf.equals(oldV2.get(1))).forEach(ip->{		//Esta linea filtra las ips de la lista para saber que enviar, si en oldV.get(1) se ha recogido una ip esta se filtrara y no se mandara a esa ip
+				new EnvioHabitaciones(ip,"files/"+casa+"/agrupaciones/originales/"+evt.getNewValue()+".dat",oldV2.get(0),this).start(); // Se recibe oldV.get(0) que es el modo de envio envio/borrar/noFTP/encenderAgrupacion/noMolestar	
 				new EnvioHabitaciones(ip,"files/"+casa+"/agrupaciones/estados/"+evt.getNewValue()+".dat",oldV2.get(0),this).start();
 			});
-			if((oldV2.get(0)).equals("borrar")) {
+			if((oldV2.get(0)).equals("borrar")) { //Modo borrar,borra el fichero y manda a los demas que lo borren, y ya que se ha borrado el fichero n ose mandara por ftp
 				File file = new File("files/"+casa+"/agrupaciones/originales/"+evt.getNewValue()+".dat");
 				file.delete();
 				file = new File("files/"+casa+"/agrupaciones/estados/"+evt.getNewValue()+".dat");
 				file.delete();
 			}
-			if(!oldV2.get(0).equals("noFTP")) {
+			if(!oldV2.get(0).equals("noFTP")) { //Si el modo es noMolestar no enviara la informacion por ftp, esto se hace para cuando recibidos por ftp y queremos mandar por sockets pero no por fpt.
 				cVersion.subirVersion();
 				
 				new envioFTP("172.17.23.143",casa,username,password).start();
